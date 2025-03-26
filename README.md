@@ -151,6 +151,6 @@ Bu proje, Agile (Çevik) yazılım geliştirme metodolojisi kullanılarak geliş
 
 ## Akademik Danışman
 
-- [Ozal Yıldırım]
+- [Özal Yıldırım]
 - Yazılım Mühendisliği Bölümü
 - Fırat Üniversitesi
