@@ -1,90 +1,90 @@
-# Firat University Social Website
+# Fırat Üniversitesi Sosyal Web Sitesi
 
-A modern social networking platform for Firat University students and staff.
+Fırat Üniversitesi öğrencileri ve personeli için modern bir sosyal ağ platformu.
 
-## Features
+## Özellikler
 
-- User authentication and profiles
-- News feed with posts and updates
-- Event announcements
-- Academic resources sharing
-- Student clubs and organizations
-- Campus map integration
-- Real-time notifications
+- Kullanıcı kimlik doğrulama ve profilleri
+- Haber akışı ve güncellemeler
+- Etkinlik duyuruları
+- Akademik kaynak paylaşımı
+- Öğrenci kulüpleri ve organizasyonlar
+- Kampüs haritası entegrasyonu
+- Gerçek zamanlı bildirimler
 
-## Tech Stack
+## Teknoloji Altyapısı
 
-### Frontend
+### Ön Yüz (Frontend)
 - React.js
 - Material-UI
-- Redux for state management
-- Axios for API calls
+- Redux (Durum yönetimi için)
+- Axios (API çağrıları için)
 
-### Backend
+### Arka Yüz (Backend)
 - Node.js
 - Express.js
 - MongoDB
-- JWT for authentication
-- Socket.io for real-time features
+- JWT (Kimlik doğrulama için)
+- Socket.io (Gerçek zamanlı özellikler için)
 
-## Getting Started
+## Başlangıç
 
-### Prerequisites
-- Node.js (v14 or higher)
+### Gereksinimler
+- Node.js (v14 veya üzeri)
 - MongoDB
-- npm or yarn
+- npm veya yarn
 
-### Installation
+### Kurulum
 
-1. Clone the repository:
+1. Projeyi klonlayın:
 ```bash
 git clone https://github.com/yourusername/FiratUni-Social_WebSite.git
 cd FiratUni-Social_WebSite
 ```
 
-2. Install dependencies:
+2. Bağımlılıkları yükleyin:
 ```bash
-# Install backend dependencies
+# Backend bağımlılıklarını yükle
 cd backend
 npm install
 
-# Install frontend dependencies
+# Frontend bağımlılıklarını yükle
 cd ../frontend
 npm install
 ```
 
-3. Set up environment variables:
-Create `.env` files in both frontend and backend directories with necessary configurations.
+3. Ortam değişkenlerini ayarlayın:
+Frontend ve backend dizinlerinde gerekli yapılandırmalarla `.env` dosyaları oluşturun.
 
-4. Start the development servers:
+4. Geliştirme sunucularını başlatın:
 ```bash
-# Start backend server
+# Backend sunucusunu başlat
 cd backend
 npm run dev
 
-# Start frontend server
+# Frontend sunucusunu başlat
 cd frontend
 npm start
 ```
 
-## Project Structure
+## Proje Yapısı
 
 ```
 FiratUni-Social_WebSite/
-├── frontend/           # React frontend application
-├── backend/           # Node.js backend server
-├── docs/             # Project documentation
-└── README.md         # Project overview
+├── frontend/           # React ön yüz uygulaması
+├── backend/           # Node.js arka yüz sunucusu
+├── docs/             # Proje dokümantasyonu
+└── README.md         # Proje genel bakışı
 ```
 
-## Contributing
+## Katkıda Bulunma
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Projeyi fork edin
+2. Özellik dalınızı oluşturun (`git checkout -b feature/YeniOzellik`)
+3. Değişikliklerinizi commit edin (`git commit -m 'Yeni özellik eklendi'`)
+4. Dalınıza push yapın (`git push origin feature/YeniOzellik`)
+5. Bir Pull Request açın
 
-## License
+## Lisans
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+Bu proje MIT Lisansı altında lisanslanmıştır - detaylar için LICENSE dosyasına bakın.
