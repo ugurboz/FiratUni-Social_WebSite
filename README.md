@@ -1,1 +1,1 @@
-# FiratUni-Social
+# F-Social
