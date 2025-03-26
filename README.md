@@ -4,6 +4,21 @@ Bu proje, Fırat Üniversitesi Yazılım Mühendisliği Bölümü "Yazılım Mü
 
 Fırat Üniversitesi öğrencileri ve personeli için modern bir sosyal ağ platformu.
 
+## 📋 Görev Dağılımı
+
+| Görev | Sorumlular | Açıklama |
+|-------|------------|-----------|
+| Proje Yönetimi & Planlama | Tüm ekip | Toplantılar, görev takibi, GitHub yönetimi. |
+| Backend (API & Veritabanı) | Hüseyin & Baran | Kullanıcı kayıt/giriş, forum API, etkinlik yönetimi, veritabanı tasarımı (PostgreSQL/MySQL). |
+| Kimlik Doğrulama (Login, Kayıt, JWT) | Hüseyin & Uğur | Kullanıcı yetkilendirme, JWT token sistemi. |
+| Frontend (Arayüz Geliştirme) | İbo & Elif | React veya Blazor ile giriş ekranı, forum sayfası, etkinlik listesi ve UI tasarımı. |
+| Frontend - Backend Entegrasyonu | Baran & Elif | API bağlantılarının yapılması, veri akışının sağlanması. |
+| Veritabanı Tasarımı ve Yönetimi | Hüseyin & Uğur | PostgreSQL veya MySQL şeması oluşturma, optimizasyon. |
+| Forum ve Etkinlik Modülü | Baran & İbo | Forum mesajlaşma ve etkinlik planlama sisteminin backend ve frontend tasarımı. |
+| Kulüpler ve Sosyal Sayfalar | Elif & İbo | Kulüplerin tanıtım sayfaları, sosyal etkinlik duyuruları. |
+| Test ve Hata Ayıklama | Tüm ekip (Özellikle İbo & Uğur) | Backend & frontend testleri, hata ayıklama, Postman ile API testleri. |
+| Deployment (Canlıya Alma & Hosting) | Baran & Uğur | CI/CD entegrasyonu, Docker veya AWS/Azure kullanarak projeyi yayına alma. |
+
 ## Gereksinimler
 
 ### 1. Fonksiyonel Gereksinimler
