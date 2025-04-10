@@ -343,8 +343,9 @@
     </div>
 
     <script src="login_backend.js"></script>
+    <script src="profil_backend.js"></script>
     <script>
-        // Sayfa yüklendiğinde oturum kontrolü
+        // Sayfa yüklendiğinde oturum kontrolü ve profil bilgilerini yükle
         window.addEventListener('load', async () => {
             const hasSession = await checkSession();
             if (!hasSession) {
@@ -353,12 +354,45 @@
                 // Kullanıcı bilgilerini yükle
                 const user = JSON.parse(localStorage.getItem('user'));
                 if (user) {
-                    document.getElementById('profileAvatar').textContent = user.username.charAt(0).toUpperCase();
-                    document.getElementById('profileName').textContent = user.username;
-                    document.getElementById('profileEmail').textContent = user.email || 'kullanici@firat.edu.tr';
+                    try {
+                        const profile = await getProfile(user.username);
+                        updateProfileUI(profile);
+                    } catch (error) {
+                        console.error('Profil bilgileri yüklenirken hata oluştu:', error);
+                    }
                 }
             }
         });
+
+        // Profil bilgilerini arayüze yansıt
+        function updateProfileUI(profile) {
+            document.getElementById('profileAvatar').textContent = profile.username.charAt(0).toUpperCase();
+            document.getElementById('profileName').textContent = profile.username;
+            document.getElementById('profileEmail').textContent = profile.email;
+            document.getElementById('profilePhone').textContent = profile.phone;
+            document.getElementById('profileDepartment').textContent = profile.department;
+            document.getElementById('profileJoinDate').textContent = profile.joinDate;
+
+            // İstatistikleri güncelle
+            document.querySelector('.stat-value:nth-child(1)').textContent = profile.stats.posts;
+            document.querySelector('.stat-value:nth-child(2)').textContent = profile.stats.followers;
+            document.querySelector('.stat-value:nth-child(3)').textContent = profile.stats.following;
+
+            // Kulüpleri güncelle
+            const clubsContainer = document.querySelector('.joined-clubs');
+            clubsContainer.innerHTML = '';
+            profile.clubs.forEach(club => {
+                const clubItem = document.createElement('div');
+                clubItem.className = 'club-item';
+                clubItem.innerHTML = `
+                    <div class="club-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="club-name">${club}</div>
+                `;
+                clubsContainer.appendChild(clubItem);
+            });
+        }
 
         // Çıkış işlemi
         async function handleLogout() {
@@ -371,8 +405,24 @@
         }
 
         // Profil düzenleme butonu
-        document.querySelector('.edit-profile-button').addEventListener('click', function() {
-            alert('Profil düzenleme özelliği yakında eklenecek!');
+        document.querySelector('.edit-profile-button').addEventListener('click', async function() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                try {
+                    const updates = {
+                        email: prompt('Yeni e-posta adresiniz:', user.email),
+                        phone: prompt('Yeni telefon numaranız:', user.phone),
+                        department: prompt('Yeni bölümünüz:', user.department)
+                    };
+
+                    const updatedProfile = await updateProfile(user.username, updates);
+                    updateProfileUI(updatedProfile);
+                    alert('Profil başarıyla güncellendi!');
+                } catch (error) {
+                    console.error('Profil güncellenirken hata oluştu:', error);
+                    alert('Profil güncellenirken bir hata oluştu!');
+                }
+            }
         });
     </script>
 </body>

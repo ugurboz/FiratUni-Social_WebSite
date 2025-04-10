@@ -1,3 +1,250 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beGAK.com - Mesajlar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-name {
+            font-family: 'Righteous', cursive;
+            color: white;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ffd700;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 6rem auto 2rem;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            height: calc(100vh - 8rem);
+        }
+
+        .users-list {
+            background: white;
+            border-radius: 15px;
+            padding: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .user-item:hover {
+            background: #f0f0f0;
+        }
+
+        .user-item.active {
+            background: #e0e0e0;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #1e3c72;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .user-last-message {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 0.8rem 1rem;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .message.sent {
+            background: #1e3c72;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .message.received {
+            background: #f0f0f0;
+            color: #333;
+            align-self: flex-start;
+        }
+
+        .message-time {
+            position: absolute;
+            bottom: -20px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .message.sent .message-time {
+            right: 0;
+        }
+
+        .message.received .message-time {
+            left: 0;
+        }
+
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 1rem;
+        }
+
+        .chat-input button {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input button:hover {
+            background: #2a5298;
+        }
+
+        .no-chat-selected {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .users-list {
+                display: none;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
     <nav class="navbar">
         <div class="brand">
             <a href="anasayfa_screen.html" class="brand-name">beGAK.com</a>
@@ -9,4 +256,150 @@
             <a href="kulupler_screen.html">Kulüpler</a>
             <a href="#" onclick="handleLogout()">Çıkış Yap</a>
         </div>
-    </nav> 
+    </nav>
+
+    <div class="main-content">
+        <div class="users-list" id="usersList">
+            <!-- Kullanıcılar buraya dinamik olarak eklenecek -->
+        </div>
+        <div class="chat-container">
+            <div class="no-chat-selected" id="noChatSelected">
+                Mesajlaşmak için bir kullanıcı seçin
+            </div>
+            <div class="chat-header" id="chatHeader" style="display: none;">
+                <div class="user-avatar" id="chatUserAvatar">U</div>
+                <div class="user-info">
+                    <div class="user-name" id="chatUserName">Kullanıcı</div>
+                </div>
+            </div>
+            <div class="chat-messages" id="chatMessages" style="display: none;">
+                <!-- Mesajlar buraya dinamik olarak eklenecek -->
+            </div>
+            <div class="chat-input" id="chatInput" style="display: none;">
+                <input type="text" id="messageInput" placeholder="Mesajınızı yazın...">
+                <button onclick="sendMessage()">Gönder</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="login_backend.js"></script>
+    <script src="mesajlar_backend.js"></script>
+    <script>
+        let currentUser = null;
+        let selectedUser = null;
+
+        // Sayfa yüklendiğinde oturum kontrolü ve kullanıcı listesini yükle
+        window.addEventListener('load', async () => {
+            const hasSession = await checkSession();
+            if (!hasSession) {
+                window.location.href = 'login_screen.html';
+            } else {
+                currentUser = JSON.parse(localStorage.getItem('user'));
+                loadUsers();
+            }
+        });
+
+        // Kullanıcı listesini yükle
+        async function loadUsers() {
+            try {
+                const users = await getUsers();
+                const usersList = document.getElementById('usersList');
+                usersList.innerHTML = '';
+
+                users.forEach(user => {
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    userItem.innerHTML = `
+                        <div class="user-avatar">${user.charAt(0).toUpperCase()}</div>
+                        <div class="user-info">
+                            <div class="user-name">${user}</div>
+                            <div class="user-last-message">Son mesaj...</div>
+                        </div>
+                    `;
+                    userItem.addEventListener('click', () => selectUser(user));
+                    usersList.appendChild(userItem);
+                });
+            } catch (error) {
+                console.error('Kullanıcılar yüklenirken hata oluştu:', error);
+            }
+        }
+
+        // Kullanıcı seçme
+        async function selectUser(username) {
+            selectedUser = username;
+            document.querySelectorAll('.user-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.querySelector('.user-name').textContent === username) {
+                    item.classList.add('active');
+                }
+            });
+
+            document.getElementById('noChatSelected').style.display = 'none';
+            document.getElementById('chatHeader').style.display = 'flex';
+            document.getElementById('chatMessages').style.display = 'flex';
+            document.getElementById('chatInput').style.display = 'flex';
+
+            document.getElementById('chatUserAvatar').textContent = username.charAt(0).toUpperCase();
+            document.getElementById('chatUserName').textContent = username;
+
+            loadMessages(username);
+        }
+
+        // Mesajları yükle
+        async function loadMessages(username) {
+            try {
+                const messages = await getMessages(username);
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.innerHTML = '';
+
+                messages.forEach(message => {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = `message ${message.sender === currentUser.username ? 'sent' : 'received'}`;
+                    messageElement.innerHTML = `
+                        ${message.content}
+                        <div class="message-time">${new Date(message.timestamp).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</div>
+                    `;
+                    chatMessages.appendChild(messageElement);
+                });
+
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } catch (error) {
+                console.error('Mesajlar yüklenirken hata oluştu:', error);
+            }
+        }
+
+        // Mesaj gönderme
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const content = messageInput.value.trim();
+
+            if (content && selectedUser) {
+                try {
+                    await sendMessage(selectedUser, content);
+                    messageInput.value = '';
+                    loadMessages(selectedUser);
+                } catch (error) {
+                    console.error('Mesaj gönderilirken hata oluştu:', error);
+                }
+            }
+        }
+
+        // Enter tuşu ile mesaj gönderme
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Çıkış işlemi
+        async function handleLogout() {
+            try {
+                await handleLogout();
+                window.location.href = 'login_screen.html';
+            } catch (error) {
+                console.error('Çıkış yapılırken bir hata oluştu:', error);
+            }
+        }
+    </script>
+</body>
+</html> 
