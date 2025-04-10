@@ -173,13 +173,13 @@
 <body>
     <nav class="navbar">
         <div class="brand">
-            <a href="anasayfa_screen.html" class="brand-name">beGAK.com</a>
+            <a href="/main/anasayfa_screen.html" class="brand-name">beGAK.com</a>
         </div>
         <div class="nav-links">
-            <a href="anasayfa_screen.html">Ana Sayfa</a>
-            <a href="profil_screen.html">Profil</a>
-            <a href="mesajlar_screen.html">Mesajlar</a>
-            <a href="kulupler_screen.html">Kulüpler</a>
+            <a href="/main/anasayfa_screen.html">Ana Sayfa</a>
+            <a href="/main/profil_screen.html">Profil</a>
+            <a href="/main/mesajlar_screen.html">Mesajlar</a>
+            <a href="/main/kulupler_screen.html">Kulüpler</a>
             <a href="#" onclick="handleLogout()">Çıkış Yap</a>
         </div>
     </nav>
@@ -188,83 +188,7 @@
         <h1 class="page-title">Kulüpler</h1>
         
         <div class="clubs-grid">
-            <div class="club-card">
-                <div class="club-icon">
-                    <i class="fas fa-code"></i>
-                </div>
-                <h3 class="club-title">Yazılım Kulübü</h3>
-                <p class="club-description">Yazılım geliştirme, proje yönetimi ve teknoloji etkinlikleri düzenleyen kulüp.</p>
-                <div class="club-members">
-                    <i class="fas fa-users"></i>
-                    <span>150 üye</span>
-                </div>
-                <button class="join-button">Kulübe Katıl</button>
-            </div>
-
-            <div class="club-card">
-                <div class="club-icon">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <h3 class="club-title">Robotik Kulübü</h3>
-                <p class="club-description">Robotik projeler, yarışmalar ve atölye çalışmaları düzenleyen kulüp.</p>
-                <div class="club-members">
-                    <i class="fas fa-users"></i>
-                    <span>85 üye</span>
-                </div>
-                <button class="join-button">Kulübe Katıl</button>
-            </div>
-
-            <div class="club-card">
-                <div class="club-icon">
-                    <i class="fas fa-paint-brush"></i>
-                </div>
-                <h3 class="club-title">Sanat Kulübü</h3>
-                <p class="club-description">Resim, heykel ve diğer sanat dallarında etkinlikler düzenleyen kulüp.</p>
-                <div class="club-members">
-                    <i class="fas fa-users"></i>
-                    <span>120 üye</span>
-                </div>
-                <button class="join-button">Kulübe Katıl</button>
-            </div>
-
-            <div class="club-card">
-                <div class="club-icon">
-                    <i class="fas fa-music"></i>
-                </div>
-                <h3 class="club-title">Müzik Kulübü</h3>
-                <p class="club-description">Konserler, müzik atölyeleri ve performanslar düzenleyen kulüp.</p>
-                <div class="club-members">
-                    <i class="fas fa-users"></i>
-                    <span>95 üye</span>
-                </div>
-                <button class="join-button">Kulübe Katıl</button>
-            </div>
-
-            <div class="club-card">
-                <div class="club-icon">
-                    <i class="fas fa-futbol"></i>
-                </div>
-                <h3 class="club-title">Spor Kulübü</h3>
-                <p class="club-description">Spor etkinlikleri, turnuvalar ve fitness programları düzenleyen kulüp.</p>
-                <div class="club-members">
-                    <i class="fas fa-users"></i>
-                    <span>200 üye</span>
-                </div>
-                <button class="join-button">Kulübe Katıl</button>
-            </div>
-
-            <div class="club-card">
-                <div class="club-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <h3 class="club-title">Akademik Kulüp</h3>
-                <p class="club-description">Seminerler, konferanslar ve akademik etkinlikler düzenleyen kulüp.</p>
-                <div class="club-members">
-                    <i class="fas fa-users"></i>
-                    <span>180 üye</span>
-                </div>
-                <button class="join-button">Kulübe Katıl</button>
-            </div>
+            <!-- Kulüpler burada dinamik olarak yüklenecek -->
         </div>
     </div>
 
@@ -275,8 +199,67 @@
             const hasSession = await checkSession();
             if (!hasSession) {
                 window.location.href = 'login_screen.html';
+            } else {
+                // Kulüpleri yükle
+                loadClubs();
             }
         });
+
+        // Kulüpleri yükle
+        async function loadClubs() {
+            try {
+                const clubs = await getClubs();
+                const clubsContainer = document.querySelector('.clubs-grid');
+                clubsContainer.innerHTML = '';
+
+                clubs.forEach(club => {
+                    const user = JSON.parse(localStorage.getItem('user'));
+                    const isMember = club.members.includes(user.username);
+
+                    const clubCard = document.createElement('div');
+                    clubCard.className = 'club-card';
+                    clubCard.innerHTML = `
+                        <div class="club-icon">
+                            <i class="fas ${club.icon}"></i>
+                        </div>
+                        <h3>${club.name}</h3>
+                        <p>${club.description}</p>
+                        <div class="club-members">
+                            <i class="fas fa-users"></i>
+                            <span>${club.members.length} Üye</span>
+                        </div>
+                        <button class="join-button ${isMember ? 'joined' : ''}" onclick="toggleMembership(${club.id})">
+                            ${isMember ? 'Ayrıl' : 'Katıl'}
+                        </button>
+                    `;
+                    clubsContainer.appendChild(clubCard);
+                });
+            } catch (error) {
+                console.error('Kulüpler yüklenirken hata:', error);
+            }
+        }
+
+        // Kulüp üyeliğini değiştir
+        async function toggleMembership(clubId) {
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                const clubs = await getClubs();
+                const club = clubs.find(c => c.id === clubId);
+                const isMember = club.members.includes(user.username);
+
+                if (isMember) {
+                    await leaveClub(clubId);
+                } else {
+                    await joinClub(clubId);
+                }
+
+                // Kulüpleri yeniden yükle
+                loadClubs();
+            } catch (error) {
+                console.error('Kulüp üyeliği değiştirilirken hata:', error);
+                alert(error.message);
+            }
+        }
 
         // Çıkış işlemi
         async function handleLogout() {
@@ -287,14 +270,6 @@
                 console.error('Çıkış yapılırken bir hata oluştu:', error);
             }
         }
-
-        // Kulübe katılma işlevi
-        document.querySelectorAll('.join-button').forEach(button => {
-            button.addEventListener('click', function() {
-                this.classList.toggle('joined');
-                this.textContent = this.classList.contains('joined') ? 'Kulüpten Ayrıl' : 'Kulübe Katıl';
-            });
-        });
     </script>
 </body>
 </html> 
