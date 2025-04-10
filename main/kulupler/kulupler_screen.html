@@ -4,9 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>beGAK.com - Kulüpler</title>
-    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a0ca3;
+            --secondary-color: #4cc9f0;
+            --accent-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4bb543;
+            --error-color: #ff3333;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,17 +29,37 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: #f5f5f5;
+            background: #f5f7fa;
             min-height: 100vh;
+            color: var(--dark-color);
+            position: relative;
         }
 
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Navbar */
         .navbar {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: var(--box-shadow);
             position: fixed;
             width: 100%;
             top: 0;
@@ -38,11 +72,29 @@
             gap: 1rem;
         }
 
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-family: 'Righteous', cursive;
+        }
+
         .brand-name {
             font-family: 'Righteous', cursive;
             color: white;
             font-size: 1.5rem;
             text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .brand-name:hover {
+            transform: translateY(-2px);
         }
 
         .nav-links {
@@ -55,68 +107,152 @@
             color: white;
             text-decoration: none;
             font-size: 1rem;
-            transition: color 0.3s ease;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         .nav-links a:hover {
-            color: #ffd700;
+            color: var(--secondary-color);
         }
 
+        /* Main Content */
         .main-content {
             max-width: 1200px;
             margin: 6rem auto 2rem;
             padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
         }
 
         .page-title {
-            color: #1e3c72;
-            margin-bottom: 2rem;
-            font-size: 2rem;
-            text-align: center;
+            font-family: 'Righteous', cursive;
+            color: var(--primary-dark);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
         }
 
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.5s ease;
+        }
+
+        .page-header:hover .page-title::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Clubs Grid */
         .clubs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 2rem;
+            margin-bottom: 3rem;
         }
 
         .club-card {
-            background: white;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--border-radius);
             padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .club-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-color), var(--primary-color), var(--secondary-color));
         }
 
         .club-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
 
         .club-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 15px;
-            background: #1e3c72;
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            transition: var(--transition);
+        }
+
+        .club-card:hover .club-icon {
+            transform: rotate(15deg) scale(1.1);
         }
 
         .club-title {
-            color: #1e3c72;
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
         }
 
         .club-description {
             color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+            font-size: 0.95rem;
             line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .club-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
         }
 
         .club-members {
@@ -124,119 +260,408 @@
             align-items: center;
             gap: 0.5rem;
             color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+        }
+
+        .club-members i {
+            color: var(--primary-color);
+        }
+
+        .club-events {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+        }
+
+        .club-events i {
+            color: var(--accent-color);
         }
 
         .join-button {
-            background: #1e3c72;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 20px;
+            padding: 0.8rem;
+            border-radius: var(--border-radius);
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s ease;
             width: 100%;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .join-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
         }
 
         .join-button:hover {
-            background: #2a5298;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .join-button:hover::before {
+            left: 100%;
         }
 
         .join-button.joined {
-            background: #27ae60;
+            background: linear-gradient(135deg, var(--success-color) 0%, #2ecc71 100%);
         }
 
-        .join-button.joined:hover {
-            background: #2ecc71;
+        /* Search and Filter */
+        .club-filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 3rem;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .filter-dropdown {
+            position: relative;
+        }
+
+        .filter-button {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .filter-button:hover {
+            border-color: var(--primary-color);
+        }
+
+        .filter-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1rem;
+            margin-top: 0.5rem;
+            min-width: 200px;
+            display: none;
+            z-index: 10;
+        }
+
+        .filter-options.show {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .filter-option {
+            padding: 0.5rem 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-option:hover {
+            color: var(--primary-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .clubs-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .club-filters {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .filter-dropdown {
+                align-self: flex-end;
+            }
         }
 
         @media (max-width: 768px) {
             .navbar {
-                flex-direction: column;
-                gap: 1rem;
                 padding: 1rem;
             }
 
             .nav-links {
-                flex-direction: column;
                 gap: 1rem;
             }
 
+            .main-content {
+                margin-top: 5rem;
+                padding: 0 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
             .clubs-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .club-card {
+                padding: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-     <nav class="navbar">
+    <!-- Navbar -->
+    <nav class="navbar">
         <div class="brand">
+            <div class="brand-logo">bG</div>
             <a href="../../main/anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
         </div>
         <div class="nav-links">
-            <a href="../../main/anasayfa/anasayfa_screen.html">Ana Sayfa</a>
-            <a href="../../main/profil/profil_screen.html">Profil</a>
-            <a href="../../main/mesajlar/mesajlar_screen.html">Mesajlar</a>
-            <a href="../../main/kulupler/kulupler_screen.html">Kulüpler</a>
-            <a href="../../main/login/login_screen.html" onclick="handleLogout()">Çıkış Yap</a>
+            <a href="../../main/anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="../../main/profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
+            <a href="../../main/mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
+            <a href="../../main/kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
+            <a href="../../main/login/login_screen.html" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
         </div>
     </nav>
 
+    <!-- Main Content -->
     <div class="main-content">
-        <h1 class="page-title">Kulüpler</h1>
-        
-        <div class="clubs-grid">
-            <!-- Kulüpler burada dinamik olarak yüklenecek -->
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Kulüpler</h1>
+            <p class="page-subtitle">Fırat Üniversitesi'nin aktif öğrenci kulüplerini keşfedin ve ilgi alanlarınıza göre katılın</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="club-filters">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Kulüp ara..." id="club-search">
+            </div>
+            <div class="filter-dropdown">
+                <button class="filter-button" id="filter-button">
+                    <i class="fas fa-filter"></i>
+                    <span>Filtrele</span>
+                </button>
+                <div class="filter-options" id="filter-options">
+                    <div class="filter-option" data-filter="all">Tüm Kulüpler</div>
+                    <div class="filter-option" data-filter="technology">Teknoloji</div>
+                    <div class="filter-option" data-filter="art">Sanat</div>
+                    <div class="filter-option" data-filter="sport">Spor</div>
+                    <div class="filter-option" data-filter="academic">Akademik</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clubs Grid -->
+        <div class="clubs-grid" id="clubs-container">
+            <!-- Clubs will be loaded here dynamically -->
         </div>
     </div>
 
-    <script src="kulupler_backend.js"></script>
     <script>
-        // Sayfa yüklendiğinde oturum kontrolü
-        window.addEventListener('load', async () => {
-            const hasSession = await checkSession();
-            if (!hasSession) {
-                window.location.href = 'login_screen.html';
-            } else {
-                // Kulüpleri yükle
-                loadClubs();
+        // Kulüp veritabanı simülasyonu
+        const clubsDB = [
+            {
+                id: 1,
+                name: "Yazılım Kulübü",
+                description: "Yazılım geliştirme ve teknolojiye ilgi duyan öğrenciler için bir arayış platformu.",
+                icon: "fa-code",
+                category: "technology",
+                members: ["admin"],
+                events: 5,
+                createdAt: "2023-01-15"
+            },
+            {
+                id: 2,
+                name: "Müzik Kulübü",
+                description: "Müziğin büyülü dünyasında birlikte yolculuk yapmak isteyenler için.",
+                icon: "fa-music",
+                category: "art",
+                members: [],
+                events: 3,
+                createdAt: "2023-02-20"
+            },
+            {
+                id: 3,
+                name: "Basketbol Kulübü",
+                description: "Basketbol oynamayı ve izlemeyi sevenlerin buluşma noktası.",
+                icon: "fa-basketball-ball",
+                category: "sport",
+                members: [],
+                events: 8,
+                createdAt: "2023-03-10"
+            },
+            {
+                id: 4,
+                name: "Robotik Kulübü",
+                description: "Robotik ve yapay zeka alanında projeler geliştiren öğrenci topluluğu.",
+                icon: "fa-robot",
+                category: "technology",
+                members: [],
+                events: 4,
+                createdAt: "2023-01-25"
+            },
+            {
+                id: 5,
+                name: "Fotoğrafçılık Kulübü",
+                description: "Fotoğraf sanatını keşfetmek ve geliştirmek isteyenler için.",
+                icon: "fa-camera",
+                category: "art",
+                members: [],
+                events: 2,
+                createdAt: "2023-04-05"
+            },
+            {
+                id: 6,
+                name: "Satranç Kulübü",
+                description: "Strateji ve zeka oyunlarına ilgi duyan öğrenciler için.",
+                icon: "fa-chess",
+                category: "sport",
+                members: [],
+                events: 6,
+                createdAt: "2023-02-15"
             }
+        ];
+
+        // DOM yüklendiğinde
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Oturum kontrolü
+            const isLoggedIn = await checkSession();
+            if (!isLoggedIn) {
+                window.location.href = 'login_screen.html';
+                return;
+            }
+
+            // Kulüpleri yükle
+            loadClubs();
+
+            // Filtre butonu event listener
+            document.getElementById('filter-button').addEventListener('click', function() {
+                document.getElementById('filter-options').classList.toggle('show');
+            });
+
+            // Filtre seçenekleri event listener
+            document.querySelectorAll('.filter-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    filterClubs(filter);
+                    document.getElementById('filter-options').classList.remove('show');
+                });
+            });
+
+            // Arama kutusu event listener
+            document.getElementById('club-search').addEventListener('input', function() {
+                searchClubs(this.value);
+            });
         });
 
         // Kulüpleri yükle
         async function loadClubs() {
             try {
                 const clubs = await getClubs();
-                const clubsContainer = document.querySelector('.clubs-grid');
-                clubsContainer.innerHTML = '';
+                displayClubs(clubs);
+            } catch (error) {
+                console.error('Kulüpler yüklenirken hata:', error);
+            }
+        }
 
-                clubs.forEach(club => {
-                    const user = JSON.parse(localStorage.getItem('user'));
-                    const isMember = club.members.includes(user.username);
+        // Kulüpleri ekranda göster
+        function displayClubs(clubs) {
+            const clubsContainer = document.getElementById('clubs-container');
+            clubsContainer.innerHTML = '';
 
-                    const clubCard = document.createElement('div');
-                    clubCard.className = 'club-card';
-                    clubCard.innerHTML = `
-                        <div class="club-icon">
-                            <i class="fas ${club.icon}"></i>
-                        </div>
-                        <h3>${club.name}</h3>
-                        <p>${club.description}</p>
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            clubs.forEach(club => {
+                const isMember = club.members.includes(user.username);
+                
+                const clubCard = document.createElement('div');
+                clubCard.className = 'club-card';
+                clubCard.setAttribute('data-category', club.category);
+                clubCard.innerHTML = `
+                    <div class="club-icon">
+                        <i class="fas ${club.icon}"></i>
+                    </div>
+                    <h3 class="club-title">${club.name}</h3>
+                    <p class="club-description">${club.description}</p>
+                    <div class="club-meta">
                         <div class="club-members">
                             <i class="fas fa-users"></i>
                             <span>${club.members.length} Üye</span>
                         </div>
-                        <button class="join-button ${isMember ? 'joined' : ''}" onclick="toggleMembership(${club.id})">
-                            ${isMember ? 'Ayrıl' : 'Katıl'}
-                        </button>
-                    `;
-                    clubsContainer.appendChild(clubCard);
+                        <div class="club-events">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>${club.events} Etkinlik</span>
+                        </div>
+                    </div>
+                    <button class="join-button ${isMember ? 'joined' : ''}" data-club-id="${club.id}">
+                        ${isMember ? 'Kulüpten Ayrıl' : 'Kulübe Katıl'}
+                    </button>
+                `;
+
+                // Katıl/Ayrıl butonu event listener
+                const joinButton = clubCard.querySelector('.join-button');
+                joinButton.addEventListener('click', async function() {
+                    const clubId = parseInt(this.getAttribute('data-club-id'));
+                    await toggleMembership(clubId);
                 });
-            } catch (error) {
-                console.error('Kulüpler yüklenirken hata:', error);
-            }
+
+                clubsContainer.appendChild(clubCard);
+            });
         }
 
         // Kulüp üyeliğini değiştir
@@ -261,12 +686,114 @@
             }
         }
 
-        // Çıkış işlemi
-        function handleLogout() {
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('user');
-            window.location.href = '../../main/login/login_screen.html';
+        // Kulüpleri filtrele
+        function filterClubs(category) {
+            const clubs = document.querySelectorAll('.club-card');
+            
+            clubs.forEach(club => {
+                if (category === 'all' || club.getAttribute('data-category') === category) {
+                    club.style.display = 'block';
+                } else {
+                    club.style.display = 'none';
+                }
+            });
+        }
+
+        // Kulüpleri ara
+        function searchClubs(query) {
+            const clubs = document.querySelectorAll('.club-card');
+            const searchTerm = query.toLowerCase();
+            
+            clubs.forEach(club => {
+                const title = club.querySelector('.club-title').textContent.toLowerCase();
+                const description = club.querySelector('.club-description').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    club.style.display = 'block';
+                } else {
+                    club.style.display = 'none';
+                }
+            });
+        }
+
+        /* Backend Fonksiyonları */
+
+        // Oturum kontrolü
+        async function checkSession() {
+            try {
+                const token = localStorage.getItem('authToken');
+                return !!token;
+            } catch (error) {
+                console.error('Oturum kontrolü yapılırken hata:', error);
+                return false;
+            }
+        }
+
+        // Kulüpleri getir
+        async function getClubs() {
+            try {
+                return clubsDB;
+            } catch (error) {
+                console.error('Kulüpler getirilirken hata:', error);
+                throw error;
+            }
+        }
+
+        // Kulübe katıl
+        async function joinClub(clubId) {
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (!user) {
+                    throw new Error('Kullanıcı oturumu bulunamadı');
+                }
+
+                const club = clubsDB.find(c => c.id === clubId);
+                if (!club) {
+                    throw new Error('Kulüp bulunamadı');
+                }
+
+                if (!club.members.includes(user.username)) {
+                    club.members.push(user.username);
+                }
+
+                return club;
+            } catch (error) {
+                console.error('Kulübe katılırken hata:', error);
+                throw error;
+            }
+        }
+
+        // Kulüpten ayrıl
+        async function leaveClub(clubId) {
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (!user) {
+                    throw new Error('Kullanıcı oturumu bulunamadı');
+                }
+
+                const club = clubsDB.find(c => c.id === clubId);
+                if (!club) {
+                    throw new Error('Kulüp bulunamadı');
+                }
+
+                club.members = club.members.filter(member => member !== user.username);
+                return club;
+            } catch (error) {
+                console.error('Kulüpten ayrılırken hata:', error);
+                throw error;
+            }
+        }
+
+        // Çıkış yap
+        async function handleLogout() {
+            try {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('user');
+                window.location.href = 'login_screen.html';
+            } catch (error) {
+                console.error('Çıkış yapılırken hata:', error);
+            }
         }
     </script>
 </body>
-</html> 
+</html>
