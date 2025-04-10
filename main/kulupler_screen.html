@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beGAK.com - Kulüpler</title>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-name {
+            font-family: 'Righteous', cursive;
+            color: white;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ffd700;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 6rem auto 2rem;
+            padding: 0 2rem;
+        }
+
+        .page-title {
+            color: #1e3c72;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .clubs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .club-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .club-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .club-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: #1e3c72;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .club-title {
+            color: #1e3c72;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .club-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .club-members {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .join-button {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .join-button:hover {
+            background: #2a5298;
+        }
+
+        .join-button.joined {
+            background: #27ae60;
+        }
+
+        .join-button.joined:hover {
+            background: #2ecc71;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .clubs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="brand">
+            <a href="anasayfa_screen.html" class="brand-name">beGAK.com</a>
+        </div>
+        <div class="nav-links">
+            <a href="anasayfa_screen.html">Ana Sayfa</a>
+            <a href="profil_screen.html">Profil</a>
+            <a href="mesajlar_screen.html">Mesajlar</a>
+            <a href="kulupler_screen.html">Kulüpler</a>
+            <a href="#" onclick="handleLogout()">Çıkış Yap</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1 class="page-title">Kulüpler</h1>
+        
+        <div class="clubs-grid">
+            <div class="club-card">
+                <div class="club-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3 class="club-title">Yazılım Kulübü</h3>
+                <p class="club-description">Yazılım geliştirme, proje yönetimi ve teknoloji etkinlikleri düzenleyen kulüp.</p>
+                <div class="club-members">
+                    <i class="fas fa-users"></i>
+                    <span>150 üye</span>
+                </div>
+                <button class="join-button">Kulübe Katıl</button>
+            </div>
+
+            <div class="club-card">
+                <div class="club-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="club-title">Robotik Kulübü</h3>
+                <p class="club-description">Robotik projeler, yarışmalar ve atölye çalışmaları düzenleyen kulüp.</p>
+                <div class="club-members">
+                    <i class="fas fa-users"></i>
+                    <span>85 üye</span>
+                </div>
+                <button class="join-button">Kulübe Katıl</button>
+            </div>
+
+            <div class="club-card">
+                <div class="club-icon">
+                    <i class="fas fa-paint-brush"></i>
+                </div>
+                <h3 class="club-title">Sanat Kulübü</h3>
+                <p class="club-description">Resim, heykel ve diğer sanat dallarında etkinlikler düzenleyen kulüp.</p>
+                <div class="club-members">
+                    <i class="fas fa-users"></i>
+                    <span>120 üye</span>
+                </div>
+                <button class="join-button">Kulübe Katıl</button>
+            </div>
+
+            <div class="club-card">
+                <div class="club-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+                <h3 class="club-title">Müzik Kulübü</h3>
+                <p class="club-description">Konserler, müzik atölyeleri ve performanslar düzenleyen kulüp.</p>
+                <div class="club-members">
+                    <i class="fas fa-users"></i>
+                    <span>95 üye</span>
+                </div>
+                <button class="join-button">Kulübe Katıl</button>
+            </div>
+
+            <div class="club-card">
+                <div class="club-icon">
+                    <i class="fas fa-futbol"></i>
+                </div>
+                <h3 class="club-title">Spor Kulübü</h3>
+                <p class="club-description">Spor etkinlikleri, turnuvalar ve fitness programları düzenleyen kulüp.</p>
+                <div class="club-members">
+                    <i class="fas fa-users"></i>
+                    <span>200 üye</span>
+                </div>
+                <button class="join-button">Kulübe Katıl</button>
+            </div>
+
+            <div class="club-card">
+                <div class="club-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3 class="club-title">Akademik Kulüp</h3>
+                <p class="club-description">Seminerler, konferanslar ve akademik etkinlikler düzenleyen kulüp.</p>
+                <div class="club-members">
+                    <i class="fas fa-users"></i>
+                    <span>180 üye</span>
+                </div>
+                <button class="join-button">Kulübe Katıl</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="kulupler_backend.js"></script>
+    <script>
+        // Sayfa yüklendiğinde oturum kontrolü
+        window.addEventListener('load', async () => {
+            const hasSession = await checkSession();
+            if (!hasSession) {
+                window.location.href = 'login_screen.html';
+            }
+        });
+
+        // Çıkış işlemi
+        async function handleLogout() {
+            try {
+                await handleLogout();
+                window.location.href = 'login_screen.html';
+            } catch (error) {
+                console.error('Çıkış yapılırken bir hata oluştu:', error);
+            }
+        }
+
+        // Kulübe katılma işlevi
+        document.querySelectorAll('.join-button').forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('joined');
+                this.textContent = this.classList.contains('joined') ? 'Kulüpten Ayrıl' : 'Kulübe Katıl';
+            });
+        });
+    </script>
+</body>
+</html> 

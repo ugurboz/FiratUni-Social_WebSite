@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beGAK.com - Fırat Üniversitesi Sosyal Platformu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-name {
+            font-family: 'Righteous', cursive;
+            color: #1e3c72;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .brand-subtitle {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .login-form input:focus {
+            border-color: #1e3c72;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+        }
+
+        .login-form button {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-button {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .login-button:hover {
+            background: #2a5298;
+            transform: translateY(-2px);
+        }
+
+        .register-button {
+            background: transparent;
+            color: #1e3c72;
+            border: 2px solid #1e3c72 !important;
+        }
+
+        .register-button:hover {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .forgot-password a {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: #1e3c72;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+            
+            .brand-name {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="brand-header">
+            <h1 class="brand-name">beGAK.com</h1>
+            <p class="brand-subtitle">Fırat Üniversitesi Sosyal Platformu</p>
+        </div>
+        
+        <form class="login-form" id="loginForm" onsubmit="return handleLoginForm(event)">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" placeholder="Kullanıcı Adı" required>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Şifre" required>
+            </div>
+            
+            <button type="submit" class="login-button">Giriş Yap</button>
+            <button type="button" class="register-button" onclick="showRegisterForm()">Kayıt Ol</button>
+            
+            <div class="forgot-password">
+                <a href="#" onclick="showForgotPassword()">Şifremi Unuttum</a>
+            </div>
+            
+            <div class="error-message" id="errorMessage"></div>
+        </form>
+    </div>
+
+    <!-- Backend entegrasyonu -->
+    <script src="login_backend.js"></script>
+    <script>
+        // Login işlemi
+        async function handleLoginForm(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            try {
+                const result = await handleLogin(username, password);
+                if (result.success) {
+                    // Başarılı giriş
+                    errorMessage.style.display = 'none';
+                    localStorage.setItem('authToken', 'dummy-token'); // Gerçek uygulamada JWT token kullanılır
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    window.location.href = 'anasayfa_screen.html';
+                }
+            } catch (error) {
+                // Hatalı giriş
+                errorMessage.textContent = error.message;
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        // Kayıt formu
+        async function showRegisterForm() {
+            const username = prompt("Kullanıcı Adı:");
+            if (!username) return;
+
+            const email = prompt("E-posta Adresi:");
+            if (!email) return;
+
+            const password = prompt("Şifre:");
+            if (!password) return;
+
+            try {
+                const result = await handleRegister(username, password, email);
+                alert(result.message);
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        // Şifre sıfırlama
+        async function showForgotPassword() {
+            const email = prompt("E-posta Adresiniz:");
+            if (!email) return;
+
+            try {
+                const result = await handlePasswordReset(email);
+                alert(result.message);
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        // Sayfa yüklendiğinde oturum kontrolü
+        window.addEventListener('load', async () => {
+            const hasSession = await checkSession();
+            if (hasSession) {
+                window.location.href = 'main.html';
+            }
+        });
+
+        // Input alanlarına focus olduğunda animasyon
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.querySelector('i').style.color = '#1e3c72';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.querySelector('i').style.color = '#666';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beGAK.com - Profil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-name {
+            font-family: 'Righteous', cursive;
+            color: white;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ffd700;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 6rem auto 2rem;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .profile-sidebar {
+            position: sticky;
+            top: 6rem;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #1e3c72;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            margin: 0 auto 1rem;
+        }
+
+        .profile-name {
+            color: #1e3c72;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-role {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            color: #1e3c72;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .edit-profile-button {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .edit-profile-button:hover {
+            background: #2a5298;
+        }
+
+        .profile-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            color: #1e3c72;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #1e3c72;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .joined-clubs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .club-item {
+            background: #f8f8f8;
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .club-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #1e3c72;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .club-name {
+            color: #333;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-sidebar {
+                position: static;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="brand">
+            <a href="anasayfa_screen.html" class="brand-name">beGAK.com</a>
+        </div>
+        <div class="nav-links">
+            <a href="anasayfa_screen.html">Ana Sayfa</a>
+            <a href="profil_screen.html">Profil</a>
+            <a href="mesajlar_screen.html">Mesajlar</a>
+            <a href="kulupler_screen.html">Kulüpler</a>
+            <a href="#" onclick="handleLogout()">Çıkış Yap</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="profile-sidebar">
+            <div class="profile-card">
+                <div class="profile-avatar" id="profileAvatar">U</div>
+                <h2 class="profile-name" id="profileName">Kullanıcı</h2>
+                <p class="profile-role">Öğrenci</p>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">150</div>
+                        <div class="stat-label">Paylaşım</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">500</div>
+                        <div class="stat-label">Takipçi</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">300</div>
+                        <div class="stat-label">Takip</div>
+                    </div>
+                </div>
+                <button class="edit-profile-button">Profili Düzenle</button>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <h3 class="section-title">Kişisel Bilgiler</h3>
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="info-content">
+                    <div class="info-label">E-posta</div>
+                    <div class="info-value" id="profileEmail">kullanici@firat.edu.tr</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="info-content">
+                    <div class="info-label">Telefon</div>
+                    <div class="info-value" id="profilePhone">+90 555 123 4567</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="info-content">
+                    <div class="info-label">Bölüm</div>
+                    <div class="info-value" id="profileDepartment">Bilgisayar Mühendisliği</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-calendar"></i>
+                </div>
+                <div class="info-content">
+                    <div class="info-label">Kayıt Tarihi</div>
+                    <div class="info-value" id="profileJoinDate">01.09.2023</div>
+                </div>
+            </div>
+
+            <h3 class="section-title">Katıldığım Kulüpler</h3>
+            <div class="joined-clubs">
+                <div class="club-item">
+                    <div class="club-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="club-name">Yazılım Kulübü</div>
+                </div>
+                <div class="club-item">
+                    <div class="club-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="club-name">Robotik Kulübü</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="login_backend.js"></script>
+    <script>
+        // Sayfa yüklendiğinde oturum kontrolü
+        window.addEventListener('load', async () => {
+            const hasSession = await checkSession();
+            if (!hasSession) {
+                window.location.href = 'login_screen.html';
+            } else {
+                // Kullanıcı bilgilerini yükle
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (user) {
+                    document.getElementById('profileAvatar').textContent = user.username.charAt(0).toUpperCase();
+                    document.getElementById('profileName').textContent = user.username;
+                    document.getElementById('profileEmail').textContent = user.email || 'kullanici@firat.edu.tr';
+                }
+            }
+        });
+
+        // Çıkış işlemi
+        async function handleLogout() {
+            try {
+                await handleLogout();
+                window.location.href = 'login_screen.html';
+            } catch (error) {
+                console.error('Çıkış yapılırken bir hata oluştu:', error);
+            }
+        }
+
+        // Profil düzenleme butonu
+        document.querySelector('.edit-profile-button').addEventListener('click', function() {
+            alert('Profil düzenleme özelliği yakında eklenecek!');
+        });
+    </script>
+</body>
+</html> 

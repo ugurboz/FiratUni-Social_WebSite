@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beGAK.com - Ana Sayfa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-name {
+            font-family: 'Righteous', cursive;
+            color: white;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ffd700;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .welcome-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .welcome-section h1 {
+            color: #1e3c72;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-section p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card i {
+            font-size: 2rem;
+            color: #1e3c72;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: #1e3c72;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="brand">
+            <a href="main.html" class="brand-name">beGAK.com</a>
+        </div>
+        <div class="nav-links">
+            <a href="main.html">Ana Sayfa</a>
+            <a href="#">Profil</a>
+            <a href="#">Mesajlar</a>
+            <a href="#" onclick="handleLogout()">Çıkış Yap</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <section class="welcome-section">
+            <h1>Hoş Geldiniz!</h1>
+            <p>Fırat Üniversitesi sosyal platformuna hoş geldiniz. Burada öğrenciler, öğretim üyeleri ve mezunlar bir araya gelerek bilgi paylaşımında bulunabilir, etkinlikler düzenleyebilir ve sosyal ağlarını genişletebilirler.</p>
+        </section>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>Akademik Duyurular</h3>
+                <p>Üniversite duyurularını, sınav tarihlerini ve akademik takvimi takip edin.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-users"></i>
+                <h3>Sosyal Etkinlikler</h3>
+                <p>Kulüp etkinliklerine katılın, yeni arkadaşlar edinin ve sosyal ağınızı genişletin.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-book"></i>
+                <h3>Ders Notları</h3>
+                <p>Ders notlarını paylaşın, ödevlerinizde yardım alın ve akademik başarınızı artırın.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="login_backend.js"></script>
+    <script>
+        // Sayfa yüklendiğinde oturum kontrolü
+        window.addEventListener('load', async () => {
+            const hasSession = await checkSession();
+            if (!hasSession) {
+                window.location.href = 'login_screen.html';
+            }
+        });
+
+        // Çıkış işlemi
+        async function handleLogout() {
+            try {
+                await handleLogout();
+                window.location.href = 'login_screen.html';
+            } catch (error) {
+                console.error('Çıkış yapılırken bir hata oluştu:', error);
+            }
+        }
+    </script>
+</body>
+</html> 
