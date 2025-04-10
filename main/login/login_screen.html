@@ -4,9 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>beGAK.com - Fırat Üniversitesi Sosyal Platformu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a0ca3;
+            --secondary-color: #4cc9f0;
+            --accent-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4bb543;
+            --error-color: #ff3333;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,261 +29,566 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            padding: 20px;
-        }
-
-        .login-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-            padding: 40px;
+            justify-content: center;
+            padding: 2rem;
+            color: var(--dark-color);
             position: relative;
             overflow: hidden;
         }
 
-        .login-container::before {
+        body::before {
             content: '';
             position: absolute;
             top: -50%;
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: rotate(45deg);
-            animation: shine 3s infinite;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 0;
         }
 
-        @keyframes shine {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .brand-header {
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 500px;
+            padding: 2.5rem;
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-color), var(--primary-color), var(--secondary-color));
+            animation: progressBar 3s ease-in-out infinite;
+        }
+
+        @keyframes progressBar {
+            0% { width: 0; left: 0; }
+            50% { width: 100%; left: 0; }
+            100% { width: 0; left: 100%; }
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .brand {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+            transition: var(--transition);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         .brand-name {
             font-family: 'Righteous', cursive;
-            color: #1e3c72;
+            color: var(--primary-dark);
             font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
         }
 
-        .brand-subtitle {
+        .brand-name::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .brand-name:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .brand-tagline {
             color: #666;
             font-size: 1rem;
+            margin-top: 0.5rem;
+            font-weight: 400;
+            position: relative;
+            display: inline-block;
+        }
+
+        .brand-tagline::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .brand-tagline:hover::after {
+            opacity: 1;
         }
 
         .login-form {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 1.5rem;
         }
 
-        .input-group {
+        .form-group {
             position: relative;
         }
 
-        .input-group i {
+        .form-group i {
             position: absolute;
-            left: 15px;
+            left: 1rem;
             top: 50%;
             transform: translateY(-50%);
             color: #666;
+            transition: var(--transition);
         }
 
-        .login-form input {
+        .form-group input {
             width: 100%;
-            padding: 15px 15px 15px 45px;
+            padding: 1rem 1rem 1rem 3rem;
             border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             font-size: 1rem;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.9);
+            transition: var(--transition);
+            background-color: rgba(255, 255, 255, 0.8);
         }
 
-        .login-form input:focus {
-            border-color: #1e3c72;
+        .form-group input:focus {
+            border-color: var(--primary-color);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
         }
 
-        .login-form button {
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
+        .form-group input:focus + i {
+            color: var(--primary-color);
+            animation: iconShake 0.3s ease;
+        }
+
+        @keyframes iconShake {
+            0%, 100% { transform: translateY(-50%) rotate(0deg); }
+            25% { transform: translateY(-50%) rotate(-5deg); }
+            75% { transform: translateY(-50%) rotate(5deg); }
         }
 
         .login-button {
-            background: #1e3c72;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
             color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .login-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
         }
 
         .login-button:hover {
-            background: #2a5298;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .login-button:hover::before {
+            left: 100%;
         }
 
         .register-button {
             background: transparent;
-            color: #1e3c72;
-            border: 2px solid #1e3c72 !important;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color) !important;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 0.5rem;
         }
 
         .register-button:hover {
-            background: #1e3c72;
+            background: var(--primary-color);
             color: white;
         }
 
         .forgot-password {
             text-align: center;
-            margin-top: 10px;
+            margin-top: 1rem;
+            color: #666;
+            font-size: 0.9rem;
         }
 
         .forgot-password a {
-            color: #666;
+            color: var(--primary-color);
             text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
+            font-weight: 500;
+            position: relative;
         }
 
-        .forgot-password a:hover {
-            color: #1e3c72;
+        .forgot-password a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .forgot-password a:hover::after {
+            width: 100%;
         }
 
         .error-message {
-            color: #e74c3c;
+            color: var(--error-color);
             font-size: 0.9rem;
-            text-align: center;
-            margin-top: 10px;
+            margin-top: 0.5rem;
             display: none;
+            padding: 0.5rem;
+            background-color: rgba(255, 51, 51, 0.1);
+            border-radius: 5px;
+            border-left: 3px solid var(--error-color);
+            animation: shake 0.5s ease;
         }
 
-        .login-link {
-            text-align: center;
-            margin-top: 10px;
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
         }
 
-        .login-link a {
-            color: #1e3c72;
-            text-decoration: none;
+        .success-message {
+            color: var(--success-color);
             font-size: 0.9rem;
-            transition: color 0.3s ease;
+            margin-top: 0.5rem;
+            display: none;
+            padding: 0.5rem;
+            background-color: rgba(75, 181, 67, 0.1);
+            border-radius: 5px;
+            border-left: 3px solid var(--success-color);
+            animation: fadeInUp 0.5s ease;
         }
 
-        .login-link a:hover {
-            color: #2a5298;
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 480px) {
+        .floating-label {
+            position: absolute;
+            left: 3rem;
+            top: 1rem;
+            color: #999;
+            font-size: 0.9rem;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus + .floating-label,
+        .form-group input:not(:placeholder-shown) + .floating-label {
+            top: -10px;
+            left: 3rem;
+            font-size: 0.7rem;
+            background: white;
+            padding: 0 5px;
+            color: var(--primary-color);
+            animation: labelPop 0.3s ease;
+        }
+
+        @keyframes labelPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
             .login-container {
-                padding: 30px 20px;
+                padding: 1.5rem;
+            }
+            
+            .brand-logo {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
             }
             
             .brand-name {
                 font-size: 2rem;
             }
         }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-container {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .form-group {
+            animation: fadeIn 0.6s ease-out forwards;
+            animation-delay: calc(var(--order) * 0.1s);
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <div class="brand-header">
-            <h1 class="brand-name">beGAK.com</h1>
-            <p class="brand-subtitle">Fırat Üniversitesi Sosyal Platformu</p>
+        <div class="brand">
+            <div class="brand-logo">
+                <i class="fas fa-users"></i>
+            </div>
+            <a href="index.html" class="brand-name">beGAK.com</a>
+            <p class="brand-tagline">Fırat Üniversitesi Sosyal Platformu</p>
         </div>
         
-        <form class="login-form" id="loginForm" onsubmit="return handleLoginForm(event)">
-            <div class="input-group">
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+            <div class="form-group" style="--order: 1;">
+                <input type="text" id="email" placeholder=" " required>
+                <span class="floating-label">E-posta (@firat.edu.tr)</span>
                 <i class="fas fa-envelope"></i>
-                <input type="email" id="email" placeholder="@firat.edu.tr" required>
             </div>
             
-            <div class="input-group">
+            <div class="form-group" style="--order: 2;">
+                <input type="password" id="password" placeholder=" " required>
+                <span class="floating-label">Şifre</span>
                 <i class="fas fa-lock"></i>
-                <input type="password" id="password" placeholder="Şifre" required>
-            </div>
-            
-            <button type="submit" class="login-button">Giriş Yap</button>
-            <button type="button" class="register-button" onclick="window.location.href='register_screen.html'">Kayıt Ol</button>
-            
-            <div class="forgot-password">
-                <a href="#" onclick="showForgotPassword()">Şifremi Unuttum</a>
             </div>
             
             <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+            
+            <button type="submit" class="login-button">
+                <span>Giriş Yap</span>
+                <i class="fas fa-sign-in-alt" style="margin-left: 8px;"></i>
+            </button>
+            
+            <button type="button" class="register-button" onclick="window.location.href='main/register/register_screen.html'">
+                <span>Kayıt Ol</span>
+                <i class="fas fa-user-plus" style="margin-left: 8px;"></i>
+            </button>
         </form>
-
-        <div class="login-link">
-            Hesabınız yok mu? <a href="register_screen.html">Kayıt Ol</a>
+        
+        <div class="forgot-password">
+            <a href="#" onclick="showForgotPassword()">Şifremi Unuttum</a>
         </div>
     </div>
 
-    <!-- Backend entegrasyonu -->
-    <script src="login_backend.js"></script>
     <script>
-        // Login işlemi
-        async function handleLoginForm(event) {
+        // Kullanıcı veritabanı simülasyonu
+        const usersDB = {
+            'admin@firat.edu.tr': {
+                email: 'admin@firat.edu.tr',
+                password: 'admin',
+                joinDate: new Date().toISOString()
+            }
+        };
+
+        // Giriş işlemi
+        async function handleLogin(event) {
             event.preventDefault();
             
-            const studentNumber = document.getElementById('email').value;
-            const email = studentNumber + '@firat.edu.tr';
+            const email = document.getElementById('email').value;
+            // E-posta @firat.edu.tr ile bitmiyorsa ekle
+            const fullEmail = email.endsWith('@firat.edu.tr') ? email : email + '@firat.edu.tr';
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
-            
+            const successMessage = document.getElementById('successMessage');
+
+            // Hata mesajlarını temizle
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
             try {
-                const result = await handleLogin(email, password);
+                // Backend login işlemi
+                const result = await handleLoginBackend(fullEmail, password);
+                
                 if (result.success) {
-                    // Başarılı giriş
-                    errorMessage.style.display = 'none';
+                    successMessage.textContent = 'Giriş başarılı! Yönlendiriliyorsunuz...';
+                    successMessage.style.display = 'block';
+                    
+                    // Butonu devre dışı bırak ve yükleniyor efekti ekle
+                    const btn = event.target.querySelector('button[type="submit"]');
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yönlendiriliyor...';
+                    
+                    // Kullanıcı bilgilerini sakla
                     localStorage.setItem('authToken', 'dummy-token');
                     localStorage.setItem('user', JSON.stringify(result.user));
-                    window.location.href = 'anasayfa_screen.html';
+                    
+                    setTimeout(() => {
+                        window.location.href = 'anasayfa_screen.html';
+                    }, 2000);
+                } else {
+                    errorMessage.textContent = result.message || 'Giriş sırasında bir hata oluştu!';
+                    errorMessage.style.display = 'block';
                 }
             } catch (error) {
-                // Hatalı giriş
-                errorMessage.textContent = error.message;
+                errorMessage.textContent = error.message || 'Giriş sırasında bir hata oluştu! Lütfen tekrar deneyin.';
                 errorMessage.style.display = 'block';
+                console.error('Giriş hatası:', error);
             }
+
+            return false;
         }
+        
+        // Backend login fonksiyonu
+        async function handleLoginBackend(email, password) {
+            return new Promise((resolve, reject) => {
+                try {
+                    // E-posta kontrolü
+                    if (!email.endsWith('@firat.edu.tr')) {
+                        reject(new Error('Lütfen Fırat Üniversitesi e-posta adresinizi kullanın!'));
+                        return;
+                    }
 
-        // Şifre sıfırlama
-        async function showForgotPassword() {
-            const studentNumber = prompt("Öğrenci Numaranız:");
-            if (!studentNumber) return;
+                    const user = usersDB[email];
+                    if (!user) {
+                        reject(new Error('Kullanıcı bulunamadı!'));
+                        return;
+                    }
 
-            const email = studentNumber + '@firat.edu.tr';
+                    if (user.password !== password) {
+                        reject(new Error('Şifre hatalı!'));
+                        return;
+                    }
 
-            try {
-                const result = await handlePasswordReset(email);
-                alert(result.message);
-            } catch (error) {
-                alert(error.message);
-            }
-        }
-
-        // Input alanlarına focus olduğunda animasyon
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentElement.querySelector('i').style.color = '#1e3c72';
+                    resolve({
+                        success: true,
+                        user: {
+                            email: user.email,
+                            joinDate: user.joinDate
+                        }
+                    });
+                } catch (error) {
+                    reject(error);
+                }
             });
+        }
+        
+        // Şifremi unuttum fonksiyonu
+        async function showForgotPassword() {
+            const email = prompt("Fırat Üniversitesi e-posta adresinizi girin:");
+            if (!email) return;
             
-            input.addEventListener('blur', function() {
-                this.parentElement.querySelector('i').style.color = '#666';
+            try {
+                // Backend şifre sıfırlama işlemi
+                const result = await handlePasswordReset(email);
+                
+                if (result.success) {
+                    alert(result.message);
+                } else {
+                    alert(result.message || 'Şifre sıfırlama işlemi başarısız oldu!');
+                }
+            } catch (error) {
+                alert(error.message || 'Bir hata oluştu!');
+            }
+        }
+        
+        // Backend şifre sıfırlama fonksiyonu
+        async function handlePasswordReset(email) {
+            return new Promise((resolve, reject) => {
+                try {
+                    // E-posta kontrolü
+                    if (!email.endsWith('@firat.edu.tr')) {
+                        reject(new Error('Lütfen Fırat Üniversitesi e-posta adresinizi kullanın!'));
+                        return;
+                    }
+
+                    const user = usersDB[email];
+                    if (!user) {
+                        reject(new Error('Bu e-posta adresi ile kayıtlı kullanıcı bulunamadı!'));
+                        return;
+                    }
+
+                    // Şifre sıfırlama bağlantısı gönderildi simülasyonu
+                    resolve({
+                        success: true,
+                        message: 'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi!'
+                    });
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+        
+        // Sayfa yüklendiğinde animasyonları tetikle
+        document.addEventListener('DOMContentLoaded', function() {
+            // Floating label'ları başlangıç pozisyonuna getir
+            document.querySelectorAll('input').forEach(input => {
+                if (input.value) {
+                    const label = input.nextElementSibling;
+                    if (label && label.classList.contains('floating-label')) {
+                        label.style.top = '-10px';
+                        label.style.fontSize = '0.7rem';
+                        label.style.background = 'white';
+                        label.style.padding = '0 5px';
+                    }
+                }
             });
         });
     </script>

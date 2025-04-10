@@ -3,7 +3,6 @@
 // Örnek kullanıcı veritabanı
 const usersDB = {
     'admin@firat.edu.tr': {
-        username: 'admin',
         email: 'admin@firat.edu.tr',
         password: 'admin',
         joinDate: new Date().toISOString()
@@ -34,7 +33,6 @@ async function handleLogin(email, password) {
             resolve({
                 success: true,
                 user: {
-                    username: user.username,
                     email: user.email,
                     joinDate: user.joinDate
                 }
@@ -46,20 +44,19 @@ async function handleLogin(email, password) {
 }
 
 // Kayıt işlemini gerçekleştiren fonksiyon
-function handleRegister(username, password, email) {
+function handleRegister(password, email) {
     return new Promise((resolve, reject) => {
-        // Kullanıcı adı kontrolü
+        // E-posta kontrolü
         if (usersDB[email]) {
             reject({
                 success: false,
-                message: 'Bu kullanıcı adı zaten kullanılıyor!'
+                message: 'Bu e-posta adresi zaten kullanılıyor!'
             });
             return;
         }
 
         // Yeni kullanıcı oluştur
         usersDB[email] = {
-            username: username,
             email: email,
             password: password,
             joinDate: new Date().toISOString()
@@ -114,4 +111,4 @@ async function handleLogout() {
         localStorage.removeItem('user');
         resolve(true);
     });
-} 
+}
