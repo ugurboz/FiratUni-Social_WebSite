@@ -452,11 +452,11 @@
                     Bugünkü ders çok verimli geçti. Özellikle yapay zeka konusunda yeni bilgiler öğrendik. Haftaya proje sunumlarımız var, herkese başarılar!
                 </div>
                 <div class="post-actions">
-                    <div class="post-action">
+                    <div class="post-action like-button">
                         <i class="far fa-heart"></i>
                         <span>Beğen</span>
                     </div>
-                    <div class="post-action">
+                    <div class="post-action comment-button">
                         <i class="far fa-comment"></i>
                         <span>Yorum Yap</span>
                     </div>
@@ -464,6 +464,13 @@
                         <i class="far fa-share-square"></i>
                         <span>Paylaş</span>
                     </div>
+                </div>
+                <div class="comment-section" style="display: none;">
+                    <div class="comment-input">
+                        <input type="text" placeholder="Yorum yaz...">
+                        <button>Gönder</button>
+                    </div>
+                    <div class="comments"></div>
                 </div>
             </div>
 
@@ -479,11 +486,11 @@
                     Yeni dönem için ders seçimleri başladı. Hangi seçmeli dersleri almayı düşünüyorsunuz? Önerilerinizi bekliyorum.
                 </div>
                 <div class="post-actions">
-                    <div class="post-action">
+                    <div class="post-action like-button">
                         <i class="far fa-heart"></i>
                         <span>Beğen</span>
                     </div>
-                    <div class="post-action">
+                    <div class="post-action comment-button">
                         <i class="far fa-comment"></i>
                         <span>Yorum Yap</span>
                     </div>
@@ -491,6 +498,13 @@
                         <i class="far fa-share-square"></i>
                         <span>Paylaş</span>
                     </div>
+                </div>
+                <div class="comment-section" style="display: none;">
+                    <div class="comment-input">
+                        <input type="text" placeholder="Yorum yaz...">
+                        <button>Gönder</button>
+                    </div>
+                    <div class="comments"></div>
                 </div>
             </div>
         </div>
@@ -560,27 +574,13 @@
         </div>
     </div>
 
-    <script src="anasayfa_backend.js"></script>
     <script>
-        // Sayfa yüklendiğinde oturum kontrolü
-        window.addEventListener('load', async () => {
-            const hasSession = await checkSession();
-            if (!hasSession) {
-                window.location.href = 'login_screen.html';
-            }
-        });
-
-        // Çıkış işlemi
-        async function handleLogout() {
-            try {
-                await handleLogout();
-                window.location.href = 'login_screen.html';
-            } catch (error) {
-                console.error('Çıkış yapılırken bir hata oluştu:', error);
-            }
+        // Çıkış yapma fonksiyonu
+        function handleLogout() {
+            window.location.href = '../index.html';
         }
 
-        // Post paylaşma işlemi
+        // Gönderi paylaşma
         document.querySelector('.post-button').addEventListener('click', function() {
             const postInput = document.querySelector('.post-input');
             const postContent = postInput.value.trim();
@@ -603,9 +603,6 @@
             const post = document.createElement('div');
             post.className = 'post';
             
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-            
             let imageHtml = '';
             if (imageFile) {
                 const reader = new FileReader();
@@ -618,9 +615,9 @@
             
             post.innerHTML = `
                 <div class="post-header">
-                    <div class="post-avatar">${localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).username.charAt(0).toUpperCase() : 'U'}</div>
+                    <div class="post-avatar">M</div>
                     <div>
-                        <div class="post-author">${localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).username : 'Kullanıcı'}</div>
+                        <div class="post-author">Misafir Kullanıcı</div>
                         <div class="post-time">Şimdi</div>
                     </div>
                 </div>
@@ -676,9 +673,9 @@
                     const comment = document.createElement('div');
                     comment.className = 'comment';
                     comment.innerHTML = `
-                        <div class="comment-avatar">${localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).username.charAt(0).toUpperCase() : 'U'}</div>
+                        <div class="comment-avatar">M</div>
                         <div class="comment-content">
-                            <div class="comment-author">${localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).username : 'Kullanıcı'}</div>
+                            <div class="comment-author">Misafir Kullanıcı</div>
                             <div class="comment-text">${commentText}</div>
                         </div>
                     `;

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beGAK.com - Kayıt Ol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            transition: transform 0.3s;
+        }
+
+        .register-container:hover {
+            transform: scale(1.02);
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .brand-name {
+            font-family: 'Righteous', cursive;
+            color: #1e3c72;
+            font-size: 2.5rem;
+            text-decoration: none;
+        }
+
+        .register-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #1e3c72;
+            outline: none;
+            box-shadow: 0 0 5px rgba(30, 60, 114, 0.5);
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .register-button {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .register-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.4);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+        }
+
+        .login-link a {
+            color: #1e3c72;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .success-message {
+            color: #2ecc71;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .register-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="brand">
+            <a href="index.html" class="brand-name">beGAK.com</a>
+        </div>
+        <form id="registerForm" onsubmit="return handleRegister(event)">
+            <div class="form-group">
+                <input type="text" id="firstName" placeholder="Ad" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="lastName" placeholder="Soyad" required>
+            </div>
+            <div class="form-group">
+                <input type="email" id="email" placeholder="E-posta Adresi" required>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" placeholder="Şifre" required>
+            </div>
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+            <button type="submit" class="register-button">Kayıt Ol</button>
+        </form>
+        <div class="login-link">
+            Zaten hesabınız var mı? <a href="login_screen.html">Giriş Yap</a>
+        </div>
+    </div>
+
+    <script src="login_backend.js"></script>
+    <script src="register_backend.js"></script>
+    <script>
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            // Hata mesajlarını temizle
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
+            // Şifre kontrolü
+            if (password.length < 8) {
+                errorMessage.textContent = 'Şifre en az 8 karakter olmalı!';
+                errorMessage.style.display = 'block';
+                return false;
+            }
+
+            try {
+                const result = await handleRegister(firstName, lastName, password, email);
+                if (result.success) {
+                    successMessage.textContent = 'Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...';
+                    successMessage.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = 'login_screen.html';
+                    }, 2000);
+                } else {
+                    errorMessage.textContent = result.message || 'Kayıt sırasında bir hata oluştu!';
+                    errorMessage.style.display = 'block';
+                }
+            } catch (error) {
+                errorMessage.textContent = 'Kayıt sırasında bir hata oluştu!';
+                errorMessage.style.display = 'block';
+            }
+
+            return false;
+        }
+    </script>
+</body>
+</html> 

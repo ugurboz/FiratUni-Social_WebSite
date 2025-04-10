@@ -159,6 +159,22 @@
             display: none;
         }
 
+        .login-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .login-link a {
+            color: #1e3c72;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #2a5298;
+        }
+
         @media (max-width: 480px) {
             .login-container {
                 padding: 30px 20px;
@@ -179,8 +195,8 @@
         
         <form class="login-form" id="loginForm" onsubmit="return handleLoginForm(event)">
             <div class="input-group">
-                <i class="fas fa-user"></i>
-                <input type="text" id="username" placeholder="Kullanıcı Adı" required>
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" placeholder="@firat.edu.tr" required>
             </div>
             
             <div class="input-group">
@@ -189,7 +205,7 @@
             </div>
             
             <button type="submit" class="login-button">Giriş Yap</button>
-            <button type="button" class="register-button" onclick="showRegisterForm()">Kayıt Ol</button>
+            <button type="button" class="register-button" onclick="window.location.href='register_screen.html'">Kayıt Ol</button>
             
             <div class="forgot-password">
                 <a href="#" onclick="showForgotPassword()">Şifremi Unuttum</a>
@@ -197,6 +213,10 @@
             
             <div class="error-message" id="errorMessage"></div>
         </form>
+
+        <div class="login-link">
+            Hesabınız yok mu? <a href="register_screen.html">Kayıt Ol</a>
+        </div>
     </div>
 
     <!-- Backend entegrasyonu -->
@@ -206,16 +226,17 @@
         async function handleLoginForm(event) {
             event.preventDefault();
             
-            const username = document.getElementById('username').value;
+            const studentNumber = document.getElementById('email').value;
+            const email = studentNumber + '@firat.edu.tr';
             const password = document.getElementById('password').value;
             const errorMessage = document.getElementById('errorMessage');
             
             try {
-                const result = await handleLogin(username, password);
+                const result = await handleLogin(email, password);
                 if (result.success) {
                     // Başarılı giriş
                     errorMessage.style.display = 'none';
-                    localStorage.setItem('authToken', 'dummy-token'); // Gerçek uygulamada JWT token kullanılır
+                    localStorage.setItem('authToken', 'dummy-token');
                     localStorage.setItem('user', JSON.stringify(result.user));
                     window.location.href = 'anasayfa_screen.html';
                 }
@@ -226,29 +247,12 @@
             }
         }
 
-        // Kayıt formu
-        async function showRegisterForm() {
-            const username = prompt("Kullanıcı Adı:");
-            if (!username) return;
-
-            const email = prompt("E-posta Adresi:");
-            if (!email) return;
-
-            const password = prompt("Şifre:");
-            if (!password) return;
-
-            try {
-                const result = await handleRegister(username, password, email);
-                alert(result.message);
-            } catch (error) {
-                alert(error.message);
-            }
-        }
-
         // Şifre sıfırlama
         async function showForgotPassword() {
-            const email = prompt("E-posta Adresiniz:");
-            if (!email) return;
+            const studentNumber = prompt("Öğrenci Numaranız:");
+            if (!studentNumber) return;
+
+            const email = studentNumber + '@firat.edu.tr';
 
             try {
                 const result = await handlePasswordReset(email);
@@ -257,14 +261,6 @@
                 alert(error.message);
             }
         }
-
-        // Sayfa yüklendiğinde oturum kontrolü
-        window.addEventListener('load', async () => {
-            const hasSession = await checkSession();
-            if (hasSession) {
-                window.location.href = 'main.html';
-            }
-        });
 
         // Input alanlarına focus olduğunda animasyon
         document.querySelectorAll('input').forEach(input => {
