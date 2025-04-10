@@ -1,40 +1,47 @@
 // Giriş backend işlevleri
 
-// Örnek kullanıcı veritabanı
-const usersDB = {
-    'admin@firat.edu.tr': {
-        email: 'admin@firat.edu.tr',
-        password: 'admin',
-        joinDate: new Date().toISOString()
+// Kullanıcı veritabanı
+const users = [
+    {
+        studentNumber: "2023123456",
+        email: "2023123456@firat.edu.tr",
+        password: "test123",
+        name: "Test User"
     }
-};
+];
 
 // Giriş işlemi
 async function handleLogin(email, password) {
     return new Promise((resolve, reject) => {
         try {
-            // E-posta kontrolü
+            // E-posta formatını kontrol et
             if (!email.endsWith('@firat.edu.tr')) {
-                reject(new Error('Lütfen Fırat Üniversitesi e-posta adresinizi kullanın!'));
+                reject(new Error('Lütfen Fırat Üniversitesi e-posta adresinizi kullanın.'));
                 return;
             }
 
-            const user = usersDB[email];
+            // Öğrenci numarasını e-postadan çıkar
+            const studentNumber = email.split('@')[0];
+            
+            // Kullanıcıyı bul
+            const user = users.find(u => u.studentNumber === studentNumber);
+            
             if (!user) {
-                reject(new Error('Kullanıcı bulunamadı!'));
+                reject(new Error('Kullanıcı bulunamadı.'));
                 return;
             }
 
             if (user.password !== password) {
-                reject(new Error('Şifre hatalı!'));
+                reject(new Error('Hatalı şifre.'));
                 return;
             }
 
             resolve({
                 success: true,
                 user: {
+                    studentNumber: user.studentNumber,
                     email: user.email,
-                    joinDate: user.joinDate
+                    name: user.name
                 }
             });
         } catch (error) {
@@ -73,22 +80,27 @@ function handleRegister(password, email) {
 async function handlePasswordReset(email) {
     return new Promise((resolve, reject) => {
         try {
-            // E-posta kontrolü
+            // E-posta formatını kontrol et
             if (!email.endsWith('@firat.edu.tr')) {
-                reject(new Error('Lütfen Fırat Üniversitesi e-posta adresinizi kullanın!'));
+                reject(new Error('Lütfen Fırat Üniversitesi e-posta adresinizi kullanın.'));
                 return;
             }
 
-            const user = usersDB[email];
+            // Öğrenci numarasını e-postadan çıkar
+            const studentNumber = email.split('@')[0];
+            
+            // Kullanıcıyı bul
+            const user = users.find(u => u.studentNumber === studentNumber);
+            
             if (!user) {
-                reject(new Error('Bu e-posta adresi ile kayıtlı kullanıcı bulunamadı!'));
+                reject(new Error('Bu e-posta adresi ile kayıtlı kullanıcı bulunamadı.'));
                 return;
             }
 
-            // Şifre sıfırlama bağlantısı gönderildi simülasyonu
+            // Şifre sıfırlama e-postası gönderildi
             resolve({
                 success: true,
-                message: 'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi!'
+                message: 'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.'
             });
         } catch (error) {
             reject(error);

@@ -167,13 +167,13 @@
         </div>
     </div>
 
-    <script src="/login/login_backend.js"></script>
+    <script src="login/login_backend.js"></script>
     <script>
         // Sayfa yüklendiğinde oturum kontrolü
         window.addEventListener('load', async () => {
             const hasSession = await checkSession();
             if (!hasSession) {
-                window.location.href = 'main/login/login_screen.html';
+                window.location.href = 'login/login_screen.html';
             }
         });
 
@@ -181,7 +181,7 @@
         async function handleLogout() {
             try {
                 await handleLogout();
-                window.location.href = 'main/login/login_screen.html';
+                window.location.href = 'login/login_screen.html';
             } catch (error) {
                 console.error('Çıkış yapılırken bir hata oluştu:', error);
             }

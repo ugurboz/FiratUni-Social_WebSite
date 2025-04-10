@@ -182,6 +182,9 @@
 
         .form-group {
             position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .form-group i {
@@ -201,6 +204,13 @@
             font-size: 1rem;
             transition: var(--transition);
             background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .email-suffix {
+            color: #666;
+            font-size: 1rem;
+            white-space: nowrap;
+            padding: 0 0.5rem;
         }
 
         .form-group input:focus {
@@ -402,21 +412,19 @@
             <div class="brand-logo">
                 <i class="fas fa-users"></i>
             </div>
-            <a href="index.html" class="brand-name">beGAK.com</a>
+            <a href="../main.html" class="brand-name">beGAK.com</a>
             <p class="brand-tagline">Fırat Üniversitesi Sosyal Platformu</p>
         </div>
         
-        <form id="loginForm" onsubmit="return handleLogin(event)">
-            <div class="form-group" style="--order: 1;">
-                <input type="text" id="email" placeholder=" " required>
-                <span class="floating-label">E-posta (@firat.edu.tr)</span>
-                <i class="fas fa-envelope"></i>
+        <form id="loginForm" onsubmit="return handleLoginForm(event)">
+            <div class="form-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="studentNumber" placeholder="Numaranızı giriniz" required>
+                <span class="email-suffix">@firat.edu.tr</span>
             </div>
-            
-            <div class="form-group" style="--order: 2;">
-                <input type="password" id="password" placeholder=" " required>
-                <span class="floating-label">Şifre</span>
+            <div class="form-group">
                 <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Şifreniz" required>
             </div>
             
             <div class="error-message" id="errorMessage"></div>
@@ -427,7 +435,7 @@
                 <i class="fas fa-sign-in-alt" style="margin-left: 8px;"></i>
             </button>
             
-            <button type="button" class="register-button" onclick="window.location.href='main/register/register_screen.html'">
+            <button type="button" class="register-button" onclick="window.location.href='../register/register_screen.html'">
                 <span>Kayıt Ol</span>
                 <i class="fas fa-user-plus" style="margin-left: 8px;"></i>
             </button>
@@ -449,13 +457,12 @@
         };
 
         // Giriş işlemi
-        async function handleLogin(event) {
+        async function handleLoginForm(event) {
             event.preventDefault();
             
-            const email = document.getElementById('email').value;
-            // E-posta @firat.edu.tr ile bitmiyorsa ekle
-            const fullEmail = email.endsWith('@firat.edu.tr') ? email : email + '@firat.edu.tr';
+            const studentNumber = document.getElementById('studentNumber').value;
             const password = document.getElementById('password').value;
+            const email = studentNumber + '@firat.edu.tr';
             const errorMessage = document.getElementById('errorMessage');
             const successMessage = document.getElementById('successMessage');
 
@@ -464,9 +471,7 @@
             successMessage.style.display = 'none';
 
             try {
-                // Backend login işlemi
-                const result = await handleLoginBackend(fullEmail, password);
-                
+                const result = await handleLogin(email, password);
                 if (result.success) {
                     successMessage.textContent = 'Giriş başarılı! Yönlendiriliyorsunuz...';
                     successMessage.style.display = 'block';
@@ -481,7 +486,7 @@
                     localStorage.setItem('user', JSON.stringify(result.user));
                     
                     setTimeout(() => {
-                        window.location.href = 'anasayfa_screen.html';
+                        window.location.href = '../anasayfa/anasayfa_screen.html';
                     }, 2000);
                 } else {
                     errorMessage.textContent = result.message || 'Giriş sırasında bir hata oluştu!';
@@ -497,7 +502,7 @@
         }
         
         // Backend login fonksiyonu
-        async function handleLoginBackend(email, password) {
+        async function handleLogin(email, password) {
             return new Promise((resolve, reject) => {
                 try {
                     // E-posta kontrolü

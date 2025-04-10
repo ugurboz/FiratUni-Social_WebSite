@@ -250,14 +250,14 @@
 <body>
     <nav class="navbar">
         <div class="brand">
-            <a href="anasayfa_screen.html" class="brand-name">beGAK.com</a>
+            <a href="../../main/anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
         </div>
         <div class="nav-links">
-            <a href="anasayfa_screen.html">Ana Sayfa</a>
-            <a href="profil_screen.html">Profil</a>
-            <a href="mesajlar_screen.html">Mesajlar</a>
-            <a href="kulupler_screen.html">Kulüpler</a>
-            <a href="#" onclick="handleLogout()">Çıkış Yap</a>
+            <a href="../../main/anasayfa/anasayfa_screen.html">Ana Sayfa</a>
+            <a href="../../main/profil/profil_screen.html">Profil</a>
+            <a href="../../main/mesajlar/mesajlar_screen.html">Mesajlar</a>
+            <a href="../../main/kulupler/kulupler_screen.html">Kulüpler</a>
+            <a href="../../main/login/login_screen.html" onclick="handleLogout()">Çıkış Yap</a>
         </div>
     </nav>
 
@@ -395,13 +395,10 @@
         }
 
         // Çıkış işlemi
-        async function handleLogout() {
-            try {
-                await handleLogout();
-                window.location.href = 'login_screen.html';
-            } catch (error) {
-                console.error('Çıkış yapılırken bir hata oluştu:', error);
-            }
+        function handleLogout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            window.location.href = '../../main/login/login_screen.html';
         }
 
         // Profil düzenleme butonu

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beGAK.com - Kayıt Ol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .brand-name {
+            font-family: 'Righteous', cursive;
+            color: #1e3c72;
+            font-size: 2rem;
+            text-decoration: none;
+        }
+
+        .form-title {
+            color: #1e3c72;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #1e3c72;
+            outline: none;
+        }
+
+        .email-input-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .email-input-container input {
+            flex: 1;
+        }
+
+        .email-suffix {
+            color: #495057;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        .register-button {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .register-button:hover {
+            background: #2a5298;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+        }
+
+        .form-footer a {
+            color: #1e3c72;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="brand">
+            <a href="/main/anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
+        </div>
+        <h2 class="form-title">Kayıt Ol</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="name">Ad Soyad</label>
+                <input type="text" id="name" class="form-control" placeholder="Adınız ve soyadınız" required>
+            </div>
+            <div class="form-group">
+                <label for="studentNumber">Öğrenci Numarası</label>
+                <div class="email-input-container">
+                    <input type="text" id="studentNumber" class="form-control" placeholder="Numaranızı giriniz" required>
+                    <span class="email-suffix">@firat.edu.tr</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">Şifre</label>
+                <input type="password" id="password" class="form-control" placeholder="Şifreniz" required>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Şifre Tekrar</label>
+                <input type="password" id="confirmPassword" class="form-control" placeholder="Şifrenizi tekrar giriniz" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="register-button">Kayıt Ol</button>
+                <div id="errorMessage" class="error-message"></div>
+            </div>
+            <div class="form-footer">
+                <p>Zaten hesabınız var mı? <a href="/main/login/login_screen.html">Giriş yapın</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script src="register_backend.js"></script>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const studentNumber = document.getElementById('studentNumber').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Şifre kontrolü
+            if (password !== confirmPassword) {
+                errorMessage.textContent = 'Şifreler eşleşmiyor!';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Şifre güvenliği kontrolü
+            if (password.length < 6) {
+                errorMessage.textContent = 'Şifre en az 6 karakter olmalıdır!';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            try {
+                const result = await handleRegister(studentNumber, password, confirmPassword, name);
+                alert(result.message);
+                window.location.href = '/main/login/login_screen.html';
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
