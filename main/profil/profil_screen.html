@@ -569,12 +569,39 @@
         // Profil bilgilerini getir
         async function getProfile(username) {
             // Gerçek uygulamada burada API çağrısı yapılacak
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            
+            // Bölüm seçeneklerini tanımla
+            const departments = {
+                'bilgisayar': 'Bilgisayar Mühendisliği',
+                'yazilim': 'Yazılım Mühendisliği',
+                'elektrik': 'Elektrik-Elektronik Mühendisliği',
+                'makine': 'Makine Mühendisliği',
+                'endustri': 'Endüstri Mühendisliği',
+                'insaat': 'İnşaat Mühendisliği',
+                'mimarlik': 'Mimarlık',
+                'tip': 'Tıp',
+                'dis': 'Diş Hekimliği',
+                'eczacilik': 'Eczacılık',
+                'hukuk': 'Hukuk',
+                'iktisat': 'İktisat',
+                'isletme': 'İşletme',
+                'egitim': 'Eğitim Bilimleri',
+                'fen': 'Fen-Edebiyat',
+                'ilahiyat': 'İlahiyat',
+                'iletisim': 'İletişim',
+                'diger': 'Diğer'
+            };
+
+            // Seçilen bölümün tam adını al
+            const selectedDepartment = userData?.department ? departments[userData.department] || userData.department : 'Bölüm Seçilmedi';
+            
             return {
                 username: username,
                 email: `${username}@firat.edu.tr`,
-                phone: '+90 555 123 4567',
-                department: 'Yazılım Mühendisliği',
-                title: 'Yazılım Mühendisliği Öğrencisi',
+                phone: userData?.phone || '+90 555 123 4567',
+                department: selectedDepartment,
+                title: selectedDepartment !== 'Bölüm Seçilmedi' ? `${selectedDepartment} Öğrencisi` : 'Öğrenci',
                 joinDate: new Date('2023-09-15').toISOString(),
                 stats: {
                     posts: 128,

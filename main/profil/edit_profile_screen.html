@@ -718,7 +718,7 @@
             }
 
             // Profil bilgilerini yükle
-            loadProfile(userData.email.split('@')[0]);
+            loadUserData(userData);
         });
 
         // Kullanıcı verilerini forma yükle
@@ -728,6 +728,10 @@
             if (user.email) document.getElementById('email').value = user.email;
             if (user.phone) document.getElementById('phone').value = user.phone;
             if (user.studentId) document.getElementById('studentId').value = user.studentId;
+            if (user.department) document.getElementById('department').value = user.department;
+            if (user.graduationYear) document.getElementById('graduationYear').value = user.graduationYear;
+            if (user.bio) document.getElementById('bio').value = user.bio;
+            if (user.interests) document.getElementById('interests').value = user.interests;
             
             // Avatar ekle
             const avatarPreview = document.getElementById('avatarPreview');
@@ -772,6 +776,28 @@
             const successMessage = document.getElementById('successMessage');
             const errorMessage = document.getElementById('errorMessage');
             const saveBtn = document.querySelector('.save-btn');
+            
+            // Form verilerini al
+            const department = document.getElementById('department').value;
+            const studentId = document.getElementById('studentId').value;
+            const graduationYear = document.getElementById('graduationYear').value;
+            const phone = document.getElementById('phone').value;
+            const bio = document.getElementById('bio').value;
+            const interests = document.getElementById('interests').value;
+            
+            // Kullanıcı verilerini güncelle
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            if (userData) {
+                userData.department = department;
+                userData.studentId = studentId;
+                userData.graduationYear = graduationYear;
+                userData.phone = phone;
+                userData.bio = bio;
+                userData.interests = interests;
+                
+                // Güncellenmiş verileri kaydet
+                localStorage.setItem('userData', JSON.stringify(userData));
+            }
             
             // Şifre eşleşme kontrolü
             const newPassword = document.getElementById('newPassword').value;
