@@ -6,7 +6,7 @@ const usersDB = {
         username: 'admin',
         email: 'admin@firat.edu.tr',
         phone: '+90 555 123 4567',
-        department: 'Bilgisayar Mühendisliği',
+        department: 'Yazılım Mühendisliği',
         joinDate: '01.09.2023',
         stats: {
             posts: 150,
