@@ -394,6 +394,61 @@
             display: none;
         }
 
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: var(--transition);
+            z-index: 2;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary-color);
+        }
+
+        .password-toggle i {
+            position: static;
+            transform: none;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .password-toggle.active i {
+            animation: eyeAnimation 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        @keyframes eyeAnimation {
+            0% { transform: scale(1) rotate(0deg); }
+            20% { transform: scale(0.8) rotate(-10deg); }
+            40% { transform: scale(1.2) rotate(10deg); }
+            60% { transform: scale(0.9) rotate(-5deg); }
+            80% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .password-toggle i.fa-eye-slash {
+            display: none;
+        }
+
+        .password-toggle.active i.fa-eye {
+            display: none;
+        }
+
+        .password-toggle.active i.fa-eye-slash {
+            display: inline-block;
+        }
+
         @media (max-width: 768px) {
             .register-container {
                 padding: 1.5rem;
@@ -456,9 +511,14 @@
             </div>
             
             <div class="form-group" style="--order: 4;">
-                <input type="password" id="password" placeholder=" " required oninput="checkPasswordStrength()">
-                <span class="floating-label">Şifre</span>
                 <i class="fas fa-lock"></i>
+                <div class="password-container">
+                    <input type="password" id="password" placeholder="Şifreniz" required oninput="checkPasswordStrength()">
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password')">
+                        <i class="fas fa-eye"></i>
+                        <i class="fas fa-eye-slash"></i>
+                    </button>
+                </div>
                 <div class="password-strength">
                     <div class="strength-bar" id="strengthBar"></div>
                 </div>
@@ -466,9 +526,14 @@
             </div>
             
             <div class="form-group" style="--order: 5;">
-                <input type="password" id="confirmPassword" placeholder=" " required oninput="checkPasswordMatch()">
-                <span class="floating-label">Şifre Tekrar</span>
                 <i class="fas fa-lock"></i>
+                <div class="password-container">
+                    <input type="password" id="confirmPassword" placeholder="Şifrenizi Tekrar Girin" required oninput="checkPasswordMatch()">
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmPassword')">
+                        <i class="fas fa-eye"></i>
+                        <i class="fas fa-eye-slash"></i>
+                    </button>
+                </div>
                 <div class="password-match" id="passwordMatch">Şifreler eşleşmiyor!</div>
             </div>
             
@@ -680,6 +745,20 @@
                 }
             });
         });
+
+        // Toggle password visibility
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const toggle = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggle.classList.add('active');
+            } else {
+                input.type = 'password';
+                toggle.classList.remove('active');
+            }
+        }
     </script>
 </body>
 </html>

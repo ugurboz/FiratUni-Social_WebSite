@@ -545,13 +545,13 @@
     <nav class="navbar">
         <div class="brand">
             <div class="brand-logo">bG</div>
-            <a href="../../main/anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
+            <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
         </div>
         <div class="nav-links">
-            <a href="../../main/anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
-            <a href="../../main/profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
-            <a href="../../main/mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
-            <a href="../../main/kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
+            <a href="../anasayfa/anasayfa_screen.html" class="active"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="../profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
+            <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
+            <a href="../kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
             <a href="#" onclick="return handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
         </div>
     </nav>
@@ -656,20 +656,30 @@
         // Bildirim veritabanı simülasyonu
         let notifications = [];
 
-        // DOM yüklendiğinde
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Oturum kontrolü
-            const isLoggedIn = await checkSession();
-            if (!isLoggedIn) {
-                window.location.href = 'login_screen.html';
+        // Oturum kontrolü
+        document.addEventListener('DOMContentLoaded', function() {
+            // localStorage'dan authToken'ı kontrol et
+            const authToken = localStorage.getItem('authToken');
+            
+            // Eğer authToken yoksa, login sayfasına yönlendir
+            if (!authToken) {
+                window.location.href = '../login/login_screen.html';
                 return;
             }
-
+            
             // Kullanıcı bilgilerini al
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) {
-                window.location.href = 'login_screen.html';
-                return;
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            // Kullanıcı adını göster
+            const userNameElement = document.getElementById('userName');
+            if (userNameElement && userData.displayName) {
+                userNameElement.textContent = userData.displayName;
+            }
+            
+            // Profil resmini göster
+            const profilePictureElement = document.getElementById('profilePicture');
+            if (profilePictureElement && userData.profilePicture) {
+                profilePictureElement.src = userData.profilePicture;
             }
 
             // Gönderileri yükle
@@ -945,8 +955,8 @@
             if (confirm("Çıkış yapmak istediğinize emin misiniz?")) {
                 // Kullanıcı onayladıysa çıkış işlemleri yap
                 localStorage.removeItem('authToken');
-                localStorage.removeItem('user');
-                window.location.href = '../../main/login/login_screen.html';
+                localStorage.removeItem('userData');
+                window.location.href = '../login/login_screen.html';
                 return true;
             }
             // Kullanıcı onaylamadıysa hiçbir şey yapma

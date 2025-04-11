@@ -475,19 +475,19 @@
             // Oturum kontrolü
             const isLoggedIn = await checkSession();
             if (!isLoggedIn) {
-                window.location.href = 'login_screen.html';
+                window.location.href = '../login/login_screen.html';
                 return;
             }
 
             // Kullanıcı bilgilerini al
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) {
-                window.location.href = 'login_screen.html';
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            if (!userData) {
+                window.location.href = '../login/login_screen.html';
                 return;
             }
 
             // Profil bilgilerini yükle
-            loadProfile(user.username);
+            loadProfile(userData.email.split('@')[0]);
         });
 
         // Profil bilgilerini yükle
@@ -551,8 +551,8 @@
             if (confirm("Çıkış yapmak istediğinize emin misiniz?")) {
                 // Kullanıcı onayladıysa çıkış işlemleri yap
                 localStorage.removeItem('authToken');
-                localStorage.removeItem('user');
-                window.location.href = '../../main/login/login_screen.html';
+                localStorage.removeItem('userData');
+                window.location.href = '../login/login_screen.html';
                 return true;
             }
             // Kullanıcı onaylamadıysa hiçbir şey yapma

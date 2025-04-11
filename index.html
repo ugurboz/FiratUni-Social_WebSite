@@ -6,7 +6,16 @@
     <title>beGAK.com</title>
     <script>
         window.onload = function() {
-            window.location.href = 'main/login/login_screen.html';
+            // Oturum kontrolü
+            const authToken = localStorage.getItem('authToken');
+            
+            // Eğer authToken varsa, ana sayfaya yönlendir
+            if (authToken) {
+                window.location.href = 'main/anasayfa/anasayfa_screen.html';
+            } else {
+                // Yoksa login sayfasına yönlendir
+                window.location.href = 'main/login/login_screen.html';
+            }
         }
     </script>
 </head>
