@@ -363,7 +363,7 @@
             <a href="../../main/profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
             <a href="../../main/mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
             <a href="../../main/kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
-            <a href="../../main/login/login_screen.html" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
+            <a href="#" onclick="return handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
         </div>
     </nav>
 
@@ -547,9 +547,16 @@
 
         // Çıkış yapma
         function handleLogout() {
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('user');
-            window.location.href = 'login_screen.html';
+            // Çıkış için onay al
+            if (confirm("Çıkış yapmak istediğinize emin misiniz?")) {
+                // Kullanıcı onayladıysa çıkış işlemleri yap
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('user');
+                window.location.href = '../../main/login/login_screen.html';
+                return true;
+            }
+            // Kullanıcı onaylamadıysa hiçbir şey yapma
+            return false;
         }
 
         /* Backend Fonksiyonları (simüle edilmiş) */

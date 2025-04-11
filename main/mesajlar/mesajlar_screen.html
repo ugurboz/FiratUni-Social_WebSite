@@ -229,56 +229,147 @@
 
         /* Chat Container */
         .chat-container {
-            background: white;
-            border-radius: var(--border-radius);
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
             overflow: hidden;
-            display: flex;
+            display: none;
             flex-direction: column;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
+            height: 100%;
+            width: 100%;
         }
 
-        .chat-container:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        .chat-container.active {
+            display: flex;
         }
 
         .chat-header {
             padding: 1rem 1.5rem;
+            background: linear-gradient(to right, rgba(67, 97, 238, 0.05), white);
             border-bottom: 1px solid #eee;
-            background: linear-gradient(to right, rgba(67, 97, 238, 0.05), rgba(76, 201, 240, 0.05));
             display: flex;
             align-items: center;
             justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
-        .chat-header-user {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .chat-header-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .chat-header-action {
-            width: 36px;
-            height: 36px;
+        .back-button {
+            background: transparent;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: var(--light-color);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            background: rgba(67, 97, 238, 0.1);
+            transform: translateX(-3px);
+        }
+
+        .chat-user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .chat-user-avatar {
+            position: relative;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .chat-user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-status {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .user-status.online {
+            background: var(--success-color);
+        }
+
+        .user-status.away {
+            background: #ffc107;
+        }
+
+        .user-status.offline {
+            background: #ccc;
+        }
+
+        .chat-user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-user-name {
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+
+        .chat-user-status {
+            font-size: 0.8rem;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-action-btn {
+            background: transparent;
+            border: none;
+            color: #888;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             transition: var(--transition);
         }
 
-        .chat-header-action:hover {
-            background: var(--primary-color);
-            color: white;
+        .chat-action-btn:hover {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            transform: translateY(-2px);
         }
 
         .chat-messages {
@@ -548,7 +639,7 @@
             <a href="../../main/profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
             <a href="../../main/mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
             <a href="../../main/kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
-            <a href="../../main/login/login_screen.html" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
+            <a href="#" onclick="return handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
         </div>
     </nav>
 
@@ -609,26 +700,24 @@
 
         <!-- Chat Section -->
         <div class="chat-section">
-            <!-- Chat Container 1 -->
+            <!-- Chat container for User 1 -->
             <div class="chat-container" id="chat1">
                 <div class="chat-header">
-                    <div class="chat-header-user">
-                        <div class="user-avatar">A</div>
-                        <div class="user-info">
-                            <div class="user-name">Ahmet Yılmaz</div>
-                            <small>Çevrimiçi</small>
+                    <button class="back-button"><i class="fas fa-arrow-left"></i></button>
+                    <div class="chat-user-info">
+                        <div class="chat-user-avatar">
+                            <img src="../../assets/images/profile1.jpg" alt="User Avatar">
+                            <span class="user-status online"></span>
+                        </div>
+                        <div class="chat-user-details">
+                            <div class="chat-user-name">Ahmet Yılmaz</div>
+                            <div class="chat-user-status">Çevrimiçi</div>
                         </div>
                     </div>
-                    <div class="chat-header-actions">
-                        <div class="chat-header-action">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                        <div class="chat-header-action">
-                            <i class="fas fa-video"></i>
-                        </div>
-                        <div class="chat-header-action">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
+                    <div class="chat-actions">
+                        <button class="chat-action-btn"><i class="fas fa-phone"></i></button>
+                        <button class="chat-action-btn"><i class="fas fa-video"></i></button>
+                        <button class="chat-action-btn"><i class="fas fa-ellipsis-v"></i></button>
                     </div>
                 </div>
                 <div class="chat-messages">
@@ -655,26 +744,24 @@
                 </div>
             </div>
 
-            <!-- Chat Container 2 -->
-            <div class="chat-container" id="chat2" style="display: none;">
+            <!-- Chat container for User 2 -->
+            <div class="chat-container" id="chat2">
                 <div class="chat-header">
-                    <div class="chat-header-user">
-                        <div class="user-avatar">M</div>
-                        <div class="user-info">
-                            <div class="user-name">Merve Demir</div>
-                            <small>Son görülme: 5 dk önce</small>
+                    <button class="back-button"><i class="fas fa-arrow-left"></i></button>
+                    <div class="chat-user-info">
+                        <div class="chat-user-avatar">
+                            <img src="../../assets/images/profile2.jpg" alt="User Avatar">
+                            <span class="user-status away"></span>
+                        </div>
+                        <div class="chat-user-details">
+                            <div class="chat-user-name">Zeynep Kaya</div>
+                            <div class="chat-user-status">10 dk önce çevrimiçiydi</div>
                         </div>
                     </div>
-                    <div class="chat-header-actions">
-                        <div class="chat-header-action">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                        <div class="chat-header-action">
-                            <i class="fas fa-video"></i>
-                        </div>
-                        <div class="chat-header-action">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
+                    <div class="chat-actions">
+                        <button class="chat-action-btn"><i class="fas fa-phone"></i></button>
+                        <button class="chat-action-btn"><i class="fas fa-video"></i></button>
+                        <button class="chat-action-btn"><i class="fas fa-ellipsis-v"></i></button>
                     </div>
                 </div>
                 <div class="chat-messages">
@@ -701,32 +788,162 @@
                 </div>
             </div>
 
-            <!-- Chat Container 3 -->
-            <div class="chat-container" id="chat3" style="display: none;">
+            <!-- Chat container for User 3 -->
+            <div class="chat-container" id="chat3">
                 <div class="chat-header">
-                    <div class="chat-header-user">
-                        <div class="user-avatar">E</div>
-                        <div class="user-info">
-                            <div class="user-name">Ece Kaya</div>
-                            <small>Çevrimdışı</small>
+                    <button class="back-button"><i class="fas fa-arrow-left"></i></button>
+                    <div class="chat-user-info">
+                        <div class="chat-user-avatar">
+                            <img src="../../assets/images/profile3.jpg" alt="User Avatar">
+                            <span class="user-status offline"></span>
+                        </div>
+                        <div class="chat-user-details">
+                            <div class="chat-user-name">Mustafa Demir</div>
+                            <div class="chat-user-status">4 saat önce çevrimiçiydi</div>
                         </div>
                     </div>
-                    <div class="chat-header-actions">
-                        <div class="chat-header-action">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                        <div class="chat-header-action">
-                            <i class="fas fa-video"></i>
-                        </div>
-                        <div class="chat-header-action">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
+                    <div class="chat-actions">
+                        <button class="chat-action-btn"><i class="fas fa-phone"></i></button>
+                        <button class="chat-action-btn"><i class="fas fa-video"></i></button>
+                        <button class="chat-action-btn"><i class="fas fa-ellipsis-v"></i></button>
                     </div>
                 </div>
                 <div class="chat-messages">
                     <div class="message received">
                         <div class="message-content">Proje için buluşalım mı?</div>
                         <div class="message-meta">Dün 15:45</div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <div class="chat-input-actions">
+                            <div class="chat-input-action">
+                                <i class="fas fa-paperclip"></i>
+                            </div>
+                            <div class="chat-input-action">
+                                <i class="far fa-smile"></i>
+                            </div>
+                        </div>
+                        <input type="text" class="chat-input" placeholder="Mesajınızı yazın...">
+                        <button class="chat-send">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat container for User 4 -->
+            <div class="chat-container" id="chat4">
+                <div class="chat-header">
+                    <button class="back-button"><i class="fas fa-arrow-left"></i></button>
+                    <div class="chat-user-info">
+                        <div class="chat-user-avatar">
+                            <img src="../../assets/images/profile4.jpg" alt="User Avatar">
+                            <span class="user-status online"></span>
+                        </div>
+                        <div class="chat-user-details">
+                            <div class="chat-user-name">Kerem Aydın</div>
+                            <div class="chat-user-status">Çevrimiçi</div>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="chat-action-btn"><i class="fas fa-phone"></i></button>
+                        <button class="chat-action-btn"><i class="fas fa-video"></i></button>
+                        <button class="chat-action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                    </div>
+                </div>
+                <div class="chat-messages">
+                    <div class="message received">
+                        <div class="message-content">Makale için kaynak buldum</div>
+                        <div class="message-meta">Dün 13:20</div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <div class="chat-input-actions">
+                            <div class="chat-input-action">
+                                <i class="fas fa-paperclip"></i>
+                            </div>
+                            <div class="chat-input-action">
+                                <i class="far fa-smile"></i>
+                            </div>
+                        </div>
+                        <input type="text" class="chat-input" placeholder="Mesajınızı yazın...">
+                        <button class="chat-send">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat container for User 5 -->
+            <div class="chat-container" id="chat5">
+                <div class="chat-header">
+                    <button class="back-button"><i class="fas fa-arrow-left"></i></button>
+                    <div class="chat-user-info">
+                        <div class="chat-user-avatar">
+                            <img src="../../assets/images/profile5.jpg" alt="User Avatar">
+                            <span class="user-status away"></span>
+                        </div>
+                        <div class="chat-user-details">
+                            <div class="chat-user-name">Zeynep Öztürk</div>
+                            <div class="chat-user-status">Son görülme: 20 dk önce</div>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="chat-action-btn"><i class="fas fa-phone"></i></button>
+                        <button class="chat-action-btn"><i class="fas fa-video"></i></button>
+                        <button class="chat-action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                    </div>
+                </div>
+                <div class="chat-messages">
+                    <div class="message received">
+                        <div class="message-content">Seminere gelecek misin?</div>
+                        <div class="message-meta">12:45</div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <div class="chat-input-actions">
+                            <div class="chat-input-action">
+                                <i class="fas fa-paperclip"></i>
+                            </div>
+                            <div class="chat-input-action">
+                                <i class="far fa-smile"></i>
+                            </div>
+                        </div>
+                        <input type="text" class="chat-input" placeholder="Mesajınızı yazın...">
+                        <button class="chat-send">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat container for User 6 -->
+            <div class="chat-container" id="chat6">
+                <div class="chat-header">
+                    <button class="back-button"><i class="fas fa-arrow-left"></i></button>
+                    <div class="chat-user-info">
+                        <div class="chat-user-avatar">
+                            <img src="../../assets/images/profile6.jpg" alt="User Avatar">
+                            <span class="user-status online"></span>
+                        </div>
+                        <div class="chat-user-details">
+                            <div class="chat-user-name">Can Özkan</div>
+                            <div class="chat-user-status">Çevrimiçi</div>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="chat-action-btn"><i class="fas fa-phone"></i></button>
+                        <button class="chat-action-btn"><i class="fas fa-video"></i></button>
+                        <button class="chat-action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                    </div>
+                </div>
+                <div class="chat-messages">
+                    <div class="message received">
+                        <div class="message-content">Sınav için çalışalım mı?</div>
+                        <div class="message-meta">14:30</div>
                     </div>
                 </div>
                 <div class="chat-input-container">
@@ -775,186 +992,76 @@
             usersList.classList.toggle('show');
         });
 
-        // Handle user selection and chat switching
-        userItems.forEach((item, index) => {
-            item.addEventListener('click', () => {
-                // Update active states for users
-                userItems.forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-
-                // Show selected chat and hide others
-                chatContainers.forEach((container, containerIndex) => {
-                    if (containerIndex === index) {
-                        container.style.display = 'flex';
-                    } else {
-                        container.style.display = 'none';
-                    }
-                });
-
-                // On mobile, hide the users list after selection
-                if (window.innerWidth <= 768) {
-                    usersList.classList.remove('show');
-                }
-
-                // Remove unread badge if exists
-                const unreadBadge = item.querySelector('.unread-badge');
-                if (unreadBadge) {
-                    unreadBadge.remove();
-                }
+        // Function to show a specific chat based on ID
+        function showChat(chatId) {
+            // Hide all chat containers
+            document.querySelectorAll('.chat-container').forEach(container => {
+                container.style.display = 'none';
             });
-        });
-
-        // Handle back button clicks
-        document.querySelectorAll('.back-button').forEach(button => {
-            button.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
-                    usersList.classList.add('show');
-                }
-            });
-        });
-
-        // Search functionality
-        searchBox.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            userItems.forEach(item => {
-                const userName = item.querySelector('.user-name').textContent.toLowerCase();
-                const lastMessage = item.querySelector('.user-last-message').textContent.toLowerCase();
-                const isVisible = userName.includes(searchTerm) || lastMessage.includes(searchTerm);
-                item.style.display = isVisible ? 'flex' : 'none';
-            });
-        });
-
-        // Send message functionality
-        function sendMessage(event) {
-            event.preventDefault();
-            const activeChat = document.querySelector('.chat-container[style*="flex"]');
-            if (!activeChat) return;
-
-            const input = activeChat.querySelector('.chat-input');
-            const message = input.value.trim();
             
-            if (message) {
-                const chatMessages = activeChat.querySelector('.chat-messages');
-                const newMessage = document.createElement('div');
-                newMessage.className = 'message sent';
+            // Show the selected chat container
+            const selectedChat = document.getElementById(chatId);
+            if (selectedChat) {
+                selectedChat.style.display = 'flex';
                 
-                const now = new Date();
-                const time = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-                
-                newMessage.innerHTML = `
-                    <div class="message-content">
-                        ${message}
-                    </div>
-                    <div class="message-meta">
-                        ${time}
-                        <div class="message-status">
-                            <i class="fas fa-check"></i>
-                        </div>
-                    </div>
-                `;
-                
-                chatMessages.appendChild(newMessage);
-                input.value = '';
-                
-                // Scroll to bottom
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                
-                // Simulate response
-                simulateResponse(chatMessages);
+                // For mobile view - hide user list and show chat section
+                if (window.innerWidth < 768) {
+                    document.querySelector('.user-list').style.display = 'none';
+                    document.querySelector('.chat-section').style.display = 'flex';
+                }
             }
         }
-
-        // Simulate response
-        function simulateResponse(chatMessages) {
-            setTimeout(() => {
-                const typingIndicator = document.createElement('div');
-                typingIndicator.className = 'typing-indicator';
-                typingIndicator.innerHTML = `
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                `;
-                chatMessages.appendChild(typingIndicator);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                
-                setTimeout(() => {
-                    chatMessages.removeChild(typingIndicator);
-                    
-                    const responses = [
-                        "Tamam, anladım.",
-                        "Bu konuyu yarın toplantıda konuşalım.",
-                        "Harika, teşekkürler!",
-                        "Sence bu yaklaşım doğru mu?",
-                        "Evet, kesinlikle katılıyorum."
-                    ];
-                    
-                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                    const responseMessage = document.createElement('div');
-                    responseMessage.className = 'message received';
-                    
-                    const now = new Date();
-                    const time = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-                    
-                    responseMessage.innerHTML = `
-                        <div class="message-content">
-                            ${randomResponse}
-                        </div>
-                        <div class="message-meta">
-                            ${time}
-                        </div>
-                    `;
-                    
-                    chatMessages.appendChild(responseMessage);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                    
-                    // Update message status to read
-                    setTimeout(() => {
-                        const lastSentMessage = document.querySelector('.message.sent:last-of-type .message-status i');
-                        if (lastSentMessage) {
-                            lastSentMessage.className = 'fas fa-check-double';
-                        }
-                    }, 1000);
-                    
-                }, 2000);
-            }, 1000);
+        
+        // Function to show user list (for mobile view)
+        function showUserList() {
+            if (window.innerWidth < 768) {
+                document.querySelector('.user-list').style.display = 'flex';
+                document.querySelector('.chat-section').style.display = 'none';
+            }
         }
-
-        // Add event listeners for message sending
-        document.querySelectorAll('.chat-input-container').forEach(container => {
-            const form = container.querySelector('form') || container;
-            const input = container.querySelector('.chat-input');
-            const sendButton = container.querySelector('.chat-send');
-
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                sendMessage(e);
+        
+        // Set up event listeners when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click event to each user item
+            document.querySelectorAll('.user-item').forEach((userItem, index) => {
+                userItem.addEventListener('click', function() {
+                    // Remove active class from all user items
+                    document.querySelectorAll('.user-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // Add active class to the clicked user item
+                    this.classList.add('active');
+                    
+                    // Show the corresponding chat container (chat1, chat2, etc.)
+                    showChat('chat' + (index + 1));
+                });
             });
-
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage(e);
-                }
+            
+            // Add click event to back buttons
+            document.querySelectorAll('.back-button').forEach(button => {
+                button.addEventListener('click', showUserList);
             });
-
-            sendButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                sendMessage(e);
-            });
+            
+            // Set first chat as active by default on desktop
+            if (window.innerWidth >= 768) {
+                showChat('chat1');
+                document.querySelector('.user-item').classList.add('active');
+            }
         });
 
         // Handle logout
         function handleLogout() {
-            // Çıkış işlemleri
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('user');
-            window.location.href = '../../main/login/login_screen.html';
-        }
-
-        // Initialize the first chat as active
-        if (chatContainers.length > 0) {
-            chatContainers[0].style.display = 'flex';
-            userItems[0].classList.add('active');
+            // Çıkış için onay al
+            if (confirm("Çıkış yapmak istediğinize emin misiniz?")) {
+                // Kullanıcı onayladıysa çıkış işlemleri yap
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('user');
+                window.location.href = '../../main/login/login_screen.html';
+                return true;
+            }
+            // Kullanıcı onaylamadıysa hiçbir şey yapma
+            return false;
         }
     </script>
 </body>

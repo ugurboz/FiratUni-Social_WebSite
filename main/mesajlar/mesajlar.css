@@ -1,0 +1,22 @@
+/* Chat Containers */
+.chat-container {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.chat-container:first-child {
+    display: flex;
+}
+
+#chat1 {
+    display: flex;
+}
+
+#chat2, #chat3, #chat4, #chat5, #chat6 {
+    display: none;
+} 
