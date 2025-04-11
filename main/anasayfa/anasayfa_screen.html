@@ -942,8 +942,9 @@
         // Çıkış yapma
         async function handleLogout() {
             try {
-                await handleLogoutBackend();
-                window.location.href = 'login_screen.html';
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('user');
+                window.location.href = '../../main/login/login_screen.html';
             } catch (error) {
                 console.error('Çıkış yapılırken hata:', error);
             }
@@ -1068,18 +1069,6 @@
                 });
             } catch (error) {
                 console.error('Resim yüklenirken hata:', error);
-                throw error;
-            }
-        }
-
-        // Çıkış yapma (backend)
-        async function handleLogoutBackend() {
-            try {
-                localStorage.removeItem('authToken');
-                localStorage.removeItem('user');
-                return true;
-            } catch (error) {
-                console.error('Çıkış yapılırken hata:', error);
                 throw error;
             }
         }

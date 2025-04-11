@@ -945,7 +945,9 @@
 
         // Handle logout
         function handleLogout() {
-            // Gerçek uygulamada oturum kapatma işlemleri burada yapılacak
+            // Çıkış işlemleri
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
             window.location.href = '../../main/login/login_screen.html';
         }
 
@@ -956,4 +958,4 @@
         }
     </script>
 </body>
-</html>c
+</html>

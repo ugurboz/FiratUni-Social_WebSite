@@ -598,6 +598,58 @@
     </div>
 
     <script>
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Oturum kontrolü
+            const isLoggedIn = await checkSession();
+            if (!isLoggedIn) {
+                window.location.href = '../../main/login/login_screen.html';
+                return;
+            }
+
+            // Kullanıcı bilgilerini al
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user) {
+                window.location.href = '../../main/login/login_screen.html';
+                return;
+            }
+
+            // Form alanlarını doldur
+            loadUserData(user);
+        });
+
+        // Kullanıcı verilerini forma yükle
+        function loadUserData(user) {
+            if (user.firstName) document.getElementById('firstName').value = user.firstName;
+            if (user.lastName) document.getElementById('lastName').value = user.lastName;
+            if (user.email) document.getElementById('email').value = user.email;
+            if (user.phone) document.getElementById('phone').value = user.phone;
+            if (user.studentId) document.getElementById('studentId').value = user.studentId;
+            
+            // Avatar ekle
+            const avatarPreview = document.getElementById('avatarPreview');
+            if (avatarPreview) {
+                const firstLetter = user.firstName ? user.firstName.charAt(0) : user.username.charAt(0);
+                const avatarImage = document.getElementById('avatarImage');
+                
+                if (!user.avatar) {
+                    // Varsayılan avatar göster
+                    avatarImage.style.display = 'none';
+                    avatarPreview.textContent = firstLetter.toUpperCase();
+                } else {
+                    // Kullanıcı avatarını göster
+                    avatarImage.src = user.avatar;
+                    avatarImage.style.display = 'block';
+                    avatarPreview.textContent = '';
+                }
+            }
+        }
+
+        // Oturum kontrolü
+        async function checkSession() {
+            return !!localStorage.getItem('authToken');
+        }
+
         // Profil resmi yükleme işlemi
         document.getElementById('avatarInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -638,8 +690,10 @@
 
         // Çıkış yapma işlemi
         function handleLogout() {
-            // Çıkış işlemleri burada yapılacak
-            window.location.href = '../login/login_screen.html';
+            // Çıkış işlemleri
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            window.location.href = '../../main/login/login_screen.html';
         }
     </script>
 </body>

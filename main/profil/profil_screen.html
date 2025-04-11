@@ -509,9 +509,14 @@
             document.getElementById('profilePhone').textContent = profile.phone || 'Belirtilmemiş';
             document.getElementById('profileDepartment').textContent = profile.department || 'Belirtilmemiş';
             document.getElementById('profileJoinDate').textContent = formatDate(profile.joinDate);
-            document.getElementById('postCount').textContent = profile.stats.posts;
-            document.getElementById('followerCount').textContent = profile.stats.followers;
-            document.getElementById('followingCount').textContent = profile.stats.following;
+            
+            // Profil istatistiklerini güncelle
+            const statValues = document.querySelectorAll('.stat-value');
+            if(statValues.length >= 3) {
+                statValues[0].textContent = profile.stats.posts;
+                statValues[1].textContent = profile.stats.followers;
+                statValues[2].textContent = profile.stats.following;
+            }
 
             // Kulüpleri yükle
             const clubsGrid = document.querySelector('.clubs-grid');
