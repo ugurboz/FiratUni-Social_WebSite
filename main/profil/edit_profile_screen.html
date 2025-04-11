@@ -404,6 +404,29 @@
             transform: translateY(-3px);
         }
 
+        .password-strength {
+            margin-top: 0.5rem;
+            height: 4px;
+            background-color: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0;
+            background-color: var(--error-color);
+            transition: var(--transition);
+        }
+
+        .strength-text {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 0.25rem;
+            text-align: right;
+        }
+
         @media (max-width: 768px) {
             .edit-profile-form {
                 grid-template-columns: 1fr;
@@ -564,6 +587,30 @@
 
                 <div class="form-section">
                     <h2 class="form-section-title">
+                        <i class="fas fa-key"></i>
+                        Şifre Değiştir
+                    </h2>
+                    <div class="form-group">
+                        <label for="currentPassword" class="form-label">Mevcut Şifre</label>
+                        <input type="password" id="currentPassword" class="form-input" placeholder="Mevcut şifreniz">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword" class="form-label">Yeni Şifre</label>
+                        <input type="password" id="newPassword" class="form-input" placeholder="Yeni şifreniz" oninput="checkPasswordStrength()">
+                        <div class="password-strength">
+                            <div class="strength-bar" id="strengthBar"></div>
+                        </div>
+                        <div class="strength-text" id="strengthText">Şifre gücü: zayıf</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmNewPassword" class="form-label">Yeni Şifre Tekrar</label>
+                        <input type="password" id="confirmNewPassword" class="form-input" placeholder="Yeni şifrenizi tekrar girin" oninput="checkPasswordMatch()">
+                        <div class="password-match" id="passwordMatch" style="display: none; margin-top: 5px; font-size: 0.75rem; color: var(--error-color);">Şifreler eşleşmiyor!</div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2 class="form-section-title">
                         <i class="fas fa-link"></i>
                         Sosyal Medya
                     </h2>
@@ -670,6 +717,16 @@
             const errorMessage = document.getElementById('errorMessage');
             const saveBtn = document.querySelector('.save-btn');
             
+            // Şifre eşleşme kontrolü
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            
+            if (newPassword && newPassword !== confirmNewPassword) {
+                errorMessage.textContent = 'Şifreler eşleşmiyor!';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
             // Buton durumunu güncelle
             saveBtn.disabled = true;
             saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Kaydediliyor...';
@@ -686,6 +743,74 @@
                     window.location.href = 'profil_screen.html';
                 }, 2000);
             }, 1500);
+        }
+
+        // Şifre gücü kontrolü
+        function checkPasswordStrength() {
+            const password = document.getElementById('newPassword').value;
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            
+            // Şifre güç hesaplama
+            let strength = 0;
+            
+            // Uzunluk kontrolü
+            if (password.length > 7) strength += 1;
+            if (password.length > 11) strength += 1;
+            
+            // Karakter çeşitliliği
+            if (password.match(/[a-z]/)) strength += 1; // Küçük harf
+            if (password.match(/[A-Z]/)) strength += 1; // Büyük harf
+            if (password.match(/[0-9]/)) strength += 1; // Rakam
+            if (password.match(/[^a-zA-Z0-9]/)) strength += 1; // Özel karakter
+            
+            // Güç seviyesine göre görsel güncelleme
+            let width = 0;
+            let color = '';
+            let text = '';
+            
+            if (password.length === 0) {
+                width = 0;
+                text = '';
+            } else if (strength <= 2) {
+                width = 30;
+                color = '#ff3333';
+                text = 'Zayıf';
+            } else if (strength <= 4) {
+                width = 60;
+                color = '#ffcc00';
+                text = 'Orta';
+            } else {
+                width = 100;
+                color = '#4bb543';
+                text = 'Güçlü';
+            }
+            
+            strengthBar.style.width = width + '%';
+            strengthBar.style.backgroundColor = color;
+            strengthText.textContent = password.length > 0 ? `Şifre gücü: ${text}` : '';
+            
+            // Şifre eşleşme kontrolünü de tetikle
+            checkPasswordMatch();
+        }
+        
+        // Şifre eşleşme kontrolü
+        function checkPasswordMatch() {
+            const password = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmNewPassword').value;
+            const passwordMatch = document.getElementById('passwordMatch');
+            
+            if (confirmPassword.length === 0) {
+                passwordMatch.style.display = 'none';
+                return;
+            }
+            
+            if (password === confirmPassword) {
+                passwordMatch.style.display = 'none';
+            } else {
+                passwordMatch.style.display = 'block';
+                passwordMatch.textContent = 'Şifreler eşleşmiyor!';
+            }
         }
 
         // Çıkış yapma işlemi
