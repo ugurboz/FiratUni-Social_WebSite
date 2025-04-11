@@ -564,21 +564,55 @@
                 return false;
             }
             
+            // Öğrenci numarası formatı kontrolü (en az 8 karakter)
+            if (studentNumber.length < 8) {
+                errorMessage.textContent = 'Geçerli bir öğrenci numarası giriniz';
+                errorMessage.style.display = 'block';
+                loginButton.classList.remove('loading');
+                loginButton.disabled = false;
+                return false;
+            }
+            
+            // Şifre kontrolü (en az 6 karakter)
+            if (password.length < 6) {
+                errorMessage.textContent = 'Şifre en az 6 karakter olmalıdır';
+                errorMessage.style.display = 'block';
+                loginButton.classList.remove('loading');
+                loginButton.disabled = false;
+                return false;
+            }
+            
             try {
                 // Simulate API call for login
                 await new Promise(resolve => setTimeout(resolve, 1500));
 
-                // Başarılı giriş simülasyonu
+                // Demo kullanıcı bilgileri - gerçek uygulamada bu bilgiler API'den gelecektir
+                const demoUsers = [
+                    { studentNumber: '202012345', password: '123456', name: 'Ahmet Yılmaz', profilePicture: '../assets/images/profile1.jpg' },
+                    { studentNumber: '202098765', password: '123456', name: 'Merve Demir', profilePicture: '../assets/images/profile2.jpg' },
+                    { studentNumber: '202056789', password: '123456', name: 'Ece Kaya', profilePicture: '../assets/images/profile3.jpg' }
+                ];
+                
+                // Kullanıcı doğrulama
+                const user = demoUsers.find(u => u.studentNumber === studentNumber && u.password === password);
+                
+                if (!user) {
+                    errorMessage.textContent = 'Öğrenci numarası veya şifre hatalı';
+                    errorMessage.style.display = 'block';
+                    loginButton.classList.remove('loading');
+                    loginButton.disabled = false;
+                    return false;
+                }
+                
+                // Başarılı giriş
                 localStorage.setItem('authToken', 'dummy-token');
                 
-                // Eğer localStorage'da userData yoksa, varsayılan değerleri kullan
-                if (!localStorage.getItem('userData')) {
-                    localStorage.setItem('userData', JSON.stringify({ 
-                        email: `${studentNumber}@firat.edu.tr`,
-                        displayName: 'Kullanıcı',
-                        profilePicture: '../assets/images/profile1.jpg'
-                    }));
-                }
+                // Kullanıcı bilgilerini kaydet
+                localStorage.setItem('userData', JSON.stringify({ 
+                    email: `${studentNumber}@firat.edu.tr`,
+                    displayName: user.name,
+                    profilePicture: user.profilePicture
+                }));
                 
                 // Show success message
                 successMessage.textContent = 'Giriş başarılı! Yönlendiriliyorsunuz...';

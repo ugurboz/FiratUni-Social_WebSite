@@ -1048,6 +1048,85 @@
                 showChat('chat1');
                 document.querySelector('.user-item').classList.add('active');
             }
+
+            // Mesaj gönderme fonksiyonu
+            function sendMessage(chatId) {
+                const chatInput = document.querySelector(`#${chatId} .chat-input`);
+                const messageText = chatInput.value.trim();
+                
+                if (messageText === '') return; // Boş mesaj gönderme
+                
+                // Mesajı sohbete ekle
+                const chatMessages = document.querySelector(`#${chatId} .chat-messages`);
+                const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message sent';
+                messageElement.innerHTML = `
+                    <div class="message-content">${messageText}</div>
+                    <div class="message-meta">
+                        <span class="message-time">${currentTime}</span>
+                        <span class="message-status"><i class="fas fa-check-double"></i></span>
+                    </div>
+                `;
+                
+                chatMessages.appendChild(messageElement);
+                
+                // Input alanını temizle
+                chatInput.value = '';
+                
+                // Otomatik kaydırma
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Karşı tarafın yazıyor göstergesini göster
+                const typingIndicator = document.createElement('div');
+                typingIndicator.className = 'typing-indicator';
+                typingIndicator.innerHTML = `
+                    <span>Karşı taraf yazıyor</span>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                `;
+                chatMessages.appendChild(typingIndicator);
+                
+                // 2 saniye sonra yazıyor göstergesini kaldır ve cevap göster
+                setTimeout(() => {
+                    chatMessages.removeChild(typingIndicator);
+                    
+                    // Otomatik cevap (demo amaçlı)
+                    const replyElement = document.createElement('div');
+                    replyElement.className = 'message received';
+                    replyElement.innerHTML = `
+                        <div class="message-content">Mesajınız alındı, en kısa sürede dönüş yapacağım.</div>
+                        <div class="message-meta">
+                            <span class="message-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                    `;
+                    chatMessages.appendChild(replyElement);
+                    
+                    // Otomatik kaydırma
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 2000);
+            }
+            
+            // Her sohbet için mesaj gönderme işlevselliğini ekle
+            document.querySelectorAll('.chat-container').forEach(chat => {
+                const chatId = chat.id;
+                const sendButton = chat.querySelector('.chat-send');
+                const chatInput = chat.querySelector('.chat-input');
+                
+                // Gönder butonuna tıklama olayı
+                sendButton.addEventListener('click', () => {
+                    sendMessage(chatId);
+                });
+                
+                // Enter tuşuna basma olayı
+                chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        sendMessage(chatId);
+                    }
+                });
+            });
         });
 
         // Handle logout
@@ -1056,8 +1135,8 @@
             if (confirm("Çıkış yapmak istediğinize emin misiniz?")) {
                 // Kullanıcı onayladıysa çıkış işlemleri yap
                 localStorage.removeItem('authToken');
-                localStorage.removeItem('user');
-                window.location.href = '../../main/login/login_screen.html';
+                localStorage.removeItem('userData');
+                window.location.href = '../login/login_screen.html';
                 return true;
             }
             // Kullanıcı onaylamadıysa hiçbir şey yapma
