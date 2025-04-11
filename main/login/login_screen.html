@@ -203,7 +203,7 @@
             border-radius: var(--border-radius);
             font-size: 1rem;
             transition: var(--transition);
-            background-color: rgba(255, 255, 255, 0.8);
+            font-family: 'Poppins', sans-serif;
         }
 
         .email-suffix {
@@ -221,13 +221,6 @@
 
         .form-group input:focus + i {
             color: var(--primary-color);
-            animation: iconShake 0.3s ease;
-        }
-
-        @keyframes iconShake {
-            0%, 100% { transform: translateY(-50%) rotate(0deg); }
-            25% { transform: translateY(-50%) rotate(-5deg); }
-            75% { transform: translateY(-50%) rotate(5deg); }
         }
 
         .login-button {
@@ -284,32 +277,28 @@
         }
 
         .forgot-password {
-            text-align: center;
-            margin-top: 1rem;
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .forgot-password a {
+            align-self: flex-end;
             color: var(--primary-color);
             text-decoration: none;
-            font-weight: 500;
-            position: relative;
-        }
-
-        .forgot-password a::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary-color);
+            font-size: 0.9rem;
             transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            background: rgba(67, 97, 238, 0.1);
         }
 
-        .forgot-password a:hover::after {
-            width: 100%;
+        .forgot-password:hover {
+            color: var(--primary-dark);
+            background: rgba(67, 97, 238, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .forgot-password i {
+            font-size: 1rem;
         }
 
         .error-message {
@@ -439,11 +428,12 @@
                 <span>Kayıt Ol</span>
                 <i class="fas fa-user-plus" style="margin-left: 8px;"></i>
             </button>
+
+            <a href="reset_password_screen.html" class="forgot-password">
+                <i class="fas fa-key"></i>
+                Şifremi Unuttum
+            </a>
         </form>
-        
-        <div class="forgot-password">
-            <a href="#" onclick="showForgotPassword()">Şifremi Unuttum</a>
-        </div>
     </div>
 
     <script>

@@ -201,11 +201,18 @@
             color: white;
             border: none;
             padding: 0.8rem 1.5rem;
-            border-radius: 30px;
-            font-weight: 600;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
             cursor: pointer;
-            width: 100%;
             transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            margin-top: 1rem;
         }
 
         .edit-profile-btn:hover {
@@ -371,22 +378,23 @@
                 
                 <div class="profile-stats">
                     <div class="stat-item">
-                        <div class="stat-value" id="postCount">128</div>
-                        <div class="stat-label">Paylaşım</div>
+                        <div class="stat-value">42</div>
+                        <div class="stat-label">Gönderi</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value" id="followerCount">456</div>
+                        <div class="stat-value">128</div>
                         <div class="stat-label">Takipçi</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value" id="followingCount">234</div>
+                        <div class="stat-value">96</div>
                         <div class="stat-label">Takip</div>
                     </div>
                 </div>
                 
-                <button class="edit-profile-btn" id="editProfileBtn">
-                    <i class="fas fa-edit"></i> Profili Düzenle
-                </button>
+                <a href="edit_profile_screen.html" class="edit-profile-btn">
+                    <i class="fas fa-edit"></i>
+                    Profili Düzenle
+                </a>
             </div>
         </div>
 
@@ -531,12 +539,6 @@
             const options = { day: 'numeric', month: 'long', year: 'numeric' };
             return new Date(dateString).toLocaleDateString('tr-TR', options);
         }
-
-        // Profil düzenleme butonu
-        document.getElementById('editProfileBtn').addEventListener('click', function() {
-            // Burada profil düzenleme modalını açabilirsiniz
-            alert('Profil düzenleme sayfası açılacak');
-        });
 
         // Çıkış yapma
         function handleLogout() {

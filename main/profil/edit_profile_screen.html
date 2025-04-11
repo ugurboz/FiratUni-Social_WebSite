@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beGAK.com - Profil Düzenle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a0ca3;
+            --secondary-color: #4cc9f0;
+            --accent-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4bb543;
+            --error-color: #ff3333;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--box-shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-family: 'Righteous', cursive;
+        }
+
+        .brand-name {
+            font-family: 'Righteous', cursive;
+            color: white;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .brand-name:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1000px;
+            margin: 6rem auto 2rem;
+            padding: 0 2rem;
+        }
+
+        .edit-profile-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            box-shadow: var(--box-shadow);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .edit-profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .edit-profile-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .edit-profile-subtitle {
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        .edit-profile-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .form-input[readonly] {
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .form-input[readonly]:focus {
+            border-color: #dee2e6;
+            box-shadow: none;
+        }
+
+        .form-label-readonly {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label-readonly i {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+        }
+
+        .form-select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .avatar-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .avatar-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-upload-btn {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .avatar-upload-btn:hover {
+            background: rgba(67, 97, 238, 0.2);
+        }
+
+        .avatar-upload input {
+            display: none;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+            grid-column: 1 / -1;
+        }
+
+        .cancel-btn {
+            background: #f1f3f5;
+            color: #495057;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .cancel-btn:hover {
+            background: #e9ecef;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .success-message {
+            display: none;
+            color: var(--success-color);
+            background: rgba(75, 181, 67, 0.1);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            grid-column: 1 / -1;
+        }
+
+        .error-message {
+            display: none;
+            color: var(--error-color);
+            background: rgba(255, 51, 51, 0.1);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            grid-column: 1 / -1;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f3f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #495057;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .edit-profile-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 0 1rem;
+            }
+            
+            .edit-profile-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="brand">
+            <div class="brand-logo">bG</div>
+            <a href="../../main/anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
+        </div>
+        <div class="nav-links">
+            <a href="../../main/anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="../../main/profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
+            <a href="../../main/mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
+            <a href="../../main/kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
+            <a href="../../main/login/login_screen.html" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="edit-profile-container">
+            <div class="edit-profile-header">
+                <div>
+                    <h1 class="edit-profile-title">Profil Düzenle</h1>
+                    <p class="edit-profile-subtitle">Profil bilgilerinizi güncelleyin</p>
+                </div>
+                <a href="profil_screen.html" class="cancel-btn">
+                    <i class="fas fa-times"></i> İptal
+                </a>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                Profil bilgileriniz başarıyla güncellendi.
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-circle"></i>
+                Profil bilgileriniz güncellenirken bir hata oluştu.
+            </div>
+
+            <form class="edit-profile-form" id="editProfileForm" onsubmit="handleSaveProfile(event)">
+                <div class="avatar-upload">
+                    <div class="avatar-preview" id="avatarPreview">
+                        <img src="https://via.placeholder.com/150" alt="Profil Resmi" id="avatarImage">
+                    </div>
+                    <label for="avatarInput" class="avatar-upload-btn">
+                        <i class="fas fa-camera"></i>
+                        Profil Resmi Yükle
+                    </label>
+                    <input type="file" id="avatarInput" accept="image/*">
+                </div>
+
+                <div class="form-section">
+                    <h2 class="form-section-title">
+                        <i class="fas fa-user"></i>
+                        Kişisel Bilgiler
+                    </h2>
+                    <div class="form-group">
+                        <label for="firstName" class="form-label form-label-readonly">
+                            Ad
+                            <i class="fas fa-lock" title="Bu alan değiştirilemez"></i>
+                        </label>
+                        <input type="text" id="firstName" class="form-input" placeholder="Adınız" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName" class="form-label form-label-readonly">
+                            Soyad
+                            <i class="fas fa-lock" title="Bu alan değiştirilemez"></i>
+                        </label>
+                        <input type="text" id="lastName" class="form-input" placeholder="Soyadınız" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label form-label-readonly">
+                            E-posta
+                            <i class="fas fa-lock" title="Bu alan değiştirilemez"></i>
+                        </label>
+                        <input type="email" id="email" class="form-input" placeholder="E-posta adresiniz" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Telefon</label>
+                        <input type="tel" id="phone" class="form-input" placeholder="Telefon numaranız">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2 class="form-section-title">
+                        <i class="fas fa-graduation-cap"></i>
+                        Eğitim Bilgileri
+                    </h2>
+                    <div class="form-group">
+                        <label for="department" class="form-label">Bölüm</label>
+                        <select id="department" class="form-select" required>
+                            <option value="">Bölümünüzü seçin</option>
+                            <option value="bilgisayar">Bilgisayar Mühendisliği</option>
+                            <option value="elektrik">Elektrik-Elektronik Mühendisliği</option>
+                            <option value="makine">Makine Mühendisliği</option>
+                            <option value="endustri">Endüstri Mühendisliği</option>
+                            <option value="insaat">İnşaat Mühendisliği</option>
+                            <option value="mimarlik">Mimarlık</option>
+                            <option value="tip">Tıp</option>
+                            <option value="dis">Diş Hekimliği</option>
+                            <option value="eczacilik">Eczacılık</option>
+                            <option value="hukuk">Hukuk</option>
+                            <option value="iktisat">İktisat</option>
+                            <option value="isletme">İşletme</option>
+                            <option value="egitim">Eğitim Bilimleri</option>
+                            <option value="fen">Fen-Edebiyat</option>
+                            <option value="ilahiyat">İlahiyat</option>
+                            <option value="iletisim">İletişim</option>
+                            <option value="diger">Diğer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentId" class="form-label">Öğrenci Numarası</label>
+                        <input type="text" id="studentId" class="form-input" placeholder="Öğrenci numaranız" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="graduationYear" class="form-label">Mezuniyet Yılı</label>
+                        <select id="graduationYear" class="form-select">
+                            <option value="">Mezuniyet yılınızı seçin</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2 class="form-section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Hakkımda
+                    </h2>
+                    <div class="form-group">
+                        <label for="bio" class="form-label">Biyografi</label>
+                        <textarea id="bio" class="form-textarea" placeholder="Kendinizden bahsedin..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="interests" class="form-label">İlgi Alanları</label>
+                        <input type="text" id="interests" class="form-input" placeholder="İlgi alanlarınızı virgülle ayırın">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2 class="form-section-title">
+                        <i class="fas fa-link"></i>
+                        Sosyal Medya
+                    </h2>
+                    <div class="form-group">
+                        <label for="instagram" class="form-label">Instagram</label>
+                        <input type="text" id="instagram" class="form-input" placeholder="Instagram kullanıcı adınız">
+                    </div>
+                    <div class="form-group">
+                        <label for="twitter" class="form-label">Twitter</label>
+                        <input type="text" id="twitter" class="form-input" placeholder="Twitter kullanıcı adınız">
+                    </div>
+                    <div class="form-group">
+                        <label for="linkedin" class="form-label">LinkedIn</label>
+                        <input type="text" id="linkedin" class="form-input" placeholder="LinkedIn profiliniz">
+                    </div>
+                    <div class="form-group">
+                        <label for="github" class="form-label">GitHub</label>
+                        <input type="text" id="github" class="form-input" placeholder="GitHub kullanıcı adınız">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="profil_screen.html" class="cancel-btn">
+                        <i class="fas fa-times"></i> İptal
+                    </a>
+                    <button type="submit" class="save-btn">
+                        <i class="fas fa-save"></i> Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Profil resmi yükleme işlemi
+        document.getElementById('avatarInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatarImage').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form gönderme işlemi
+        function handleSaveProfile(event) {
+            event.preventDefault();
+            
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const saveBtn = document.querySelector('.save-btn');
+            
+            // Buton durumunu güncelle
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Kaydediliyor...';
+            
+            // Simulate API call
+            setTimeout(() => {
+                // For demo purposes, we'll show success message
+                // In a real application, this would be handled by the backend
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                
+                // Redirect to profile page after 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'profil_screen.html';
+                }, 2000);
+            }, 1500);
+        }
+
+        // Çıkış yapma işlemi
+        function handleLogout() {
+            // Çıkış işlemleri burada yapılacak
+            window.location.href = '../login/login_screen.html';
+        }
+    </script>
+</body>
+</html> 
