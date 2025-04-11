@@ -480,6 +480,124 @@
                 padding: 1.5rem;
             }
         }
+
+        .photo-upload-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            background: #f0f0f0;
+        }
+
+        .photo-preview {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo-overlay i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .photo-upload-container:hover .photo-overlay {
+            opacity: 1;
+        }
+
+        .photo-edit-controls {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+        }
+
+        .control-group {
+            margin-bottom: 1rem;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+
+        .crop-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .crop-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .crop-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .reset-btn {
+            background: var(--error-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .reset-btn:hover {
+            background: #cc0000;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 5px;
+            -webkit-appearance: none;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -520,15 +638,45 @@
             </div>
 
             <form class="edit-profile-form" id="editProfileForm" onsubmit="handleSaveProfile(event)">
-                <div class="avatar-upload">
-                    <div class="avatar-preview" id="avatarPreview">
-                        <img src="https://via.placeholder.com/150" alt="Profil Resmi" id="avatarImage">
-                    </div>
-                    <label for="avatarInput" class="avatar-upload-btn">
+                <div class="form-section">
+                    <h2 class="form-section-title">
                         <i class="fas fa-camera"></i>
-                        Profil Resmi Yükle
-                    </label>
-                    <input type="file" id="avatarInput" accept="image/*">
+                        Profil Fotoğrafı
+                    </h2>
+                    <div class="form-group">
+                        <div class="photo-upload-container">
+                            <div class="photo-preview" id="photoPreview">
+                                <img id="previewImage" src="" alt="Profil Fotoğrafı">
+                                <div class="photo-overlay">
+                                    <i class="fas fa-camera"></i>
+                                    <span>Fotoğraf Yükle</span>
+                                </div>
+                            </div>
+                            <input type="file" id="profilePhoto" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="photo-edit-controls" id="photoEditControls" style="display: none;">
+                            <div class="control-group">
+                                <label>Ölçek</label>
+                                <input type="range" id="scaleControl" min="0.5" max="2" step="0.1" value="1">
+                            </div>
+                            <div class="control-group">
+                                <label>Döndür</label>
+                                <input type="range" id="rotateControl" min="0" max="360" step="1" value="0">
+                            </div>
+                            <div class="control-group">
+                                <label>Kırp</label>
+                                <div class="crop-controls">
+                                    <button id="cropTop" class="crop-btn"><i class="fas fa-arrow-up"></i></button>
+                                    <button id="cropBottom" class="crop-btn"><i class="fas fa-arrow-down"></i></button>
+                                    <button id="cropLeft" class="crop-btn"><i class="fas fa-arrow-left"></i></button>
+                                    <button id="cropRight" class="crop-btn"><i class="fas fa-arrow-right"></i></button>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <button id="resetPhoto" class="reset-btn">Sıfırla</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-section">
@@ -600,6 +748,7 @@
                         <label for="graduationYear" class="form-label">Mezuniyet Yılı</label>
                         <select id="graduationYear" class="form-select">
                             <option value="">Mezuniyet yılınızı seçin</option>
+                            <option value="mezun_degil">Henüz mezun değilim</option>
                             <option value="2024">2024</option>
                             <option value="2025">2025</option>
                             <option value="2026">2026</option>
@@ -732,23 +881,10 @@
             if (user.graduationYear) document.getElementById('graduationYear').value = user.graduationYear;
             if (user.bio) document.getElementById('bio').value = user.bio;
             if (user.interests) document.getElementById('interests').value = user.interests;
-            
-            // Avatar ekle
-            const avatarPreview = document.getElementById('avatarPreview');
-            if (avatarPreview) {
-                const firstLetter = user.firstName ? user.firstName.charAt(0) : user.username.charAt(0);
-                const avatarImage = document.getElementById('avatarImage');
-                
-                if (!user.avatar) {
-                    // Varsayılan avatar göster
-                    avatarImage.style.display = 'none';
-                    avatarPreview.textContent = firstLetter.toUpperCase();
-                } else {
-                    // Kullanıcı avatarını göster
-                    avatarImage.src = user.avatar;
-                    avatarImage.style.display = 'block';
-                    avatarPreview.textContent = '';
-                }
+            if (user.photo) {
+                const previewImage = document.getElementById('previewImage');
+                previewImage.src = user.photo;
+                previewImage.style.display = 'block';
             }
         }
 
@@ -769,63 +905,151 @@
             }
         });
 
+        // Profil fotoğrafı yükleme ve düzenleme
+        const photoPreview = document.getElementById('photoPreview');
+        const profilePhoto = document.getElementById('profilePhoto');
+        const previewImage = document.getElementById('previewImage');
+        const photoEditControls = document.getElementById('photoEditControls');
+        const scaleControl = document.getElementById('scaleControl');
+        const rotateControl = document.getElementById('rotateControl');
+        const cropTop = document.getElementById('cropTop');
+        const cropBottom = document.getElementById('cropBottom');
+        const cropLeft = document.getElementById('cropLeft');
+        const cropRight = document.getElementById('cropRight');
+        const resetPhoto = document.getElementById('resetPhoto');
+
+        let currentScale = 1;
+        let currentRotation = 0;
+        let currentCrop = { top: 0, bottom: 0, left: 0, right: 0 };
+
+        // Fotoğraf yükleme
+        photoPreview.addEventListener('click', () => {
+            profilePhoto.click();
+        });
+
+        profilePhoto.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImage.src = e.target.result;
+                    photoEditControls.style.display = 'block';
+                    resetPhotoControls();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Ölçek kontrolü
+        scaleControl.addEventListener('input', (e) => {
+            currentScale = parseFloat(e.target.value);
+            updateImageTransform();
+        });
+
+        // Döndürme kontrolü
+        rotateControl.addEventListener('input', (e) => {
+            currentRotation = parseInt(e.target.value);
+            updateImageTransform();
+        });
+
+        // Kırpma kontrolleri
+        cropTop.addEventListener('click', () => {
+            currentCrop.top += 10;
+            updateImageTransform();
+        });
+
+        cropBottom.addEventListener('click', () => {
+            currentCrop.bottom += 10;
+            updateImageTransform();
+        });
+
+        cropLeft.addEventListener('click', () => {
+            currentCrop.left += 10;
+            updateImageTransform();
+        });
+
+        cropRight.addEventListener('click', () => {
+            currentCrop.right += 10;
+            updateImageTransform();
+        });
+
+        // Sıfırlama
+        resetPhoto.addEventListener('click', resetPhotoControls);
+
+        function updateImageTransform() {
+            previewImage.style.transform = `
+                scale(${currentScale})
+                rotate(${currentRotation}deg)
+            `;
+            previewImage.style.clipPath = `
+                polygon(
+                    ${currentCrop.left}% ${currentCrop.top}%,
+                    ${100 - currentCrop.right}% ${currentCrop.top}%,
+                    ${100 - currentCrop.right}% ${100 - currentCrop.bottom}%,
+                    ${currentCrop.left}% ${100 - currentCrop.bottom}%,
+                    ${currentCrop.left}% ${currentCrop.top}%
+                )
+            `;
+        }
+
+        function resetPhotoControls() {
+            currentScale = 1;
+            currentRotation = 0;
+            currentCrop = { top: 0, bottom: 0, left: 0, right: 0 };
+            scaleControl.value = 1;
+            rotateControl.value = 0;
+            updateImageTransform();
+        }
+
         // Form gönderme işlemi
-        function handleSaveProfile(event) {
-            event.preventDefault();
+        function handleSaveProfile(e) {
+            e.preventDefault();
             
-            const successMessage = document.getElementById('successMessage');
-            const errorMessage = document.getElementById('errorMessage');
-            const saveBtn = document.querySelector('.save-btn');
-            
-            // Form verilerini al
-            const department = document.getElementById('department').value;
-            const studentId = document.getElementById('studentId').value;
-            const graduationYear = document.getElementById('graduationYear').value;
-            const phone = document.getElementById('phone').value;
-            const bio = document.getElementById('bio').value;
-            const interests = document.getElementById('interests').value;
-            
-            // Kullanıcı verilerini güncelle
-            const userData = JSON.parse(localStorage.getItem('userData'));
-            if (userData) {
-                userData.department = department;
-                userData.studentId = studentId;
-                userData.graduationYear = graduationYear;
-                userData.phone = phone;
-                userData.bio = bio;
-                userData.interests = interests;
+            try {
+                // Form verilerini topla
+                const formData = {
+                    phone: document.getElementById('phone').value,
+                    department: document.getElementById('department').value,
+                    studentId: document.getElementById('studentId').value,
+                    graduationYear: document.getElementById('graduationYear').value,
+                    bio: document.getElementById('bio').value,
+                    interests: document.getElementById('interests').value,
+                    instagram: document.getElementById('instagram').value,
+                    twitter: document.getElementById('twitter').value,
+                    linkedin: document.getElementById('linkedin').value,
+                    github: document.getElementById('github').value,
+                    photo: previewImage.src || '' // Düzenlenmiş fotoğraf verisini ekle
+                };
                 
-                // Güncellenmiş verileri kaydet
-                localStorage.setItem('userData', JSON.stringify(userData));
-            }
-            
-            // Şifre eşleşme kontrolü
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-            
-            if (newPassword && newPassword !== confirmNewPassword) {
-                errorMessage.textContent = 'Şifreler eşleşmiyor!';
-                errorMessage.style.display = 'block';
-                return;
-            }
-            
-            // Buton durumunu güncelle
-            saveBtn.disabled = true;
-            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Kaydediliyor...';
-            
-            // Simulate API call
-            setTimeout(() => {
-                // For demo purposes, we'll show success message
-                // In a real application, this would be handled by the backend
+                // Mevcut kullanıcı verilerini al
+                const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                
+                // Yeni verileri ekle
+                const updatedUserData = {
+                    ...userData,
+                    ...formData
+                };
+                
+                // localStorage'a kaydet
+                localStorage.setItem('userData', JSON.stringify(updatedUserData));
+                
+                // Başarılı mesajı göster
+                const successMessage = document.getElementById('successMessage');
                 successMessage.style.display = 'block';
-                errorMessage.style.display = 'none';
                 
-                // Redirect to profile page after 2 seconds
+                // 1 saniye sonra profil sayfasına yönlendir
                 setTimeout(() => {
                     window.location.href = 'profil_screen.html';
-                }, 2000);
-            }, 1500);
+                }, 1000);
+            } catch (error) {
+                console.error('Profil güncellenirken hata:', error);
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.style.display = 'block';
+            }
         }
+
+        // Form submit olayını dinle
+        document.getElementById('editProfileForm').addEventListener('submit', handleSaveProfile);
 
         // Şifre gücü kontrolü
         function checkPasswordStrength() {

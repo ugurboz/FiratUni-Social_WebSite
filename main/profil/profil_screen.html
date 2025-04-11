@@ -143,7 +143,7 @@
             box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
 
-        .profile-avatar {
+        .profile-photo {
             width: 150px;
             height: 150px;
             border-radius: 50%;
@@ -155,6 +155,45 @@
             font-size: 3rem;
             font-weight: 600;
             margin: 0 auto 1.5rem;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-upload-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo-upload-overlay i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-photo:hover .photo-upload-overlay {
+            opacity: 1;
+        }
+
+        .profile-photo:hover img {
+            transform: scale(1.1);
         }
 
         .profile-name {
@@ -372,9 +411,19 @@
         <!-- Profile Sidebar -->
         <div class="profile-sidebar">
             <div class="profile-card">
-                <div class="profile-avatar" id="profileAvatar">U</div>
-                <h2 class="profile-name" id="profileName">Kullanıcı Adı</h2>
-                <p class="profile-title" id="profileTitle">Yazılım Mühendisliği Öğrencisi</p>
+                <div class="profile-header">
+                    <div class="profile-photo">
+                        <img id="profilePhoto" src="" alt="Profil Fotoğrafı">
+                        <div class="photo-upload-overlay">
+                            <i class="fas fa-camera"></i>
+                            <span>Fotoğraf Yükle</span>
+                        </div>
+                    </div>
+                    <div class="profile-info">
+                        <h1 class="profile-name" id="profileName">Ad Soyad</h1>
+                        <p class="profile-title" id="profileTitle">Öğrenci</p>
+                    </div>
+                </div>
                 
                 <div class="profile-stats">
                     <div class="stat-item">
@@ -434,11 +483,43 @@
             
             <div class="info-item">
                 <div class="info-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="info-content">
+                    <div class="info-label">Mezuniyet Yılı</div>
+                    <div class="info-value" id="profileGraduationYear">Belirtilmemiş</div>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-icon">
                     <i class="fas fa-calendar-alt"></i>
                 </div>
                 <div class="info-content">
                     <div class="info-label">Kayıt Tarihi</div>
                     <div class="info-value" id="profileJoinDate">15 Eylül 2023</div>
+                </div>
+            </div>
+            
+            <h3 class="section-title"><i class="fas fa-user-edit"></i> Biyografi</h3>
+            
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="info-content">
+                    <div class="info-label">Hakkımda</div>
+                    <div class="info-value" id="profileBio">Henüz bir biyografi eklenmemiş.</div>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="info-content">
+                    <div class="info-label">İlgi Alanları</div>
+                    <div class="info-value" id="profileInterests">Henüz ilgi alanı eklenmemiş.</div>
                 </div>
             </div>
             
@@ -502,13 +583,25 @@
 
         // Profil bilgilerini arayüze yansıt
         function updateProfileUI(profile) {
-            document.getElementById('profileAvatar').textContent = profile.username.charAt(0).toUpperCase();
+            const profilePhoto = document.getElementById('profilePhoto');
+            if (profile.photo) {
+                profilePhoto.src = profile.photo;
+                profilePhoto.style.display = 'block';
+                profilePhoto.parentElement.style.background = 'none';
+            } else {
+                profilePhoto.style.display = 'none';
+                profilePhoto.parentElement.style.background = 'linear-gradient(135deg, var(--primary-color), var(--accent-color))';
+                profilePhoto.parentElement.textContent = profile.username.charAt(0).toUpperCase();
+            }
             document.getElementById('profileName').textContent = profile.username;
             document.getElementById('profileTitle').textContent = profile.title || 'Öğrenci';
             document.getElementById('profileEmail').textContent = profile.email;
             document.getElementById('profilePhone').textContent = profile.phone || 'Belirtilmemiş';
             document.getElementById('profileDepartment').textContent = profile.department || 'Belirtilmemiş';
+            document.getElementById('profileGraduationYear').textContent = profile.graduationYear || 'Belirtilmemiş';
             document.getElementById('profileJoinDate').textContent = formatDate(profile.joinDate);
+            document.getElementById('profileBio').textContent = profile.bio || 'Henüz bir biyografi eklenmemiş.';
+            document.getElementById('profileInterests').textContent = profile.interests || 'Henüz ilgi alanı eklenmemiş.';
             
             // Profil istatistiklerini güncelle
             const statValues = document.querySelectorAll('.stat-value');
@@ -568,8 +661,8 @@
 
         // Profil bilgilerini getir
         async function getProfile(username) {
-            // Gerçek uygulamada burada API çağrısı yapılacak
-            const userData = JSON.parse(localStorage.getItem('userData'));
+            // localStorage'dan kullanıcı bilgilerini al
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
             
             // Bölüm seçeneklerini tanımla
             const departments = {
@@ -596,13 +689,20 @@
             // Seçilen bölümün tam adını al
             const selectedDepartment = userData?.department ? departments[userData.department] || userData.department : 'Bölüm Seçilmedi';
             
+            // Mezuniyet yılı bilgisini al
+            const graduationYear = userData?.graduationYear === 'mezun_degil' ? 'Henüz mezun değilim' : userData?.graduationYear || 'Belirtilmemiş';
+            
             return {
-                username: username,
-                email: `${username}@firat.edu.tr`,
-                phone: userData?.phone || '+90 555 123 4567',
+                username: userData.username || username,
+                email: userData.email || `${username}@firat.edu.tr`,
+                phone: userData.phone || 'Belirtilmemiş',
                 department: selectedDepartment,
                 title: selectedDepartment !== 'Bölüm Seçilmedi' ? `${selectedDepartment} Öğrencisi` : 'Öğrenci',
+                graduationYear: graduationYear,
                 joinDate: new Date('2023-09-15').toISOString(),
+                photo: userData.photo || '',
+                bio: userData.bio || 'Henüz bir biyografi eklenmemiş.',
+                interests: userData.interests || 'Henüz ilgi alanı eklenmemiş.',
                 stats: {
                     posts: 128,
                     followers: 456,
@@ -615,6 +715,50 @@
                 ]
             };
         }
+
+        // Profil fotoğrafı yükleme
+        const profilePhoto = document.getElementById('profilePhoto');
+        const photoUploadOverlay = document.querySelector('.photo-upload-overlay');
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        fileInput.style.display = 'none';
+
+        profilePhoto.parentElement.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    profilePhoto.src = e.target.result;
+                    profilePhoto.style.display = 'block';
+                    profilePhoto.parentElement.style.background = 'none';
+                    
+                    // Fotoğrafı localStorage'a kaydet
+                    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                    userData.photo = e.target.result;
+                    localStorage.setItem('userData', JSON.stringify(userData));
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Sayfa yüklendiğinde profil fotoğrafını yükle
+        document.addEventListener('DOMContentLoaded', () => {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            if (userData.photo) {
+                profilePhoto.src = userData.photo;
+                profilePhoto.style.display = 'block';
+                profilePhoto.parentElement.style.background = 'none';
+            } else {
+                profilePhoto.style.display = 'none';
+                profilePhoto.parentElement.style.background = 'linear-gradient(135deg, var(--primary-color), var(--accent-color))';
+                profilePhoto.parentElement.textContent = userData.username?.charAt(0).toUpperCase() || 'U';
+            }
+        });
     </script>
 </body>
 </html>
