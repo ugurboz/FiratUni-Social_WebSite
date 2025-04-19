@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beGAK.com - Sosyal Etkinlikler</title>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="sosyal_etkinlikler_style.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a0ca3;
+            --secondary-color: #4cc9f0;
+            --accent-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4bb543;
+            --error-color: #ff3333;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--box-shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-family: 'Righteous', cursive;
+        }
+
+        .brand-name {
+            font-family: 'Righteous', cursive;
+            color: white;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .brand-name:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 6rem auto 2rem;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        /* Events Section */
+        .events-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .event-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .event-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .event-description {
+            margin-top: 0.5rem;
+            font-size: 1rem;
+            color: var(--dark-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .main-content {
+                margin-top: 5rem;
+                padding: 0 1rem;
+            }
+        }
+
+        .live-events-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 300px;
+            position: fixed;
+            right: 10px;
+            top: 6rem;
+            height: calc(100vh - 6rem);
+            padding: 1rem;
+            box-shadow: var(--box-shadow);
+            background: white;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="brand">
+            <div class="brand-logo">bG</div>
+            <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
+        </div>
+        <div class="nav-links">
+            <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="../profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
+            <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
+            <a href="../kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
+            <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html" class="active"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
+            <a href="#" onclick="return handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
+        </div>
+    </nav>
+
+    <!-- Ana İçerik -->
+    <div class="main-content">
+        <!-- Sol Bölüm - Sosyal Etkinlikler -->
+        <div class="events-section">
+            <div class="section-header">
+                <h1 class="section-title">Sosyal Etkinlikler</h1>
+                <div class="section-actions">
+                    <div class="search-box">
+                        <input type="text" placeholder="Etkinlik ara..." id="eventSearch">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <select class="filter-select" id="eventFilter">
+                        <option value="all">Tüm Etkinlikler</option>
+                        <option value="upcoming">Yaklaşan Etkinlikler</option>
+                        <option value="ongoing">Devam Eden</option>
+                        <option value="past">Geçmiş Etkinlikler</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="events-grid">
+                <!-- Örnek Etkinlik Kartları -->
+                <div class="event-card">
+                    <div class="event-image">
+                        <img src="https://via.placeholder.com/300x200" alt="Etkinlik">
+                        <span class="event-status upcoming">Yaklaşan</span>
+                    </div>
+                    <div class="event-content">
+                        <h3 class="event-title">Teknoloji Zirvesi 2024</h3>
+                        <p class="event-info"><i class="far fa-calendar"></i> 25 Mayıs 2024, 14:00</p>
+                        <p class="event-info"><i class="fas fa-map-marker-alt"></i> Konferans Salonu</p>
+                        <p class="event-description">Teknoloji dünyasının önde gelen isimleri ile buluşma fırsatı.</p>
+                        <div class="event-footer">
+                            <button class="btn btn-primary"><i class="fas fa-user-plus"></i> Katıl</button>
+                            <button class="btn btn-secondary"><i class="fas fa-share-alt"></i> Paylaş</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sağ Bölüm - Canlı Etkinlikler -->
+        <div class="live-events-container">
+            <div class="live-events-header">
+                <h2>Canlı Etkinlikler</h2>
+                <button class="create-event-btn" onclick="toggleEventForm()">
+                    <i class="fas fa-plus"></i> Yeni Etkinlik
+                </button>
+            </div>
+
+            <!-- Etkinlik Oluşturma Formu -->
+            <form id="eventForm" class="event-form" onsubmit="handleEventSubmit(event)">
+                <div class="form-group">
+                    <label for="eventName">Etkinlik Adı</label>
+                    <input type="text" id="eventName" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Tarih ve Saat</label>
+                    <input type="datetime-local" id="eventDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventLocation">Konum</label>
+                    <input type="text" id="eventLocation" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDesc">Açıklama</label>
+                    <textarea id="eventDesc" rows="4" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Oluştur</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleEventForm()">İptal</button>
+                </div>
+            </form>
+
+            <!-- Canlı Etkinlikler Listesi -->
+            <div class="live-event-list">
+                <!-- Etkinlikler JavaScript ile buraya eklenecek -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleLogout() {
+            if (confirm("Çıkış yapmak istediğinize emin misiniz?")) {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userData');
+                window.location.href = '../login/login_screen.html';
+                return true;
+            }
+            return false;
+        }
+    </script>
+    <script src="sosyal_etkinlikler_backend.js"></script>
+</body>
+</html> 
