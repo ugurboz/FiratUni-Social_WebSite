@@ -416,9 +416,6 @@
                         </div>
                     </div>
                 </div>
-                <button class="create-event-btn" id="create-live-event">
-                    <i class="fas fa-plus"></i> Etkinlik Oluştur
-                </button>
             </div>
         </div>
     </div>
@@ -1041,15 +1038,6 @@
                     showNotification(`"${eventTitle}" etkinliğine katıldınız!`);
                 });
             });
-            
-            // Etkinlik oluştur butonu için dinleyici
-            const createEventBtn = document.getElementById('create-live-event');
-            if (createEventBtn) {
-                createEventBtn.addEventListener('click', function() {
-                    // Şimdilik sadece bildirim gösteriyoruz
-                    showNotification('Etkinlik oluşturma özelliği yakında eklenecek!');
-                });
-            }
         }
 
         // Statik içerikler için event listener'lar ekleme
