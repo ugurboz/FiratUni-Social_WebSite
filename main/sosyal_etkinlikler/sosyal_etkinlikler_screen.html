@@ -7,192 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="sosyal_etkinlikler_style.css">
-    <style>
-        :root {
-            --primary-color: #4361ee;
-            --primary-dark: #3a0ca3;
-            --secondary-color: #4cc9f0;
-            --accent-color: #f72585;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --success-color: #4bb543;
-            --error-color: #ff3333;
-            --border-radius: 12px;
-            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f5f7fa;
-            min-height: 100vh;
-            color: var(--dark-color);
-        }
-
-        /* Navbar */
-        .navbar {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--box-shadow);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            height: 80px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .brand-logo {
-            width: 50px;
-            height: 50px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-color);
-            font-weight: bold;
-            font-family: 'Righteous', cursive;
-        }
-
-        .brand-name {
-            font-family: 'Righteous', cursive;
-            color: white;
-            font-size: 1.8rem;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .brand-name:hover {
-            transform: translateY(-2px);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: white;
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-links a:hover {
-            color: var(--secondary-color);
-        }
-
-        /* Main Content */
-        .main-content {
-            max-width: 1200px;
-            margin: 8rem auto 2rem;
-            padding: 0 2rem;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-
-        /* Events Section */
-        .events-section {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .event-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-
-        .event-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-
-        .event-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary-dark);
-        }
-
-        .event-description {
-            margin-top: 0.5rem;
-            font-size: 1rem;
-            color: var(--dark-color);
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 1rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-            }
-
-            .main-content {
-                margin-top: 5rem;
-                padding: 0 1rem;
-            }
-        }
-
-        .live-events-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 300px;
-            position: fixed;
-            right: 10px;
-            top: 8rem;
-            height: calc(100vh - 8rem);
-            padding: 1rem;
-            box-shadow: var(--box-shadow);
-            background: white;
-            z-index: 1000;
-        }
-    </style>
 </head>
 <body>
     <!-- Navbar -->
@@ -212,10 +26,10 @@
     </nav>
 
     <!-- Ana İçerik -->
-    <div class="main-content">
+    <main class="main-content">
         <!-- Sol Bölüm - Sosyal Etkinlikler -->
-        <div class="events-section">
-            <div class="section-header">
+        <section class="events-section">
+            <header class="section-header">
                 <h1 class="section-title">Sosyal Etkinlikler</h1>
                 <div class="section-actions">
                     <div class="search-box">
@@ -229,37 +43,79 @@
                         <option value="past">Geçmiş Etkinlikler</option>
                     </select>
                 </div>
-            </div>
+            </header>
 
             <div class="events-grid">
                 <!-- Örnek Etkinlik Kartları -->
-                <div class="event-card">
+                <article class="event-card">
                     <div class="event-image">
                         <img src="https://via.placeholder.com/300x200" alt="Etkinlik">
                         <span class="event-status upcoming">Yaklaşan</span>
                     </div>
                     <div class="event-content">
                         <h3 class="event-title">Teknoloji Zirvesi 2024</h3>
-                        <p class="event-info"><i class="far fa-calendar"></i> 25 Mayıs 2024, 14:00</p>
-                        <p class="event-info"><i class="fas fa-map-marker-alt"></i> Konferans Salonu</p>
+                        <div class="event-info">
+                            <i class="far fa-calendar"></i>
+                            <span>25 Mayıs 2024, 14:00</span>
+                        </div>
+                        <div class="event-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Konferans Salonu</span>
+                        </div>
                         <p class="event-description">Teknoloji dünyasının önde gelen isimleri ile buluşma fırsatı.</p>
                         <div class="event-footer">
-                            <button class="btn btn-primary"><i class="fas fa-user-plus"></i> Katıl</button>
-                            <button class="btn btn-secondary"><i class="fas fa-share-alt"></i> Paylaş</button>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-user-plus"></i>
+                                <span>Katıl</span>
+                            </button>
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-share-alt"></i>
+                                <span>Paylaş</span>
+                            </button>
                         </div>
                     </div>
-                </div>
+                </article>
+
+                <article class="event-card">
+                    <div class="event-image">
+                        <img src="https://via.placeholder.com/300x200" alt="Etkinlik">
+                        <span class="event-status ongoing">Devam Ediyor</span>
+                    </div>
+                    <div class="event-content">
+                        <h3 class="event-title">Müzik Festivali</h3>
+                        <div class="event-info">
+                            <i class="far fa-calendar"></i>
+                            <span>20 Mayıs 2024, 18:00</span>
+                        </div>
+                        <div class="event-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Açık Hava Sahnesi</span>
+                        </div>
+                        <p class="event-description">Yerel sanatçıların performansları ile eğlenceli bir akşam.</p>
+                        <div class="event-footer">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-user-plus"></i>
+                                <span>Katıl</span>
+                            </button>
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-share-alt"></i>
+                                <span>Paylaş</span>
+                            </button>
+                        </div>
+                    </div>
+                </article>
             </div>
-        </div>
+        </section>
 
         <!-- Sağ Bölüm - Canlı Etkinlikler -->
-        <div class="live-events-container">
-            <div class="live-events-header">
+        <aside class="live-events-container">
+            <header class="live-events-header">
                 <h2>Canlı Etkinlikler</h2>
                 <button class="create-event-btn" onclick="toggleEventForm()">
-                    <i class="fas fa-plus"></i> Yeni Etkinlik
+                    <i class="fas fa-plus"></i>
+                    <span>Yeni Etkinlik</span>
                 </button>
-            </div>
+            </header>
 
             <!-- Etkinlik Oluşturma Formu -->
             <form id="eventForm" class="event-form" onsubmit="handleEventSubmit(event)">
@@ -280,8 +136,14 @@
                     <textarea id="eventDesc" rows="4" required></textarea>
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Oluştur</button>
-                    <button type="button" class="btn btn-secondary" onclick="toggleEventForm()">İptal</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check"></i>
+                        <span>Oluştur</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleEventForm()">
+                        <i class="fas fa-times"></i>
+                        <span>İptal</span>
+                    </button>
                 </div>
             </form>
 
@@ -289,8 +151,8 @@
             <div class="live-event-list">
                 <!-- Etkinlikler JavaScript ile buraya eklenecek -->
             </div>
-        </div>
-    </div>
+        </aside>
+    </main>
 
     <script>
         function handleLogout() {
@@ -301,6 +163,16 @@
                 return true;
             }
             return false;
+        }
+
+        function toggleEventForm() {
+            const form = document.getElementById('eventForm');
+            form.classList.toggle('active');
+        }
+
+        function handleEventSubmit(event) {
+            event.preventDefault();
+            // Form işleme mantığı buraya eklenecek
         }
     </script>
     <script src="sosyal_etkinlikler_backend.js"></script>

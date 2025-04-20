@@ -512,13 +512,12 @@
             
             <div class="form-group" style="--order: 4;">
                 <i class="fas fa-lock"></i>
-                <div class="password-container">
-                    <input type="password" id="password" placeholder="Şifreniz" required oninput="checkPasswordStrength()">
-                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password')">
-                        <i class="fas fa-eye"></i>
-                        <i class="fas fa-eye-slash"></i>
-                    </button>
-                </div>
+                <input type="password" id="password" placeholder="Şifreniz" required oninput="checkPasswordStrength()">
+                <span class="floating-label">Şifre</span>
+                <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password')">
+                    <i class="fas fa-eye"></i>
+                    <i class="fas fa-eye-slash"></i>
+                </button>
                 <div class="password-strength">
                     <div class="strength-bar" id="strengthBar"></div>
                 </div>
@@ -527,13 +526,12 @@
             
             <div class="form-group" style="--order: 5;">
                 <i class="fas fa-lock"></i>
-                <div class="password-container">
-                    <input type="password" id="confirmPassword" placeholder="Şifrenizi Tekrar Girin" required oninput="checkPasswordMatch()">
-                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmPassword')">
-                        <i class="fas fa-eye"></i>
-                        <i class="fas fa-eye-slash"></i>
-                    </button>
-                </div>
+                <input type="password" id="confirmPassword" placeholder="Şifrenizi Tekrar Girin" required oninput="checkPasswordMatch()">
+                <span class="floating-label">Şifre Tekrar</span>
+                <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmPassword')">
+                    <i class="fas fa-eye"></i>
+                    <i class="fas fa-eye-slash"></i>
+                </button>
                 <div class="password-match" id="passwordMatch">Şifreler eşleşmiyor!</div>
             </div>
             

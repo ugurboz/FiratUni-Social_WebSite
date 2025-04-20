@@ -6,6 +6,7 @@
     <title>beGAK.com - Profil</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="profil.css">
     <script>
         // Oturum kontrolü
         window.onload = function() {
@@ -19,956 +20,18 @@
             }
         }
     </script>
-    <style>
-        :root {
-            --primary-color: #4361ee;
-            --primary-dark: #3a0ca3;
-            --secondary-color: #4cc9f0;
-            --accent-color: #f72585;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --success-color: #4bb543;
-            --error-color: #ff3333;
-            --border-radius: 12px;
-            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f5f7fa;
-            min-height: 100vh;
-            color: var(--dark-color);
-        }
-
-        /* Navbar */
-        .navbar {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--box-shadow);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            height: 80px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .brand-logo {
-            width: 50px;
-            height: 50px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-color);
-            font-weight: bold;
-            font-family: 'Righteous', cursive;
-        }
-
-        .brand-name {
-            font-family: 'Righteous', cursive;
-            color: white;
-            font-size: 1.8rem;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .brand-name:hover {
-            transform: translateY(-2px);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: white;
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-links a:hover {
-            color: var(--secondary-color);
-        }
-
-        /* Main Content */
-        .main-content {
-            width: 100%;
-            min-height: calc(100vh - 72px);
-            margin-top: 72px;
-            display: grid;
-            grid-template-columns: 280px 1fr 300px;
-            grid-template-areas: "sidebar feed details";
-        }
-
-        /* Profile Sidebar - Sol Kenar */
-        .profile-sidebar {
-            grid-area: sidebar;
-            padding: 1.5rem;
-            position: sticky;
-            top: 72px;
-            height: calc(100vh - 72px);
-            overflow-y: auto;
-            background: white;
-            box-shadow: var(--box-shadow);
-        }
-
-        /* Profile Feed - Orta Kısım */
-        .profile-feed {
-            grid-area: feed;
-            padding: 1.5rem;
-            overflow-y: auto;
-        }
-
-        /* Profile Details - Sağ Kenar */
-        .profile-details {
-            grid-area: details;
-            padding: 1.5rem;
-            position: sticky;
-            top: 72px;
-            height: calc(100vh - 72px);
-            overflow-y: auto;
-            background: white;
-            box-shadow: var(--box-shadow);
-        }
-
-        .profile-card {
-            text-align: center;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid #eee;
-        }
-
-        .profile-photo {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary-color);
-            box-shadow: var(--box-shadow);
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3rem;
-        }
-
-        .profile-photo.ghost {
-            background: #f1f3f5;
-            color: var(--primary-color);
-        }
-
-        .profile-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .photo-upload-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .photo-upload-overlay i {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .profile-photo:hover .photo-upload-overlay {
-            opacity: 1;
-        }
-
-        .profile-photo:hover img {
-            transform: scale(1.1);
-        }
-
-        .profile-name {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--primary-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .profile-title {
-            color: var(--dark-color);
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.8;
-        }
-
-        .profile-stats {
-            display: flex;
-            justify-content: space-around;
-            margin: 1.5rem 0;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--primary-dark);
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: #666;
-            margin-top: 0.3rem;
-        }
-
-        .edit-profile-btn {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            width: 100%;
-            margin-top: 1rem;
-        }
-
-        .edit-profile-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-        }
-
-        /* Profil içeriği - sidebar'daki bilgileri içeren kısım */
-        .sidebar-info {
-            margin-top: 1.5rem;
-        }
-
-        .sidebar-info-item {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 1rem;
-            padding: 0.8rem;
-            border-radius: var(--border-radius);
-            transition: var(--transition);
-        }
-
-        .sidebar-info-item:hover {
-            background: rgba(67, 97, 238, 0.05);
-        }
-
-        .sidebar-info-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(67, 97, 238, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-color);
-            font-size: 1rem;
-            flex-shrink: 0;
-        }
-
-        .sidebar-info-content {
-            flex: 1;
-        }
-
-        .sidebar-info-label {
-            font-size: 0.75rem;
-            color: #666;
-            margin-bottom: 0.2rem;
-        }
-
-        .sidebar-info-value {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--dark-color);
-            word-break: break-word;
-        }
-
-        /* Profile Content - Ana içerik */
-        .profile-content-wrapper {
-            flex: 1;
-            padding: 2rem;
-            overflow-y: auto;
-        }
-
-        .profile-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .content-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-
-        .content-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-
-        .section-title {
-            font-size: 1.2rem;
-            color: var(--primary-dark);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 0.8rem;
-        }
-
-        .section-title i {
-            color: var(--accent-color);
-        }
-
-        .info-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 1.2rem;
-        }
-
-        .info-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(67, 97, 238, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            color: var(--primary-color);
-            flex-shrink: 0;
-        }
-
-        .info-content {
-            flex: 1;
-        }
-
-        .info-label {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 0.3rem;
-        }
-
-        .info-value {
-            font-weight: 500;
-            color: var(--dark-color);
-        }
-
-        /* Kulüpler Bölümü */
-        .clubs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .club-card {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            background: #f8f9fa;
-            border-radius: var(--border-radius);
-            transition: var(--transition);
-            border: 1px solid #eee;
-        }
-
-        .club-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .club-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            margin-right: 1rem;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-
-        .club-name {
-            font-weight: 600;
-            color: var(--dark-color);
-            font-size: 0.9rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .main-content {
-                grid-template-columns: 250px 1fr 250px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .main-content {
-                grid-template-columns: 1fr;
-                grid-template-areas: 
-                    "sidebar"
-                    "feed"
-                    "details";
-            }
-
-            .profile-sidebar, .profile-details {
-                height: auto;
-                position: static;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 1rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-            }
-
-            .main-content {
-                margin-top: 64px;
-            }
-
-            .profile-sidebar, .profile-feed, .profile-details {
-                padding: 1rem;
-            }
-        }
-
-        /* Post Card */
-        .post-card {
-            background: white;
-            border-radius: var(--border-radius);
-            margin-bottom: 1.5rem;
-            box-shadow: var(--box-shadow);
-            overflow: hidden;
-            transition: var(--transition);
-        }
-
-        .post-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid #f5f5f5;
-        }
-
-        .post-user-photo {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-right: 1rem;
-            flex-shrink: 0;
-        }
-
-        .post-user-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .post-user-info {
-            flex: 1;
-        }
-
-        .post-username {
-            font-weight: 600;
-            color: var(--dark-color);
-            margin-bottom: 0.2rem;
-            display: block;
-        }
-
-        .post-time {
-            font-size: 0.8rem;
-            color: #777;
-        }
-
-        .post-options {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .post-options:hover {
-            background: rgba(0,0,0,0.05);
-        }
-
-        .post-content {
-            padding: 1rem;
-        }
-
-        .post-text {
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .post-image {
-            width: 100%;
-            max-height: 400px;
-            overflow: hidden;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-
-        .post-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .post-image:hover img {
-            transform: scale(1.02);
-        }
-
-        .post-actions {
-            display: flex;
-            justify-content: space-around;
-            padding: 0.5rem 1rem 1rem;
-            border-top: 1px solid #f5f5f5;
-        }
-
-        .post-action {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .post-action:hover {
-            background: rgba(0,0,0,0.05);
-        }
-
-        .post-action i {
-            font-size: 1.2rem;
-            color: #777;
-        }
-
-        .post-action span {
-            font-size: 0.9rem;
-            color: #777;
-        }
-
-        .post-action.liked i {
-            color: var(--accent-color);
-        }
-
-        /* New Post Form */
-        .new-post-card {
-            background: white;
-            border-radius: var(--border-radius);
-            margin-bottom: 2rem;
-            box-shadow: var(--box-shadow);
-            padding: 1rem;
-            transition: var(--transition);
-        }
-
-        .new-post-card:hover {
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-
-        .new-post-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .new-post-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-right: 1rem;
-            flex-shrink: 0;
-        }
-
-        .new-post-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .new-post-input-wrapper {
-            flex: 1;
-        }
-
-        .new-post-input {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #e0e0e0;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            resize: none;
-            transition: var(--transition);
-            min-height: 60px;
-        }
-
-        .new-post-input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
-        }
-
-        .new-post-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 1rem;
-        }
-
-        .new-post-tools {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .new-post-tool {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(67, 97, 238, 0.1);
-            color: var(--primary-color);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .new-post-tool:hover {
-            background: rgba(67, 97, 238, 0.2);
-        }
-
-        .new-post-submit {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: var(--border-radius);
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .new-post-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-        }
-
-        /* Post Comments */
-        .post-comments {
-            padding: 0 1rem 1rem;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .post-comments::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .post-comments::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 3px;
-        }
-
-        .post-comments::-webkit-scrollbar-thumb:hover {
-            background: #999;
-        }
-
-        .post-comment {
-            display: flex;
-            margin-bottom: 1rem;
-        }
-
-        .comment-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-right: 0.8rem;
-            flex-shrink: 0;
-        }
-
-        .comment-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .comment-content {
-            flex: 1;
-            background: #f5f7fa;
-            padding: 0.8rem;
-            border-radius: 18px;
-            position: relative;
-        }
-
-        .comment-username {
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .comment-text {
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .comment-time {
-            font-size: 0.75rem;
-            color: #777;
-            margin-top: 0.3rem;
-            text-align: right;
-        }
-
-        .post-comment-form {
-            display: flex;
-            align-items: center;
-            padding: 0 1rem 1rem;
-            gap: 0.8rem;
-        }
-
-        .comment-avatar-small {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .comment-avatar-small img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .comment-input-wrapper {
-            flex: 1;
-            position: relative;
-        }
-
-        .comment-input {
-            width: 100%;
-            padding: 0.6rem 3rem 0.6rem 1rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            transition: var(--transition);
-        }
-
-        .comment-input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
-        }
-
-        .comment-submit {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .comment-submit:hover {
-            color: var(--primary-dark);
-        }
-
-        /* Gönderi Etiketleri */
-        .post-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .post-tag {
-            background: rgba(67, 97, 238, 0.1);
-            color: var(--primary-color);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            transition: var(--transition);
-        }
-
-        .post-tag:hover {
-            background: rgba(67, 97, 238, 0.2);
-            transform: translateY(-2px);
-        }
-
-        /* Gönderi Galerileri */
-        .post-gallery {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .gallery-item {
-            height: 150px;
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .gallery-item:hover img {
-            transform: scale(1.05);
-        }
-
-        .gallery-item.gallery-main {
-            grid-column: span 2;
-            height: 250px;
-        }
-
-        /* Gönderi Dosyaları */
-        .post-attachment {
-            display: flex;
-            align-items: center;
-            background: #f5f7fa;
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            margin-bottom: 1rem;
-            transition: var(--transition);
-        }
-
-        .post-attachment:hover {
-            background: #edf0f7;
-        }
-
-        .attachment-icon {
-            width: 48px;
-            height: 48px;
-            background: white;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            font-size: 1.5rem;
-            color: var(--primary-color);
-        }
-
-        .attachment-info {
-            flex: 1;
-        }
-
-        .attachment-name {
-            font-weight: 500;
-            margin-bottom: 0.2rem;
-        }
-
-        .attachment-size {
-            font-size: 0.8rem;
-            color: #666;
-        }
-
-        .attachment-download {
-            padding: 0.5rem;
-            border-radius: 50%;
-            color: var(--primary-color);
-            transition: var(--transition);
-        }
-
-        .attachment-download:hover {
-            background: rgba(67, 97, 238, 0.1);
-        }
-    </style>
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar">
         <div class="brand">
             <div class="brand-logo">bG</div>
-            <a href="../../main/anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
+            <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
         </div>
         <div class="nav-links">
             <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
             <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
-            <a href="profil_screen.html" class="active"><i class="fas fa-user"></i> Profil</a>
+            <a href="../profil/profil_screen.html" class="active"><i class="fas fa-user"></i> Profil</a>
             <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
             <a href="../kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
             <a href="#" onclick="return handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
@@ -977,93 +40,82 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Profile Sidebar - Sol Kenar -->
+        <!-- Profile Sidebar -->
         <div class="profile-sidebar">
+            <!-- Profile Card -->
             <div class="profile-card">
-                    <div class="profile-photo">
-                        <img id="profilePhoto" src="" alt="Profil Fotoğrafı">
-                        <div class="photo-upload-overlay">
-                            <i class="fas fa-camera"></i>
-                            <span>Fotoğraf Yükle</span>
-                        </div>
+                <div class="profile-photo-container">
+                    <div class="profile-photo" id="profilePhotoPreview">
+                        <i class="fas fa-user"></i>
                     </div>
-                        <h1 class="profile-name" id="profileName">Ad Soyad</h1>
-                        <p class="profile-title" id="profileTitle">Öğrenci</p>
-                
-                <div class="profile-stats">
-                    <div class="stat-item">
-                        <div class="stat-value">42</div>
-                        <div class="stat-label">Gönderi</div>
+                    <div class="photo-edit-btn" onclick="document.getElementById('photoInput').click()">
+                        <i class="fas fa-camera"></i>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-value">128</div>
-                        <div class="stat-label">Takipçi</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">96</div>
-                        <div class="stat-label">Takip</div>
-                    </div>
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewProfilePhoto(event)">
                 </div>
-                
-                <a href="edit_profile_screen.html" class="edit-profile-btn">
-                    <i class="fas fa-edit"></i>
-                    Profili Düzenle
-                </a>
-        </div>
+                <h2 class="profile-name" id="profileName">Kullanıcı Adı</h2>
+                <p class="profile-role" id="profileRole">Öğrenci</p>
+                <div class="profile-actions">
+                    <a href="edit_profile_screen.html" class="btn-edit">
+                        <i class="fas fa-edit"></i> Profili Düzenle
+                    </a>
+                </div>
+            </div>
 
+            <!-- Information Section -->
             <div class="sidebar-info">
                 <div class="sidebar-info-item">
                     <div class="sidebar-info-icon">
-                    <i class="fas fa-envelope"></i>
-                </div>
+                        <i class="fas fa-envelope"></i>
+                    </div>
                     <div class="sidebar-info-content">
                         <div class="sidebar-info-label">E-posta</div>
                         <div class="sidebar-info-value" id="profileEmail">kullanici@firat.edu.tr</div>
+                    </div>
                 </div>
-            </div>
-            
+                
                 <div class="sidebar-info-item">
                     <div class="sidebar-info-icon">
-                    <i class="fas fa-phone"></i>
-                </div>
+                        <i class="fas fa-phone"></i>
+                    </div>
                     <div class="sidebar-info-content">
                         <div class="sidebar-info-label">Telefon</div>
                         <div class="sidebar-info-value" id="profilePhone">+90 555 123 4567</div>
+                    </div>
                 </div>
-            </div>
-            
+                
                 <div class="sidebar-info-item">
                     <div class="sidebar-info-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
                     <div class="sidebar-info-content">
                         <div class="sidebar-info-label">Bölüm</div>
                         <div class="sidebar-info-value" id="profileDepartment">Yazılım Mühendisliği</div>
+                    </div>
                 </div>
-            </div>
-            
+                
                 <div class="sidebar-info-item">
                     <div class="sidebar-info-icon">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
                     <div class="sidebar-info-content">
                         <div class="sidebar-info-label">Mezuniyet Yılı</div>
                         <div class="sidebar-info-value" id="profileGraduationYear">Belirtilmemiş</div>
+                    </div>
                 </div>
-            </div>
-            
+                
                 <div class="sidebar-info-item">
                     <div class="sidebar-info-icon">
-                    <i class="fas fa-calendar-alt"></i>
-                </div>
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
                     <div class="sidebar-info-content">
                         <div class="sidebar-info-label">Kayıt Tarihi</div>
                         <div class="sidebar-info-value" id="profileJoinDate">15 Eylül 2023</div>
                     </div>
                 </div>
-                </div>
             </div>
-            
+        </div>
+
         <!-- Profile Feed - Orta Kısım (Gönderiler) -->
         <div class="profile-feed">
             <!-- Yeni Gönderi Oluşturma -->
@@ -1351,53 +403,53 @@
         <div class="profile-details">
             <!-- Biyografi -->
             <div class="content-card">
-            <h3 class="section-title"><i class="fas fa-user-edit"></i> Biyografi</h3>
-            
-            <div class="info-item">
-                <div class="info-icon">
-                    <i class="fas fa-info-circle"></i>
+                <h3 class="section-title"><i class="fas fa-user-edit"></i> Biyografi</h3>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label">Hakkımda</div>
+                        <div class="info-value" id="profileBio">Henüz bir biyografi eklenmemiş.</div>
+                    </div>
                 </div>
-                <div class="info-content">
-                    <div class="info-label">Hakkımda</div>
-                    <div class="info-value" id="profileBio">Henüz bir biyografi eklenmemiş.</div>
-                </div>
-            </div>
-            
-            <div class="info-item">
-                <div class="info-icon">
-                    <i class="fas fa-heart"></i>
-                </div>
-                <div class="info-content">
-                    <div class="info-label">İlgi Alanları</div>
-                    <div class="info-value" id="profileInterests">Henüz ilgi alanı eklenmemiş.</div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label">İlgi Alanları</div>
+                        <div class="info-value" id="profileInterests">Henüz ilgi alanı eklenmemiş.</div>
                     </div>
                 </div>
             </div>
             
             <!-- Kulüpler Bölümü -->
             <div class="content-card">
-            <h3 class="section-title"><i class="fas fa-users"></i> Üye Olduğu Kulüpler</h3>
-            
-            <div class="clubs-grid">
-                <div class="club-card">
-                    <div class="club-icon">
-                        <i class="fas fa-code"></i>
-                    </div>
-                    <div class="club-name">Yazılım Kulübü</div>
-                </div>
+                <h3 class="section-title"><i class="fas fa-users"></i> Üye Olduğu Kulüpler</h3>
                 
-                <div class="club-card">
-                    <div class="club-icon">
-                        <i class="fas fa-robot"></i>
+                <div class="clubs-grid">
+                    <div class="club-card">
+                        <div class="club-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="club-name">Yazılım Kulübü</div>
                     </div>
-                    <div class="club-name">Robotik Kulübü</div>
-                </div>
-                
-                <div class="club-card">
-                    <div class="club-icon">
-                        <i class="fas fa-paint-brush"></i>
+                    
+                    <div class="club-card">
+                        <div class="club-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="club-name">Robotik Kulübü</div>
                     </div>
-                    <div class="club-name">Tasarım Kulübü</div>
+                    
+                    <div class="club-card">
+                        <div class="club-icon">
+                            <i class="fas fa-paint-brush"></i>
+                        </div>
+                        <div class="club-name">Tasarım Kulübü</div>
                     </div>
                 </div>
             </div>
@@ -1520,18 +572,17 @@
 
         // Profil bilgilerini arayüze yansıt
         function updateProfileUI(profile) {
-            const profilePhoto = document.getElementById('profilePhoto');
+            const profilePhoto = document.getElementById('profilePhotoPreview');
             if (profile.photo) {
-                profilePhoto.src = profile.photo;
-                profilePhoto.style.display = 'block';
-                profilePhoto.parentElement.style.background = 'none';
+                profilePhoto.style.backgroundImage = `url(${profile.photo})`;
+                profilePhoto.style.backgroundSize = 'cover';
+                profilePhoto.style.backgroundPosition = 'center';
             } else {
-                profilePhoto.style.display = 'none';
-                profilePhoto.parentElement.style.background = 'linear-gradient(135deg, var(--primary-color), var(--accent-color))';
-                profilePhoto.parentElement.textContent = profile.username.charAt(0).toUpperCase();
+                profilePhoto.style.backgroundImage = 'none';
+                profilePhoto.innerHTML = '<i class="fas fa-user"></i>';
             }
             document.getElementById('profileName').textContent = profile.username;
-            document.getElementById('profileTitle').textContent = profile.title || 'Öğrenci';
+            document.getElementById('profileRole').textContent = profile.title || 'Öğrenci';
             document.getElementById('profileEmail').textContent = profile.email;
             document.getElementById('profilePhone').textContent = profile.phone || 'Belirtilmemiş';
             document.getElementById('profileDepartment').textContent = profile.department || 'Belirtilmemiş';
@@ -1654,7 +705,7 @@
         }
 
         // Profil fotoğrafı yükleme
-        const profilePhoto = document.getElementById('profilePhoto');
+        const profilePhoto = document.getElementById('profilePhotoPreview');
         const photoUploadOverlay = document.querySelector('.photo-upload-overlay');
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
@@ -1670,9 +721,9 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    profilePhoto.src = e.target.result;
-                    profilePhoto.style.display = 'block';
-                    profilePhoto.parentElement.style.background = 'none';
+                    profilePhoto.style.backgroundImage = `url(${e.target.result})`;
+                    profilePhoto.style.backgroundSize = 'cover';
+                    profilePhoto.style.backgroundPosition = 'center';
                     
                     // Fotoğrafı localStorage'a kaydet
                     const userData = JSON.parse(localStorage.getItem('user') || '{}');
@@ -1687,13 +738,12 @@
         document.addEventListener('DOMContentLoaded', () => {
             const userData = JSON.parse(localStorage.getItem('user') || '{}');
             if (userData.photo) {
-                profilePhoto.src = userData.photo;
-                profilePhoto.style.display = 'block';
-                profilePhoto.parentElement.style.background = 'none';
+                profilePhoto.style.backgroundImage = `url(${userData.photo})`;
+                profilePhoto.style.backgroundSize = 'cover';
+                profilePhoto.style.backgroundPosition = 'center';
             } else {
-                profilePhoto.style.display = 'none';
-                profilePhoto.parentElement.style.background = 'linear-gradient(135deg, var(--primary-color), var(--accent-color))';
-                profilePhoto.parentElement.textContent = userData.username?.charAt(0).toUpperCase() || 'U';
+                profilePhoto.style.backgroundImage = 'none';
+                profilePhoto.innerHTML = '<i class="fas fa-user"></i>';
             }
         });
 
@@ -1705,7 +755,7 @@
             if (userData.isPrivate) {
                 // Gizlilik açık olduğunda tüm bilgileri gizle
                 document.querySelector('.profile-name').textContent = 'Gizli Profil';
-                document.querySelector('.profile-title').textContent = 'Bu profil gizli';
+                document.querySelector('.profile-role').textContent = 'Bu profil gizli';
                 document.querySelector('.profile-stats').style.display = 'none';
                 document.querySelector('.sidebar-info').style.display = 'none';
                 document.querySelector('.profile-details').style.display = 'none';
