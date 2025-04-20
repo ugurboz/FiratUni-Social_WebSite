@@ -37,7 +37,7 @@ body {
     width: 100%;
     top: 0;
     z-index: 1000;
-    height: 60px;
+    height: 80px;
 }
 
 .brand {
@@ -47,8 +47,8 @@ body {
 }
 
 .brand-logo {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     background: white;
     border-radius: 50%;
     display: flex;
@@ -62,7 +62,7 @@ body {
 .brand-name {
     font-family: 'Righteous', cursive;
     color: white;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     text-decoration: none;
     transition: var(--transition);
 }
@@ -110,8 +110,8 @@ body {
     grid-template-columns: 300px 1fr 300px;
     gap: 20px;
     padding: 20px;
-    margin-top: 60px; /* Navbar yüksekliği kadar boşluk */
-    height: calc(100vh - 60px);
+    margin-top: 80px; /* Navbar yüksekliği kadar boşluk */
+    height: calc(100vh - 80px);
     max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
@@ -645,7 +645,7 @@ body {
     .main-content {
         grid-template-columns: 250px 1fr 250px;
         padding: 15px;
-        margin-top: 60px;
+        margin-top: 80px;
     }
 
     .sidebar, .right-sidebar {
@@ -669,7 +669,7 @@ body {
     .main-content {
         grid-template-columns: 1fr;
         gap: 15px;
-        margin-top: 60px;
+        margin-top: 80px;
     }
 
     .sidebar, .right-sidebar {

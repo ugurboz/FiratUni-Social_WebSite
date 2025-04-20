@@ -6,6 +6,19 @@
     <title>beGAK.com - Profil</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        // Oturum kontrolü
+        window.onload = function() {
+            const authToken = localStorage.getItem('authToken');
+            const userData = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            // Eğer authToken yoksa veya userData boşsa, login sayfasına yönlendir
+            if (!authToken || !userData.studentNumber) {
+                window.location.href = '../login/login_screen.html';
+                return;
+            }
+        }
+    </script>
     <style>
         :root {
             --primary-color: #4361ee;
@@ -46,6 +59,7 @@
             width: 100%;
             top: 0;
             z-index: 1000;
+            height: 80px;
         }
 
         .brand {
@@ -55,8 +69,8 @@
         }
 
         .brand-logo {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             background: white;
             border-radius: 50%;
             display: flex;
@@ -70,7 +84,7 @@
         .brand-name {
             font-family: 'Righteous', cursive;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             text-decoration: none;
             transition: var(--transition);
         }
@@ -952,10 +966,11 @@
             <a href="../../main/anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
         </div>
         <div class="nav-links">
-            <a href="../../main/anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
-            <a href="../../main/profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
-            <a href="../../main/mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
-            <a href="../../main/kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
+            <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
+            <a href="profil_screen.html" class="active"><i class="fas fa-user"></i> Profil</a>
+            <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
+            <a href="../kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
             <a href="#" onclick="return handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
         </div>
     </nav>
@@ -1435,8 +1450,8 @@
             }
 
             // Kullanıcı bilgilerini al
-            const userData = JSON.parse(localStorage.getItem('userData'));
-            if (!userData) {
+            const userData = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!userData.studentNumber) {
                 window.location.href = '../login/login_screen.html';
                 return;
             }
@@ -1450,7 +1465,7 @@
 
         // Kullanıcı fotoğraflarını yükle
         function loadUserPhotos() {
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const userData = JSON.parse(localStorage.getItem('user') || '{}');
             const userPhoto = userData.photo || '';
             
             // Avatar fotoğraflarını güncelle
@@ -1566,7 +1581,7 @@
             if (confirm("Çıkış yapmak istediğinize emin misiniz?")) {
                 // Kullanıcı onayladıysa çıkış işlemleri yap
                 localStorage.removeItem('authToken');
-                localStorage.removeItem('userData');
+                localStorage.removeItem('user');
                 window.location.href = '../login/login_screen.html';
                 return true;
             }
@@ -1584,7 +1599,7 @@
         // Profil bilgilerini getir
         async function getProfile(username) {
             // localStorage'dan kullanıcı bilgilerini al
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const userData = JSON.parse(localStorage.getItem('user') || '{}');
             
             // Bölüm seçeneklerini tanımla
             const departments = {
@@ -1660,9 +1675,9 @@
                     profilePhoto.parentElement.style.background = 'none';
                     
                     // Fotoğrafı localStorage'a kaydet
-                    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                    const userData = JSON.parse(localStorage.getItem('user') || '{}');
                     userData.photo = e.target.result;
-                    localStorage.setItem('userData', JSON.stringify(userData));
+                    localStorage.setItem('user', JSON.stringify(userData));
                 };
                 reader.readAsDataURL(file);
             }
@@ -1670,7 +1685,7 @@
 
         // Sayfa yüklendiğinde profil fotoğrafını yükle
         document.addEventListener('DOMContentLoaded', () => {
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const userData = JSON.parse(localStorage.getItem('user') || '{}');
             if (userData.photo) {
                 profilePhoto.src = userData.photo;
                 profilePhoto.style.display = 'block';
@@ -1683,7 +1698,7 @@
         });
 
         function loadUserData() {
-            const userData = JSON.parse(localStorage.getItem('userData')) || {};
+            const userData = JSON.parse(localStorage.getItem('user')) || {};
             
             // Profil fotoğrafı ve gizlilik kontrolü
             const profilePhoto = document.querySelector('.profile-photo');

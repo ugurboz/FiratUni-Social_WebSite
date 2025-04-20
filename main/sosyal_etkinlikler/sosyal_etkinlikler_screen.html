@@ -47,6 +47,7 @@
             width: 100%;
             top: 0;
             z-index: 1000;
+            height: 80px;
         }
 
         .brand {
@@ -56,8 +57,8 @@
         }
 
         .brand-logo {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             background: white;
             border-radius: 50%;
             display: flex;
@@ -71,7 +72,7 @@
         .brand-name {
             font-family: 'Righteous', cursive;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             text-decoration: none;
             transition: var(--transition);
         }
@@ -116,7 +117,7 @@
         /* Main Content */
         .main-content {
             max-width: 1200px;
-            margin: 6rem auto 2rem;
+            margin: 8rem auto 2rem;
             padding: 0 2rem;
             display: grid;
             grid-template-columns: 1fr;
@@ -184,8 +185,8 @@
             width: 300px;
             position: fixed;
             right: 10px;
-            top: 6rem;
-            height: calc(100vh - 6rem);
+            top: 8rem;
+            height: calc(100vh - 8rem);
             padding: 1rem;
             box-shadow: var(--box-shadow);
             background: white;
@@ -202,10 +203,10 @@
         </div>
         <div class="nav-links">
             <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="sosyal_etkinlikler_screen.html" class="active"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
             <a href="../profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
             <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
             <a href="../kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
-            <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html" class="active"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
             <a href="#" onclick="return handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
         </div>
     </nav>
@@ -223,7 +224,7 @@
                     </div>
                     <select class="filter-select" id="eventFilter">
                         <option value="all">Tüm Etkinlikler</option>
-                        <option value="upcoming">Yaklaşan Etkinlikler</option>
+                        <option value="upcoming">Canlı Etkinlikler</option>
                         <option value="ongoing">Devam Eden</option>
                         <option value="past">Geçmiş Etkinlikler</option>
                     </select>
