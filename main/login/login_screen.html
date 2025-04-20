@@ -586,10 +586,9 @@
                 // Simulate API call for login
                 await new Promise(resolve => setTimeout(resolve, 1500));
 
-                // Demo kullanıcı bilgileri - gerçek uygulamada bu bilgiler API'den gelecektir
+                // Demo kullanıcı bilgileri
                 const demoUsers = [
-                    { studentNumber: 'admin', password: 'admin123', name: 'Admin', profilePicture: '../assets/images/profile1.jpg', isAdmin: true },
-                    { studentNumber: '123456789', password: '123456789', name: 'Test Kullanıcı', profilePicture: '../assets/images/profile1.jpg' },
+                    { studentNumber: '123456789', password: '123456789', name: 'Admin', profilePicture: '../assets/images/profile1.jpg', isAdmin: true },
                     { studentNumber: '202012345', password: '123456', name: 'Ahmet Yılmaz', profilePicture: '../assets/images/profile1.jpg' },
                     { studentNumber: '202098765', password: '123456', name: 'Merve Demir', profilePicture: '../assets/images/profile2.jpg' },
                     { studentNumber: '202056789', password: '123456', name: 'Ece Kaya', profilePicture: '../assets/images/profile3.jpg' }
@@ -610,10 +609,11 @@
                 localStorage.setItem('authToken', 'dummy-token');
                 
                 // Kullanıcı bilgilerini kaydet
-                localStorage.setItem('userData', JSON.stringify({ 
-                    email: `${studentNumber}@firat.edu.tr`,
-                    displayName: user.name,
-                    profilePicture: user.profilePicture
+                localStorage.setItem('user', JSON.stringify({ 
+                    studentNumber: user.studentNumber,
+                    name: user.name,
+                    profilePicture: user.profilePicture,
+                    isAdmin: user.isAdmin || false
                 }));
                 
                 // Show success message
