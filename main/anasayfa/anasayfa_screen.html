@@ -6,539 +6,7 @@
     <title>beGAK.com - Ana Sayfa</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #4361ee;
-            --primary-dark: #3a0ca3;
-            --secondary-color: #4cc9f0;
-            --accent-color: #f72585;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --success-color: #4bb543;
-            --error-color: #ff3333;
-            --border-radius: 12px;
-            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f5f7fa;
-            min-height: 100vh;
-            color: var(--dark-color);
-        }
-
-        /* Navbar */
-        .navbar {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--box-shadow);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .brand-logo {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-color);
-            font-weight: bold;
-            font-family: 'Righteous', cursive;
-        }
-
-        .brand-name {
-            font-family: 'Righteous', cursive;
-            color: white;
-            font-size: 1.5rem;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .brand-name:hover {
-            transform: translateY(-2px);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: white;
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-links a:hover {
-            color: var(--secondary-color);
-        }
-
-        /* Main Content */
-        .main-content {
-            max-width: 1200px;
-            margin: 6rem auto 2rem;
-            padding: 0 2rem;
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 2rem;
-        }
-
-        /* Feed Section */
-        .feed-section {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        /* Post Form */
-        .post-form {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-
-        .post-form:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-
-        .post-input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            resize: none;
-            transition: var(--transition);
-        }
-
-        .post-input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-        }
-
-        .post-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .media-upload {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .upload-btn {
-            background: var(--light-color);
-            color: var(--dark-color);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .upload-btn:hover {
-            background: #e0e0e0;
-        }
-
-        .upload-btn i {
-            color: var(--primary-color);
-        }
-
-        .post-button {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            padding: 0.7rem 1.5rem;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .post-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-        }
-
-        .preview-image {
-            max-width: 100%;
-            max-height: 300px;
-            border-radius: var(--border-radius);
-            margin-top: 1rem;
-            display: none;
-            object-fit: cover;
-        }
-
-        /* Posts */
-        .post {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-
-        .post:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .post-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-        }
-
-        .post-user {
-            flex: 1;
-        }
-
-        .post-author {
-            font-weight: 600;
-            color: var(--primary-dark);
-        }
-
-        .post-time {
-            color: #666;
-            font-size: 0.8rem;
-        }
-
-        .post-content {
-            color: var(--dark-color);
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-
-        .post-image {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            border-radius: var(--border-radius);
-            margin-bottom: 1rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .post-stats {
-            display: flex;
-            justify-content: space-between;
-            color: #666;
-            font-size: 0.9rem;
-            padding: 0.5rem 0;
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 1rem;
-        }
-
-        .post-actions {
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .post-action {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: var(--transition);
-            color: #666;
-        }
-
-        .post-action:hover {
-            background: var(--light-color);
-            color: var(--primary-color);
-        }
-
-        .post-action i {
-            transition: var(--transition);
-        }
-
-        .post-action.liked {
-            color: var(--accent-color);
-        }
-
-        .post-action.liked i {
-            color: var(--accent-color);
-        }
-
-        /* Comments */
-        .comment-section {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #eee;
-            display: none;
-        }
-
-        .comment-form {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .comment-input {
-            flex: 1;
-            padding: 0.8rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            transition: var(--transition);
-        }
-
-        .comment-input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-        }
-
-        .comment-submit {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0 1.5rem;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .comment-submit:hover {
-            background: var(--primary-dark);
-        }
-
-        .comments {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .comment {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .comment-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 0.8rem;
-            flex-shrink: 0;
-        }
-
-        .comment-content {
-            background: var(--light-color);
-            padding: 0.8rem;
-            border-radius: 0 10px 10px 10px;
-            flex: 1;
-        }
-
-        .comment-author {
-            font-weight: 600;
-            color: var(--primary-dark);
-            font-size: 0.9rem;
-        }
-
-        .comment-text {
-            margin-top: 0.3rem;
-            font-size: 0.9rem;
-        }
-
-        .comment-time {
-            color: #666;
-            font-size: 0.7rem;
-            margin-top: 0.3rem;
-            display: block;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: sticky;
-            top: 6rem;
-            height: fit-content;
-        }
-
-        .sidebar-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-
-        .sidebar-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-
-        .sidebar-title {
-            color: var(--primary-dark);
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .sidebar-title i {
-            color: var(--accent-color);
-        }
-
-        .event-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .event-item {
-            display: flex;
-            gap: 1rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .event-item:last-child {
-            border-bottom: none;
-        }
-
-        .event-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .event-info {
-            flex: 1;
-        }
-
-        .event-title {
-            font-weight: 600;
-            color: var(--dark-color);
-            font-size: 0.9rem;
-        }
-
-        .event-desc {
-            color: #666;
-            font-size: 0.8rem;
-            margin-top: 0.2rem;
-        }
-
-        .event-date {
-            color: var(--primary-color);
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-top: 0.3rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                display: none;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 1rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-            }
-
-            .main-content {
-                margin-top: 5rem;
-                padding: 0 1rem;
-            }
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .post {
-            animation: fadeIn 0.5s ease-out;
-        }
-    </style>
+    <link rel="stylesheet" href="css/anasayfa.css">
 </head>
 <body>
     <!-- Navbar -->
@@ -552,12 +20,24 @@
             <a href="../profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
             <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
             <a href="../kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
+            <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
             <a href="#" onclick="return handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
         </div>
     </nav>
 
     <!-- Main Content -->
     <div class="main-content">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <!-- Events Card -->
+            <div class="sidebar-card">
+                <h3 class="sidebar-title"><i class="fas fa-calendar-alt"></i> Yaklaşan Etkinlikler</h3>
+                <div class="event-list" id="events-list">
+                    <!-- Events will be loaded here dynamically -->
+                </div>
+            </div>
+        </div>
+        
         <!-- Feed Section -->
         <div class="feed-section">
             <!-- Post Form -->
@@ -569,62 +49,385 @@
                             <i class="fas fa-image"></i> Resim
                             <input type="file" id="post-image" accept="image/*" style="display: none;">
                         </label>
-                        <button class="upload-btn">
+                        <label class="upload-btn">
                             <i class="fas fa-video"></i> Video
+                            <input type="file" id="post-video" accept="video/*" style="display: none;">
+                        </label>
+                        <button class="upload-btn">
+                            <i class="fas fa-paperclip"></i> Dosya
                         </button>
                     </div>
-                    <button class="post-button" id="share-post">Paylaş</button>
+                    <button class="post-button" id="share-post">
+                        <i class="fas fa-paper-plane"></i> Paylaş
+                    </button>
                 </div>
-                <img id="image-preview" class="preview-image" alt="Preview">
+                <div class="preview-container">
+                    <img id="image-preview" class="preview-image" alt="Preview">
+                    <button id="cancel-upload" class="cancel-upload-btn" style="display: none;"><i class="fas fa-times"></i></button>
+                </div>
             </div>
 
             <!-- Posts will be loaded here dynamically -->
-            <div id="posts-container"></div>
-        </div>
+            <div id="posts-container">
+                <!-- Müzik Kulübü Paylaşımı -->
+                <div class="post">
+                    <div class="post-header">
+                        <div class="post-avatar">B</div>
+                        <div class="post-user">
+                            <div class="post-author">Burak Arda Kandemir</div>
+                            <div class="post-time">8 saat önce</div>
+                        </div>
+                    </div>
+                    <div class="post-content">Fırat Üniversitesi Müzik Kulübü olarak bu hafta Çarşamba günü saat 19:00'da merkez kampüste "Bahar Konseri" düzenliyoruz! 🎵 Program hakkında detaylı bilgi için kulüp sayfamızı ziyaret edin. Tüm üniversite öğrencileri davetlidir. #müzik #konser #firatuni</div>
+                    <img src="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" class="post-image" alt="Müzik Konseri">
+                    <div class="post-stats">
+                        <span>38 beğeni</span>
+                        <span>12 yorum</span>
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action like-button" data-post-id="sample3">
+                            <i class="fas fa-apple-whole"></i>
+                            <span>Beğen</span>
+                        </div>
+                        <div class="post-action comment-button" data-post-id="sample3">
+                            <i class="far fa-comment"></i>
+                            <span>Yorum Yap</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-share"></i>
+                            <span>Paylaş</span>
+                        </div>
+                    </div>
+                    <div class="comment-section" id="comments-sample3" style="display: none;">
+                        <div class="comment-form">
+                            <input type="text" class="comment-input" placeholder="Yorum yaz..." data-post-id="sample3">
+                            <button class="comment-submit" data-post-id="sample3"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                        <div class="comments">
+                            <div class="comment">
+                                <div class="comment-avatar">S</div>
+                                <div class="comment-content">
+                                    <div class="comment-author">Sinem Yılmaz</div>
+                                    <div class="comment-text">Geçen dönemki konser çok güzeldi, bu sefer de gelmeyi düşünüyorum!</div>
+                                    <div class="comment-time">7 saat önce</div>
+                                </div>
+                            </div>
+                            <div class="comment">
+                                <div class="comment-avatar">B</div>
+                                <div class="comment-content">
+                                    <div class="comment-author">Burak Arda Kandemir</div>
+                                    <div class="comment-text">Çok teşekkürler Sinem! Bu seferki konserimizde yeni şarkılar ve sürprizler olacak, bekleriz.</div>
+                                    <div class="comment-time">6 saat önce</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <!-- Events Card -->
-            <div class="sidebar-card">
-                <h3 class="sidebar-title"><i class="fas fa-calendar-alt"></i> Yaklaşan Etkinlikler</h3>
-                <div class="event-list" id="events-list">
-                    <!-- Events will be loaded here dynamically -->
+                <!-- Hackathon Duyurusu -->
+                <div class="post">
+                    <div class="post-header">
+                        <div class="post-avatar">İ</div>
+                        <div class="post-user">
+                            <div class="post-author">İbrahim Taşkıran</div>
+                            <div class="post-time">2 saat önce</div>
+                        </div>
+                    </div>
+                    <div class="post-content">Yazılım Mühendisliği Kulübü olarak düzenlediğimiz hackathon etkinliğimize tüm bölümlerden arkadaşları bekliyoruz! Detaylı bilgi için kulüp sayfamızı ziyaret edebilirsiniz. 💻🚀 #hackathon #yazılım #firatüni</div>
+                    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" class="post-image" alt="Hackathon">
+                    <div class="post-stats">
+                        <span>24 beğeni</span>
+                        <span>8 yorum</span>
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action like-button" data-post-id="sample1">
+                            <i class="fas fa-apple-whole"></i>
+                            <span>Beğen</span>
+                        </div>
+                        <div class="post-action comment-button" data-post-id="sample1">
+                            <i class="far fa-comment"></i>
+                            <span>Yorum Yap</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-share"></i>
+                            <span>Paylaş</span>
+                        </div>
+                    </div>
+                    <div class="comment-section" id="comments-sample1" style="display: none;">
+                        <div class="comment-form">
+                            <input type="text" class="comment-input" placeholder="Yorum yaz..." data-post-id="sample1">
+                            <button class="comment-submit" data-post-id="sample1"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                        <div class="comments">
+                            <div class="comment">
+                                <div class="comment-avatar">A</div>
+                                <div class="comment-content">
+                                    <div class="comment-author">Ayşe Demir</div>
+                                    <div class="comment-text">Etkinlik yeri ve saati hakkında daha fazla bilgi alabilir miyiz?</div>
+                                    <div class="comment-time">1 saat önce</div>
+                                </div>
+                            </div>
+                            <div class="comment">
+                                <div class="comment-avatar">İ</div>
+                                <div class="comment-content">
+                                    <div class="comment-author">İbrahim Taşkıran</div>
+                                    <div class="comment-text">Tabii, etkinliğimiz 15 Mart saat 10:00'da Mühendislik Fakültesi B Blok Konferans Salonu'nda gerçekleşecek. 24 saat sürecek ve ödüller var!</div>
+                                    <div class="comment-time">50 dakika önce</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kampüs Yaşamı Paylaşımı -->
+                <div class="post">
+                    <div class="post-header">
+                        <div class="post-avatar">U</div>
+                        <div class="post-user">
+                            <div class="post-author">Uğur Boz</div>
+                            <div class="post-time">1 gün önce</div>
+                        </div>
+                    </div>
+                    <div class="post-content">Bugün merkez kütüphanedeki yeni teknoloji laboratuvarını ziyaret ettim. Yeni 3D yazıcılar ve VR ekipmanları gerçekten etkileyici! Projeleriniz için bu imkanları kullanabilirsiniz. Laboratuvar her gün 9:00-17:00 arası açık. İşte yeni 3D yazıcının test baskısı 👇 #teknolab #firatuni #3dprinting</div>
+                    <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" class="post-image" alt="3D Printer">
+                    <div class="post-stats">
+                        <span>87 beğeni</span>
+                        <span>31 yorum</span>
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action like-button" data-post-id="sample5">
+                            <i class="fas fa-apple-whole"></i>
+                            <span>Beğen</span>
+                        </div>
+                        <div class="post-action comment-button" data-post-id="sample5">
+                            <i class="far fa-comment"></i>
+                            <span>Yorum Yap</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-share"></i>
+                            <span>Paylaş</span>
+                        </div>
+                    </div>
+                    <div class="comment-section" id="comments-sample5" style="display: none;">
+                        <div class="comment-form">
+                            <input type="text" class="comment-input" placeholder="Yorum yaz..." data-post-id="sample5">
+                            <button class="comment-submit" data-post-id="sample5"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                        <div class="comments">
+                            <div class="comment">
+                                <div class="comment-avatar">B</div>
+                                <div class="comment-content">
+                                    <div class="comment-author">Baran Arda Kandemir</div>
+                                    <div class="comment-text">Laboratuvarı kullanmak için önceden randevu almak gerekiyor mu?</div>
+                                    <div class="comment-time">23 saat önce</div>
+                                </div>
+                            </div>
+                            <div class="comment">
+                                <div class="comment-avatar">U</div>
+                                <div class="comment-content">
+                                    <div class="comment-author">Uğur Boz</div>
+                                    <div class="comment-text">VR cihazları için randevu gerekiyor ama 3D yazıcılar için öğrenci kimliğin ve baskı dosyan yeterli. Laboratuvar sorumlusu Ahmet hoca gerçekten yardımcı oluyor.</div>
+                                    <div class="comment-time">22 saat önce</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Akademik Paylaşım -->
+                <div class="post">
+                    <div class="post-header">
+                        <div class="post-avatar">E</div>
+                        <div class="post-user">
+                            <div class="post-author">Elif Zehra Ünal</div>
+                            <div class="post-time">5 saat önce</div>
+                        </div>
+                    </div>
+                    <div class="post-content">Bilgisayar Mühendisliği 3. sınıf Veri Yapıları dersi için oluşturduğum özetin PDF haline linkten ulaşabilirsiniz. Final öncesi çalışmak isteyenlere faydalı olabilir. İyi çalışmalar! 📚</div>
+                    <div class="post-stats">
+                        <span>42 beğeni</span>
+                        <span>15 yorum</span>
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action like-button" data-post-id="sample2">
+                            <i class="fas fa-apple-whole"></i>
+                            <span>Beğen</span>
+                        </div>
+                        <div class="post-action comment-button" data-post-id="sample2">
+                            <i class="far fa-comment"></i>
+                            <span>Yorum Yap</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-share"></i>
+                            <span>Paylaş</span>
+                        </div>
+                    </div>
+                    <div class="comment-section" id="comments-sample2" style="display: none;">
+                        <div class="comment-form">
+                            <input type="text" class="comment-input" placeholder="Yorum yaz..." data-post-id="sample2">
+                            <button class="comment-submit" data-post-id="sample2"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                        <div class="comments">
+                            <div class="comment">
+                                <div class="comment-avatar">M</div>
+                                <div class="comment-content">
+                                    <div class="comment-author">Mehmet Kaya</div>
+                                    <div class="comment-text">Çok teşekkürler, tam ihtiyacım olan şeydi!</div>
+                                    <div class="comment-time">4 saat önce</div>
+                                </div>
+                            </div>
+                            <div class="comment">
+                                <div class="comment-avatar">Z</div>
+                                <div class="comment-content">
+                                    <div class="comment-author">Zeynep Aydın</div>
+                                    <div class="comment-text">Harika olmuş, paylaşım için teşekkürler.</div>
+                                    <div class="comment-time">3 saat önce</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Akademik Paylaşım 2 -->
+                <div class="post">
+                    <div class="post-header">
+                        <div class="post-avatar">H</div>
+                        <div class="post-user">
+                            <div class="post-author">Hüseyin Adıgüzel</div>
+                            <div class="post-time">12 saat önce</div>
+                        </div>
+                    </div>
+                    <div class="post-content">Yazılım Mühendisliği 2. sınıf arkadaşlar için hazırladığım "Nesne Yönelimli Programlama" notlarını Drive'a yükledim. Özellikle final sınavında kalıtım ve polimorfizm konularına ağırlık verilecek. İşte bağlantı: drive.firat.edu.tr/s/3fGh5Jk 🧑‍💻 #oop #java #programlama</div>
+                    <div class="post-stats">
+                        <span>65 beğeni</span>
+                        <span>24 yorum</span>
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action like-button" data-post-id="sample4">
+                            <i class="fas fa-apple-whole"></i>
+                            <span>Beğen</span>
+                        </div>
+                        <div class="post-action comment-button" data-post-id="sample4">
+                            <i class="far fa-comment"></i>
+                            <span>Yorum Yap</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-share"></i>
+                            <span>Paylaş</span>
+                        </div>
+                    </div>
+                    <div class="comment-section" id="comments-sample4" style="display: none;">
+                        <div class="comment-form">
+                            <input type="text" class="comment-input" placeholder="Yorum yaz..." data-post-id="sample4">
+                            <button class="comment-submit" data-post-id="sample4"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                        <div class="comments">
+                            <div class="comment">
+                                <div class="comment-avatar">K</div>
+                                <div class="comment-content">
+                                    <div class="comment-author">Kerem Yıldız</div>
+                                    <div class="comment-text">Bu notlar gerçekten çok faydalı, özellikle abstract sınıflar ve interface kısmını anlamakta zorlanıyordum. Teşekkürler!</div>
+                                    <div class="comment-time">11 saat önce</div>
+                                </div>
+                            </div>
+                            <div class="comment">
+                                <div class="comment-avatar">E</div>
+                                <div class="comment-content">
+                                    <div class="comment-author">Esra Demir</div>
+                                    <div class="comment-text">Notlarda UML diyagramları da var mı acaba?</div>
+                                    <div class="comment-time">10 saat önce</div>
+                                </div>
+                            </div>
+                            <div class="comment">
+                                <div class="comment-avatar">H</div>
+                                <div class="comment-content">
+                                    <div class="comment-author">Hüseyin Adıgüzel</div>
+                                    <div class="comment-text">Evet Esra, UML sınıf diyagramları için ayrı bir bölüm ekledim. Dosyanın sonunda örnek diyagramlar bulunuyor.</div>
+                                    <div class="comment-time">9 saat önce</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+        
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <!-- Canlı Etkinlikler Panosu -->
+            <div class="live-events-card">
+                <h3 class="live-events-title"><i class="fas fa-bolt"></i> Canlı Etkinlikler</h3>
+                <div class="event-list" id="live-events-list">
+                    <!-- Canlı etkinlikler burada listelenecek -->
+                    <div class="event-item">
+                        <div class="event-icon">
+                            <i class="fas fa-futbol"></i>
+                        </div>
+                        <div class="event-details">
+                            <h4>Halısaha Maçı</h4>
+                            <p>3 kişi daha lazım, acil!</p>
+                            <div class="event-info">
+                                <span><i class="fas fa-map-marker-alt"></i> Merkez Halısaha</span>
+                                <span><i class="fas fa-clock"></i> Bugün, 18:00</span>
+                            </div>
+                            <div class="event-creator">
+                                <span><i class="fas fa-user"></i> Ahmet Yılmaz</span>
+                                <span><i class="fas fa-users"></i> 7/10 kişi</span>
+                            </div>
+                            <button class="join-event-btn">Katıl</button>
+                        </div>
+                    </div>
 
-            <!-- Quick Links Card -->
-            <div class="sidebar-card">
-                <h3 class="sidebar-title"><i class="fas fa-link"></i> Hızlı Erişim</h3>
-                <div class="event-list">
                     <div class="event-item">
                         <div class="event-icon">
                             <i class="fas fa-book"></i>
                         </div>
-                        <div class="event-info">
-                            <div class="event-title">Ders Notları</div>
-                            <div class="event-desc">Tüm ders notlarına erişim</div>
+                        <div class="event-details">
+                            <h4>Veri Yapıları Çalışma</h4>
+                            <p>Final sınavına hazırlık için buluşuyoruz</p>
+                            <div class="event-info">
+                                <span><i class="fas fa-map-marker-alt"></i> Kütüphane</span>
+                                <span><i class="fas fa-clock"></i> Yarın, 14:00</span>
+                            </div>
+                            <div class="event-creator">
+                                <span><i class="fas fa-user"></i> Zeynep Kaya</span>
+                                <span><i class="fas fa-users"></i> 4/8 kişi</span>
+                            </div>
+                            <button class="join-event-btn">Katıl</button>
                         </div>
                     </div>
+
                     <div class="event-item">
                         <div class="event-icon">
-                            <i class="fas fa-calendar-check"></i>
+                            <i class="fas fa-gamepad"></i>
                         </div>
-                        <div class="event-info">
-                            <div class="event-title">Akademik Takvim</div>
-                            <div class="event-desc">Önemli tarihler ve etkinlikler</div>
-                        </div>
-                    </div>
-                    <div class="event-item">
-                        <div class="event-icon">
-                            <i class="fas fa-bullhorn"></i>
-                        </div>
-                        <div class="event-info">
-                            <div class="event-title">Duyurular</div>
-                            <div class="event-desc">Son duyurular</div>
+                        <div class="event-details">
+                            <h4>LOL Turnuvası</h4>
+                            <p>Takımımıza 2 kişi arıyoruz</p>
+                            <div class="event-info">
+                                <span><i class="fas fa-map-marker-alt"></i> E-Spor Salonu</span>
+                                <span><i class="fas fa-clock"></i> Cumartesi</span>
+                            </div>
+                            <div class="event-creator">
+                                <span><i class="fas fa-user"></i> Burak Demir</span>
+                                <span><i class="fas fa-users"></i> 3/5 kişi</span>
+                            </div>
+                            <button class="join-event-btn">Katıl</button>
                         </div>
                     </div>
                 </div>
+                <button class="create-event-btn" id="create-live-event">
+                    <i class="fas fa-plus"></i> Etkinlik Oluştur
+                </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Bildirim Bileşeni -->
+    <div class="notification" id="notification">
+        <div class="notification-content">
+            <i class="fas fa-check-circle"></i>
+            <span id="notification-message"></span>
         </div>
     </div>
 
@@ -656,6 +459,8 @@
         // Bildirim veritabanı simülasyonu
         let notifications = [];
 
+        // Canlı etkinlik veritabanı simülasyonu (kaldırıldı)
+
         // Oturum kontrolü
         document.addEventListener('DOMContentLoaded', function() {
             // localStorage'dan authToken'ı kontrol et
@@ -685,19 +490,28 @@
             // Gönderileri yükle
             loadPosts();
             loadEvents();
+            
+            // Etkinlik katılım butonları için olay dinleyicileri
+            setupEventJoinButtons();
         });
 
         // Gönderileri yükle
         async function loadPosts() {
             try {
-                const posts = await getPosts();
+                const dynamicPosts = await getPosts();
                 const postsContainer = document.getElementById('posts-container');
-                postsContainer.innerHTML = '';
-
-                posts.forEach(post => {
-                    const postElement = createPostElement(post);
-                    postsContainer.appendChild(postElement);
-                });
+                
+                // Eğer dinamik gönderiler varsa, bunları mevcut gönderilerin üzerine ekle
+                if (dynamicPosts && dynamicPosts.length > 0) {
+                    const tempContainer = document.createElement('div');
+                    dynamicPosts.forEach(post => {
+                        const postElement = createPostElement(post);
+                        tempContainer.appendChild(postElement);
+                    });
+                    
+                    // Yeni gönderileri mevcut gönderilerin başına ekle
+                    postsContainer.insertBefore(tempContainer, postsContainer.firstChild);
+                }
             } catch (error) {
                 console.error('Gönderiler yüklenirken hata:', error);
             }
@@ -743,7 +557,7 @@
                 </div>
                 <div class="post-actions">
                     <div class="post-action like-button" data-post-id="${post.id}">
-                        <i class="far fa-heart"></i>
+                        <i class="fas fa-apple-whole"></i>
                         <span>Beğen</span>
                     </div>
                     <div class="post-action comment-button" data-post-id="${post.id}">
@@ -774,12 +588,15 @@
                     const updatedPost = await likePost(postId);
                     this.classList.toggle('liked');
                     const icon = this.querySelector('i');
-                    icon.classList.toggle('far');
-                    icon.classList.toggle('fas');
+                    icon.classList.toggle('fa-apple-whole');
+                    icon.classList.toggle('fa-apple-alt');
                     
                     // Beğeni sayısını güncelle
-                    const stats = postElement.querySelector('.post-stats span:first-child');
+                    const stats = this.closest('.post').querySelector('.post-stats span:first-child');
                     stats.textContent = `${updatedPost.likes} beğeni`;
+                    
+                    // Bildirim göster
+                    showNotification(this.classList.contains('liked') ? 'Gönderi beğenildi!' : 'Beğeni kaldırıldı');
                 } catch (error) {
                     console.error('Beğeni işlemi hatası:', error);
                 }
@@ -894,25 +711,32 @@
             const postInput = document.querySelector('.post-input');
             const content = postInput.value.trim();
             const imageFile = document.getElementById('post-image').files[0];
+            const videoFile = document.getElementById('post-video').files[0];
             
-            if (!content && !imageFile) {
-                alert('Lütfen bir içerik girin veya resim ekleyin');
+            if (!content && !imageFile && !videoFile) {
+                alert('Lütfen bir içerik girin veya resim veya video ekleyin');
                 return;
             }
             
             try {
                 let imageUrl = null;
+                let videoUrl = null;
                 if (imageFile) {
                     imageUrl = await uploadImage(imageFile);
                 }
+                if (videoFile) {
+                    videoUrl = await uploadVideo(videoFile);
+                }
                 
-                const newPost = await createPost(content, imageUrl);
+                const newPost = await createPost(content, imageUrl, videoUrl);
                 loadPosts(); // Gönderileri yeniden yükle
                 
                 // Formu temizle
                 postInput.value = '';
                 document.getElementById('post-image').value = '';
+                document.getElementById('post-video').value = '';
                 document.getElementById('image-preview').style.display = 'none';
+                document.getElementById('cancel-upload').style.display = 'none';
                 
                 // Bildirim oluştur
                 await createNotification('post', 'Yeni bir gönderi paylaştınız', null);
@@ -931,9 +755,34 @@
                     const preview = document.getElementById('image-preview');
                     preview.src = e.target.result;
                     preview.style.display = 'block';
+                    document.getElementById('cancel-upload').style.display = 'flex';
                 };
                 reader.readAsDataURL(file);
             }
+        });
+
+        // Video önizleme
+        document.getElementById('post-video').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('image-preview');
+                    // Video için bir resim önizlemesi gösteriyoruz
+                    preview.src = 'https://via.placeholder.com/300x200.png?text=Video+Y%C3%BCklendi';
+                    preview.style.display = 'block';
+                    document.getElementById('cancel-upload').style.display = 'flex';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // İptal butonu işlevi
+        document.getElementById('cancel-upload').addEventListener('click', function() {
+            document.getElementById('post-image').value = '';
+            document.getElementById('post-video').value = '';
+            document.getElementById('image-preview').style.display = 'none';
+            this.style.display = 'none';
         });
 
         /* Backend Fonksiyonları */
@@ -964,7 +813,7 @@
         }
 
         // Gönderi oluşturma
-        async function createPost(content, image = null) {
+        async function createPost(content, image = null, video = null) {
             try {
                 const user = JSON.parse(localStorage.getItem('user'));
                 if (!user) {
@@ -976,6 +825,7 @@
                     username: user.username || 'Anonim',
                     content: content,
                     image: image,
+                    video: video,
                     likes: 0,
                     comments: [],
                     timestamp: new Date().toISOString()
@@ -1007,7 +857,32 @@
                     throw new Error('Gönderi bulunamadı');
                 }
 
-                post.likes++;
+                // Butonu kontrol et
+                const likeButton = document.querySelector(`.like-button[data-post-id="${postId}"]`);
+                if (likeButton) {
+                    const isCurrentlyLiked = likeButton.classList.contains('liked');
+                    
+                    // Beğeni durumunu güncelle
+                    if (isCurrentlyLiked) {
+                        post.likes = Math.max(0, post.likes - 1);
+                    } else {
+                        post.likes++;
+                    }
+                    
+                    // Buton durumunu güncelle
+                    likeButton.classList.toggle('liked');
+                    const icon = likeButton.querySelector('i');
+                    icon.classList.toggle('fa-apple-whole');
+                    icon.classList.toggle('fa-apple-alt');
+                    
+                    // Beğeni sayısını güncelle
+                    const stats = likeButton.closest('.post').querySelector('.post-stats span:first-child');
+                    stats.textContent = `${post.likes} beğeni`;
+                    
+                    // Bildirim göster
+                    showNotification(isCurrentlyLiked ? 'Beğeni kaldırıldı' : 'Gönderi beğenildi!');
+                }
+                
                 return post;
             } catch (error) {
                 console.error('Gönderi beğenilirken hata:', error);
@@ -1085,6 +960,180 @@
                 throw error;
             }
         }
+
+        // Video yükleme
+        async function uploadVideo(file) {
+            try {
+                // Gerçek uygulamada burada bir dosya yükleme servisi kullanılacak
+                // Şimdilik sadece base64 formatında döndürüyoruz
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = error => reject(error);
+                    reader.readAsDataURL(file);
+                });
+            } catch (error) {
+                console.error('Video yüklenirken hata:', error);
+                throw error;
+            }
+        }
+
+        // Function to show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas fa-check-circle"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            // Append notification to body
+            document.body.appendChild(notification);
+            
+            // Add show class after a small delay to trigger animation
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Etkinlik katılım butonları için olay dinleyicileri kurulumu
+        function setupEventJoinButtons() {
+            const joinButtons = document.querySelectorAll('.join-event-btn');
+            
+            joinButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Butonun içeriğini ve stilini değiştir
+                    this.textContent = 'Katıldınız';
+                    this.classList.add('joined');
+                    this.disabled = true;
+                    
+                    // Butonun bulunduğu etkinlik öğesini bul
+                    const eventItem = this.closest('.event-item');
+                    
+                    // Etkinlik başlığını al
+                    const eventTitle = eventItem.querySelector('h4').textContent;
+                    
+                    // Katılımcı sayısını güncelle
+                    const participantsSpan = eventItem.querySelector('.event-creator span:last-child');
+                    const currentText = participantsSpan.textContent;
+                    const matches = currentText.match(/(\d+)\/(\d+)/);
+                    
+                    if (matches && matches.length === 3) {
+                        const current = parseInt(matches[1]);
+                        const total = parseInt(matches[2]);
+                        
+                        if (current < total) {
+                            participantsSpan.textContent = `${current + 1}/${total} kişi`;
+                        }
+                    }
+                    
+                    // Bildirim göster
+                    showNotification(`"${eventTitle}" etkinliğine katıldınız!`);
+                });
+            });
+            
+            // Etkinlik oluştur butonu için dinleyici
+            const createEventBtn = document.getElementById('create-live-event');
+            if (createEventBtn) {
+                createEventBtn.addEventListener('click', function() {
+                    // Şimdilik sadece bildirim gösteriyoruz
+                    showNotification('Etkinlik oluşturma özelliği yakında eklenecek!');
+                });
+            }
+        }
+
+        // Statik içerikler için event listener'lar ekleme
+        document.addEventListener('DOMContentLoaded', function() {
+            // Statik gönderilerin beğeni butonlarına dinleyici ekle
+            const staticLikeButtons = document.querySelectorAll('.post .like-button');
+            staticLikeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Beğeni durumunu değiştir
+                    const isCurrentlyLiked = this.classList.contains('liked');
+                    
+                    // İkonları değiştir
+                    this.classList.toggle('liked');
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('fa-apple-whole');
+                    icon.classList.toggle('fa-apple-alt');
+                    
+                    // Beğeni sayısını güncelle
+                    const stats = this.closest('.post').querySelector('.post-stats span:first-child');
+                    const currentText = stats.textContent;
+                    const likeCount = parseInt(currentText.split(' ')[0]);
+                    
+                    // Eğer şu an beğenildiyse (yani beğeni eklendiyse) sayıyı bir arttır, değilse bir azalt
+                    const newCount = isCurrentlyLiked ? Math.max(0, likeCount - 1) : likeCount + 1;
+                    stats.textContent = `${newCount} beğeni`;
+                    
+                    // Bildirim göster
+                    showNotification(isCurrentlyLiked ? 'Beğeni kaldırıldı' : 'Gönderi beğenildi!');
+                });
+            });
+            
+            // Statik gönderilerin yorum butonlarına dinleyici ekle
+            const staticCommentButtons = document.querySelectorAll('.post .comment-button');
+            staticCommentButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const postId = this.getAttribute('data-post-id');
+                    const commentSection = document.getElementById(`comments-${postId}`);
+                    commentSection.style.display = commentSection.style.display === 'none' ? 'block' : 'none';
+                });
+            });
+            
+            // Statik yorum gönderme butonlarına dinleyici ekle
+            const staticCommentSubmits = document.querySelectorAll('.post .comment-submit');
+            staticCommentSubmits.forEach(button => {
+                button.addEventListener('click', function() {
+                    const postId = this.getAttribute('data-post-id');
+                    const commentInput = this.closest('.comment-form').querySelector('.comment-input');
+                    const commentText = commentInput.value.trim();
+                    
+                    if (commentText) {
+                        // Yeni yorum elementi oluştur
+                        const commentsContainer = this.closest('.comment-section').querySelector('.comments');
+                        const commentElement = document.createElement('div');
+                        commentElement.className = 'comment';
+                        
+                        // Kullanıcı datasını al (gerçekte dinamik olacak)
+                        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                        const userInitial = userData.displayName ? userData.displayName.charAt(0).toUpperCase() : 'U';
+                        const userName = userData.displayName || 'Kullanıcı';
+                        
+                        commentElement.innerHTML = `
+                            <div class="comment-avatar">${userInitial}</div>
+                            <div class="comment-content">
+                                <div class="comment-author">${userName}</div>
+                                <div class="comment-text">${commentText}</div>
+                                <div class="comment-time">Az önce</div>
+                            </div>
+                        `;
+                        commentsContainer.appendChild(commentElement);
+                        
+                        // Input'u temizle
+                        commentInput.value = '';
+                        
+                        // Yorum sayısını güncelle
+                        const stats = this.closest('.post').querySelector('.post-stats span:last-child');
+                        const commentCount = parseInt(stats.textContent.split(' ')[0]) + 1;
+                        stats.textContent = `${commentCount} yorum`;
+                        
+                        // Bildirim göster
+                        showNotification('Yorumunuz eklendi!');
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
