@@ -151,16 +151,19 @@ body {
     border-bottom: 1px solid #eee;
 }
 
+/* Profil Fotoğrafı ve Görsel Düzeltmeleri */
 .profile-photo-container {
     position: relative;
     width: 150px;
     height: 150px;
     margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
 .profile-photo {
-    width: 150px;
-    height: 150px;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid var(--primary-color);
@@ -171,6 +174,10 @@ body {
     justify-content: center;
     color: white;
     font-size: 3rem;
+}
+
+.profile-photo i {
+    font-size: 4rem;
 }
 
 .photo-edit-btn {
@@ -188,6 +195,7 @@ body {
     cursor: pointer;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     transition: var(--transition);
+    z-index: 2;
 }
 
 .photo-edit-btn:hover {
@@ -367,13 +375,12 @@ body {
 }
 
 .club-card {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    background: #f8f9fa;
+    background: white;
     border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--box-shadow);
     transition: var(--transition);
-    border: 1px solid #eee;
+    text-align: center;
 }
 
 .club-card:hover {
@@ -382,17 +389,16 @@ body {
 }
 
 .club-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    margin-right: 1rem;
-    font-size: 1.2rem;
-    flex-shrink: 0;
+    font-size: 2rem;
 }
 
 .club-name {
@@ -423,15 +429,17 @@ body {
     border-bottom: 1px solid #f5f5f5;
 }
 
+/* Kullanıcı Avatarı */
+.new-post-avatar,
 .post-user-photo {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     overflow: hidden;
-    margin-right: a.rem;
-    flex-shrink: 0;
+    margin-right: 1rem;
 }
 
+.new-post-avatar img,
 .post-user-photo img {
     width: 100%;
     height: 100%;
@@ -463,19 +471,20 @@ body {
     line-height: 1.5;
 }
 
+/* Gönderi Görselleri */
 .post-image {
     width: 100%;
-    max-height: 400px;
+    margin: 1rem 0;
+    border-radius: var(--border-radius);
     overflow: hidden;
-    border-radius: 8px;
-    margin-bottom: 1rem;
+    box-shadow: var(--box-shadow);
 }
 
 .post-image img {
     width: 100%;
-    height: 100%;
+    height: auto;
     object-fit: cover;
-    transition: var(--transition);
+    display: block;
 }
 
 .post-actions {
@@ -509,6 +518,168 @@ body {
     color: #777;
 }
 
+/* Yeni Gönderi Oluşturma Alanı */
+.new-post-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--box-shadow);
+}
+
+.new-post-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.new-post-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.new-post-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.new-post-avatar i {
+    font-size: 1.5rem;
+}
+
+.new-post-input-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.new-post-input {
+    width: 100%;
+    min-height: 80px;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    resize: none;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--dark-color);
+    background: var(--light-color);
+    transition: var(--transition);
+}
+
+.new-post-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+.new-post-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.new-post-tools {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.new-post-tool {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    background: rgba(67, 97, 238, 0.1);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.new-post-tool:hover {
+    background: rgba(67, 97, 238, 0.2);
+    transform: translateY(-2px);
+}
+
+.new-post-tool i {
+    font-size: 1.2rem;
+}
+
+.new-post-preview {
+    width: 100%;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    position: relative;
+    background: var(--light-color);
+    border: 1px solid var(--border-color);
+}
+
+.preview-content {
+    width: 100%;
+    max-height: 300px;
+    overflow: hidden;
+}
+
+.preview-content img,
+.preview-content video {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.preview-remove {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.preview-remove:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.new-post-submit {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    align-self: flex-end;
+}
+
+.new-post-submit:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
 /* Responsive */
 @media (max-width: 1200px) {
     .main-content {
@@ -525,9 +696,20 @@ body {
             "details";
     }
 
-    .profile-sidebar, .profile-details {
-        height: auto;
+    .profile-sidebar,
+    .profile-details {
         position: static;
+        height: auto;
+        margin-bottom: 2rem;
+    }
+
+    .profile-photo-container {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-photo i {
+        font-size: 3rem;
     }
 }
 
@@ -546,5 +728,92 @@ body {
 
     .profile-sidebar, .profile-feed, .profile-details {
         padding: 1rem;
+    }
+
+    .profile-photo-container {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-photo i {
+        font-size: 2.5rem;
+    }
+
+    .new-post-avatar,
+    .post-user-photo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .club-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+
+    .new-post-card {
+        padding: 1rem;
+    }
+
+    .new-post-header {
+        gap: 0.75rem;
+    }
+
+    .new-post-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .new-post-input {
+        min-height: 60px;
+        font-size: 0.9rem;
+    }
+
+    .new-post-tools {
+        gap: 0.5rem;
+    }
+
+    .new-post-tool {
+        width: 36px;
+        height: 36px;
+    }
+
+    .new-post-tool i {
+        font-size: 1rem;
+    }
+
+    .preview-content {
+        max-height: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-photo-container {
+        width: 80px;
+        height: 80px;
+    }
+
+    .profile-photo i {
+        font-size: 2rem;
+    }
+
+    .photo-edit-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+
+    .new-post-actions {
+        gap: 0.75rem;
+    }
+
+    .new-post-tools {
+        justify-content: space-between;
+    }
+
+    .new-post-submit {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
     }
 } 

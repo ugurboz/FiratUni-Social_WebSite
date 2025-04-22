@@ -121,29 +121,38 @@
             <!-- Yeni Gönderi Oluşturma -->
             <div class="new-post-card">
                 <div class="new-post-header">
-                    <div class="new-post-avatar">
-                        <img id="userAvatar" src="" alt="Kullanıcı Fotoğrafı">
+                    <div class="new-post-avatar" id="newPostAvatar">
+                        <i class="fas fa-user"></i>
                     </div>
                     <div class="new-post-input-wrapper">
-                        <textarea class="new-post-input" placeholder="Ne düşünüyorsun?"></textarea>
+                        <textarea class="new-post-input" id="postContent" placeholder="Ne düşünüyorsun?"></textarea>
                     </div>
                 </div>
                 <div class="new-post-actions">
                     <div class="new-post-tools">
-                        <div class="new-post-tool" title="Fotoğraf Ekle">
+                        <label class="new-post-tool" title="Fotoğraf Ekle">
+                            <input type="file" accept="image/*" id="imageInput" style="display: none;" onchange="handleImageUpload(event)">
                             <i class="fas fa-image"></i>
-                        </div>
-                        <div class="new-post-tool" title="Video Ekle">
+                        </label>
+                        <label class="new-post-tool" title="Video Ekle">
+                            <input type="file" accept="video/*" id="videoInput" style="display: none;" onchange="handleVideoUpload(event)">
                             <i class="fas fa-video"></i>
-                        </div>
-                        <div class="new-post-tool" title="Dosya Ekle">
+                        </label>
+                        <label class="new-post-tool" title="Dosya Ekle">
+                            <input type="file" id="fileInput" style="display: none;" onchange="handleFileUpload(event)">
                             <i class="fas fa-file-alt"></i>
-                        </div>
-                        <div class="new-post-tool" title="Konum Ekle">
+                        </label>
+                        <div class="new-post-tool" title="Konum Ekle" onclick="handleLocationAdd()">
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
-                    </div>  
-                    <button class="new-post-submit">Paylaş</button>
+                    </div>
+                    <div class="new-post-preview" id="mediaPreview" style="display: none;">
+                        <div class="preview-content"></div>
+                        <button class="preview-remove" onclick="removePreview()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <button class="new-post-submit" onclick="createPost()">Paylaş</button>
                 </div>
             </div>
 
@@ -777,4 +786,5 @@
         }
     </script>
 </body>
+</html>
 </html>
