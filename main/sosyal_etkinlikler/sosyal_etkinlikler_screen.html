@@ -149,7 +149,32 @@
 
             <!-- Canlı Etkinlikler Listesi -->
             <div class="live-event-list">
-                <!-- Etkinlikler JavaScript ile buraya eklenecek -->
+                <!-- Örnek Etkinlik -->
+                <div class="live-event-item" data-event-id="1">
+                    <div class="event-header">
+                        <h3 class="live-event-title">Hoş Geldiniz Partisi</h3>
+                        <span class="event-status status-active">Aktif</span>
+                    </div>
+                    <div class="live-event-info">
+                        <i class="far fa-calendar"></i>
+                        <span>1 Kasım 2023 03:00</span>
+                    </div>
+                    <div class="live-event-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Üniversite Kampüsü</span>
+                    </div>
+                    <p class="live-event-description">Yeni öğrenciler için hoş geldiniz partisi.</p>
+                    <div class="live-event-actions">
+                        <button class="event-action-btn btn-finish" onclick="endEvent(this)">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Etkinliği Bitir</span>
+                        </button>
+                        <button class="event-action-btn btn-delete" onclick="deleteEvent(this)">
+                            <i class="fas fa-trash-alt"></i>
+                            <span>Sil</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </aside>
     </main>

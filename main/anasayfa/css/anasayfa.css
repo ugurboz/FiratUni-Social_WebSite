@@ -10,6 +10,11 @@
     --border-radius: 12px;
     --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --container-max-width: 1400px;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
 }
 
 * {
@@ -107,12 +112,12 @@ body {
 /* Main Content */
 .main-content {
     display: grid;
-    grid-template-columns: 300px 1fr 300px;
-    gap: 20px;
-    padding: 20px;
-    margin-top: 80px; /* Navbar yüksekliği kadar boşluk */
-    height: calc(100vh - 80px);
-    max-width: 1400px;
+    grid-template-columns: minmax(250px, 300px) minmax(0, 1fr) minmax(250px, 300px);
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    margin-top: 80px;
+    min-height: calc(100vh - 80px);
+    max-width: var(--container-max-width);
     margin-left: auto;
     margin-right: auto;
     position: relative;
@@ -123,22 +128,24 @@ body {
 .feed-section {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--spacing-lg);
     height: 100%;
     overflow-y: auto;
-    padding-right: 10px;
+    padding-right: var(--spacing-md);
     scrollbar-width: thin;
     scrollbar-color: var(--primary-color) var(--light-color);
+    max-width: 100%;
 }
 
 /* Post Form */
 .post-form {
     background: white;
     border-radius: var(--border-radius);
-    padding: 1.5rem;
+    padding: var(--spacing-lg);
     box-shadow: var(--box-shadow);
     transition: var(--transition);
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-md);
+    width: 100%;
 }
 
 .post-form:hover {
@@ -643,9 +650,9 @@ body {
 /* Responsive */
 @media (max-width: 1200px) {
     .main-content {
-        grid-template-columns: 250px 1fr 250px;
-        padding: 15px;
-        margin-top: 80px;
+        grid-template-columns: minmax(200px, 250px) minmax(0, 1fr) minmax(200px, 250px);
+        gap: var(--spacing-md);
+        padding: var(--spacing-md);
     }
 
     .sidebar, .right-sidebar {
@@ -668,16 +675,17 @@ body {
 @media (max-width: 992px) {
     .main-content {
         grid-template-columns: 1fr;
-        gap: 15px;
-        margin-top: 80px;
+        gap: var(--spacing-lg);
     }
 
     .sidebar, .right-sidebar {
+        display: none;
+    }
+
+    .feed-section {
+        max-width: 800px;
+        margin: 0 auto;
         width: 100%;
-        height: auto;
-        max-height: 300px;
-        position: relative;
-        padding: 12px;
     }
 
     .event-item {
@@ -695,23 +703,41 @@ body {
 
 @media (max-width: 768px) {
     .navbar {
-        padding: 0.8rem 1rem;
-        height: 50px;
+        padding: var(--spacing-md);
+        height: 70px;
+    }
+
+    .brand-name {
+        font-size: 1.5rem;
+    }
+
+    .main-content {
+        padding: var(--spacing-md);
+        margin-top: 70px;
+    }
+
+    .post-form {
+        padding: var(--spacing-md);
+    }
+
+    .post-actions {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .media-upload {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .post-button {
+        width: 100%;
     }
 
     .nav-links {
         gap: 1rem;
     }
-
-    .main-content {
-        margin-top: 50px;
-        padding: 10px;
-    }
     
-    .sidebar, .right-sidebar {
-        margin-bottom: 1.5rem;
-    }
-
     .event-item {
         flex-direction: column;
     }
@@ -744,6 +770,35 @@ body {
     .notification-content {
         width: 100%;
         min-width: unset;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: var(--spacing-sm);
+        height: 60px;
+    }
+
+    .brand-logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .brand-name {
+        font-size: 1.2rem;
+    }
+
+    .main-content {
+        padding: var(--spacing-sm);
+        margin-top: 60px;
+    }
+
+    .post-form {
+        padding: var(--spacing-sm);
+    }
+
+    .post-input {
+        min-height: 80px;
     }
 }
 
