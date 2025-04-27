@@ -159,6 +159,7 @@ body {
     margin: 0 auto 1.5rem;
     border-radius: 50%;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .profile-photo {
@@ -174,10 +175,33 @@ body {
     justify-content: center;
     color: white;
     font-size: 3rem;
+    position: relative;
+    transition: var(--transition);
+}
+
+.profile-photo::before {
+    content: '\f030';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.profile-photo:hover::before {
+    opacity: 1;
 }
 
 .profile-photo i {
     font-size: 4rem;
+    z-index: 1;
 }
 
 .photo-edit-btn {
@@ -680,6 +704,161 @@ body {
     transform: translateY(-2px);
 }
 
+/* Yorum Stilleri */
+.post-comments {
+    padding: 1rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.post-comment {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.post-comment:hover {
+    background: rgba(67, 97, 238, 0.05);
+}
+
+.comment-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.comment-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-username {
+    font-weight: 600;
+    color: var(--primary-dark);
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+}
+
+.comment-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--dark-color);
+    margin-bottom: 0.3rem;
+}
+
+.comment-time {
+    font-size: 0.8rem;
+    color: #777;
+}
+
+/* Yorum Formu */
+.post-comment-form {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border-top: 1px solid #f0f0f0;
+    align-items: center;
+}
+
+.comment-avatar-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.comment-avatar-small img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.comment-input-wrapper {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.comment-input {
+    flex: 1;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    background: var(--light-color);
+}
+
+.comment-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+}
+
+.comment-submit {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.comment-submit:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.comment-submit i {
+    font-size: 0.9rem;
+}
+
+/* Yorum Etkileşimleri */
+.comment-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.3rem;
+}
+
+.comment-action {
+    font-size: 0.8rem;
+    color: #777;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.comment-action:hover {
+    color: var(--primary-color);
+}
+
+/* Yanıt Formu */
+.reply-form {
+    margin-left: 3.5rem;
+    margin-top: 0.5rem;
+    display: none;
+}
+
+.reply-form.active {
+    display: flex;
+}
+
 /* Responsive */
 @media (max-width: 1200px) {
     .main-content {
@@ -784,6 +963,42 @@ body {
 
     .preview-content {
         max-height: 200px;
+    }
+
+    .post-comments {
+        padding: 0.75rem;
+    }
+
+    .post-comment {
+        gap: 0.75rem;
+    }
+
+    .comment-avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .comment-text {
+        font-size: 0.85rem;
+    }
+
+    .post-comment-form {
+        padding: 0.75rem;
+    }
+
+    .comment-avatar-small {
+        width: 28px;
+        height: 28px;
+    }
+
+    .comment-input {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .comment-submit {
+        width: 28px;
+        height: 28px;
     }
 }
 
