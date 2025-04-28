@@ -1,256 +1,179 @@
 // Profil backend işlevleri
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
-// Örnek kullanıcı veritabanı
-const usersDB = {
-    'admin': {
-        username: 'admin',
-        email: 'admin@firat.edu.tr',
-        phone: '+90 555 123 4567',
-        department: 'Yazılım Mühendisliği',
-        joinDate: '01.09.2023',
-        stats: {
-            posts: 150,
-            followers: 500,
-            following: 300
-        },
-        clubs: ['Yazılım Kulübü', 'Robotik Kulübü']
-    }
-};
+const uri = process.env.MONGODB_URI;
+const dbName = "firatuni_social";
 
-// Profil bilgilerini getirme fonksiyonu
-async function getProfile(username) {
-    return new Promise((resolve, reject) => {
-        try {
-            const user = usersDB[username];
-            if (user) {
-                resolve(user);
-            } else {
-                reject(new Error('Kullanıcı bulunamadı'));
+// Veritabanından kullanıcı profilini getir
+async function getUserProfile(email) {
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    try {
+        await client.connect();
+        const database = client.db(dbName);
+        const users = database.collection("users");
+
+        // E-posta ile kullanıcıyı bul
+        const user = await users.findOne(
+            { email: email },
+            { projection: {
+                password: 0, // Şifreyi hariç tut
+                _id: 0 // ID'yi hariç tut
+            }}
+        );
+
+        if (!user) {
+            return { success: false, message: "Kullanıcı bulunamadı" };
+        }
+
+        return {
+            success: true,
+            user: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                studentNumber: user.studentNumber,
+                department: user.department,
+                year: user.year,
+                createdAt: user.createdAt
             }
-        } catch (error) {
-            reject(error);
-        }
-    });
-}
+        };
 
-// Profil güncelleme fonksiyonu
-async function updateProfile(username, updates) {
-    return new Promise((resolve, reject) => {
-        try {
-            if (!usersDB[username]) {
-                reject(new Error('Kullanıcı bulunamadı'));
-                return;
-            }
-
-            // Güncellemeleri uygula
-            Object.keys(updates).forEach(key => {
-                if (key in usersDB[username]) {
-                    usersDB[username][key] = updates[key];
-                }
-            });
-
-            resolve(usersDB[username]);
-        } catch (error) {
-            reject(error);
-        }
-    });
-}
-
-// Kulüp ekleme fonksiyonu
-async function joinClub(username, clubName) {
-    return new Promise((resolve, reject) => {
-        try {
-            if (!usersDB[username]) {
-                reject(new Error('Kullanıcı bulunamadı'));
-                return;
-            }
-
-            if (!usersDB[username].clubs.includes(clubName)) {
-                usersDB[username].clubs.push(clubName);
-            }
-
-            resolve(usersDB[username].clubs);
-        } catch (error) {
-            reject(error);
-        }
-    });
-}
-
-// Kulüp çıkma fonksiyonu
-async function leaveClub(username, clubName) {
-    return new Promise((resolve, reject) => {
-        try {
-            if (!usersDB[username]) {
-                reject(new Error('Kullanıcı bulunamadı'));
-                return;
-            }
-
-            usersDB[username].clubs = usersDB[username].clubs.filter(club => club !== clubName);
-            resolve(usersDB[username].clubs);
-        } catch (error) {
-            reject(error);
-        }
-    });
-}
-
-// Oturum kontrolü
-async function checkSession() {
-    return new Promise((resolve) => {
-        const token = localStorage.getItem('authToken');
-        resolve(!!token);
-    });
-}
-
-// Çıkış yapma fonksiyonu
-async function handleLogout() {
-    return new Promise((resolve) => {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
-        resolve(true);
-    });
-}
-
-// Profil fotoğrafı ve gönderi işlevleri
-
-// Profil fotoğrafı önizleme
-function previewProfilePhoto(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const preview = document.getElementById('profilePhotoPreview');
-            preview.innerHTML = `<img src="${e.target.result}" alt="Profil Fotoğrafı">`;
-            
-            // Gönderi oluşturma alanındaki avatarı da güncelle
-            updateNewPostAvatar(e.target.result);
-        }
-        reader.readAsDataURL(file);
+    } catch (error) {
+        console.error("Profil bilgileri getirme hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
+    } finally {
+        await client.close();
     }
 }
 
-// Gönderi oluşturma alanındaki avatarı güncelle
-function updateNewPostAvatar(imageUrl) {
-    const avatar = document.getElementById('newPostAvatar');
-    if (imageUrl) {
-        avatar.innerHTML = `<img src="${imageUrl}" alt="Kullanıcı Fotoğrafı">`;
-    } else {
-        avatar.innerHTML = '<i class="fas fa-user"></i>';
-    }
-}
-
-// Medya yükleme işlevleri
-function handleImageUpload(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            showMediaPreview('image', e.target.result);
+// Kullanıcı profil bilgilerini güncelle
+async function updateUserProfile(email, userData) {
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
         }
-        reader.readAsDataURL(file);
-    }
-}
+    });
 
-function handleVideoUpload(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            showMediaPreview('video', e.target.result);
-        }
-        reader.readAsDataURL(file);
-    }
-}
+    try {
+        await client.connect();
+        const database = client.db(dbName);
+        const users = database.collection("users");
 
-function handleFileUpload(event) {
-    const file = event.target.files[0];
-    if (file) {
-        showMediaPreview('file', file.name);
-    }
-}
+        // Güncellenebilir alanlar
+        const updatableFields = {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            department: userData.department,
+            year: userData.year
+        };
 
-function handleLocationAdd() {
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            const location = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-            showMediaPreview('location', `${location.lat}, ${location.lng}`);
+        // Boş değerleri temizle
+        Object.keys(updatableFields).forEach(key => {
+            if (!updatableFields[key]) delete updatableFields[key];
         });
-    } else {
-        alert("Konum servisi kullanılamıyor.");
+
+        // Kullanıcıyı güncelle
+        const result = await users.updateOne(
+            { email: email },
+            { $set: { ...updatableFields, updatedAt: new Date() } }
+        );
+
+        if (result.matchedCount === 0) {
+            return { success: false, message: "Kullanıcı bulunamadı" };
+        }
+
+        return {
+            success: true,
+            message: "Profil başarıyla güncellendi"
+        };
+
+    } catch (error) {
+        console.error("Profil güncelleme hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
+    } finally {
+        await client.close();
     }
 }
 
-// Medya önizleme
-function showMediaPreview(type, content) {
-    const preview = document.getElementById('mediaPreview');
-    const previewContent = preview.querySelector('.preview-content');
-    
-    preview.style.display = 'block';
-    
-    switch(type) {
-        case 'image':
-            previewContent.innerHTML = `<img src="${content}" alt="Yüklenen Görsel">`;
-            break;
-        case 'video':
-            previewContent.innerHTML = `<video src="${content}" controls></video>`;
-            break;
-        case 'file':
-            previewContent.innerHTML = `
-                <div class="file-preview">
-                    <i class="fas fa-file-alt"></i>
-                    <span>${content}</span>
-                </div>`;
-            break;
-        case 'location':
-            previewContent.innerHTML = `
-                <div class="location-preview">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>${content}</span>
-                </div>`;
-            break;
+// Kulüp üyelik işlemleri
+async function joinClub(email, clubName) {
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    try {
+        await client.connect();
+        const database = client.db(dbName);
+        const users = database.collection("users");
+
+        const result = await users.updateOne(
+            { email: email },
+            { $addToSet: { clubs: clubName } }
+        );
+
+        if (result.matchedCount === 0) {
+            return { success: false, message: "Kullanıcı bulunamadı" };
+        }
+
+        return { success: true, message: "Kulübe başarıyla katıldınız" };
+    } catch (error) {
+        console.error("Kulübe katılma hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
+    } finally {
+        await client.close();
     }
 }
 
-function removePreview() {
-    const preview = document.getElementById('mediaPreview');
-    preview.style.display = 'none';
-    preview.querySelector('.preview-content').innerHTML = '';
-    
-    // Input'ları sıfırla
-    document.getElementById('imageInput').value = '';
-    document.getElementById('videoInput').value = '';
-    document.getElementById('fileInput').value = '';
+async function leaveClub(email, clubName) {
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+
+    try {
+        await client.connect();
+        const database = client.db(dbName);
+        const users = database.collection("users");
+
+        const result = await users.updateOne(
+            { email: email },
+            { $pull: { clubs: clubName } }
+        );
+
+        if (result.matchedCount === 0) {
+            return { success: false, message: "Kullanıcı bulunamadı" };
+        }
+
+        return { success: true, message: "Kulüpten başarıyla ayrıldınız" };
+    } catch (error) {
+        console.error("Kulüpten ayrılma hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
+    } finally {
+        await client.close();
+    }
 }
 
-// Gönderi oluşturma
-function createPost() {
-    const content = document.getElementById('postContent').value;
-    const preview = document.getElementById('mediaPreview');
-    const mediaContent = preview.querySelector('.preview-content').innerHTML;
-    
-    if (!content && !mediaContent) {
-        alert('Lütfen bir içerik girin veya medya ekleyin.');
-        return;
-    }
-    
-    // Burada gönderi oluşturma API çağrısı yapılacak
-    console.log('Gönderi oluşturuluyor:', { content, mediaContent });
-    
-    // Formu temizle
-    document.getElementById('postContent').value = '';
-    removePreview();
-    
-    // Başarı mesajı göster
-    alert('Gönderi başarıyla paylaşıldı!');
-}
-
-// Sayfa yüklendiğinde çalışacak fonksiyonlar
-document.addEventListener('DOMContentLoaded', function() {
-    // Profil fotoğrafını yükle
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
-    if (userData.profilePhoto) {
-        updateNewPostAvatar(userData.profilePhoto);
-    }
-}); 
+module.exports = {
+    getUserProfile,
+    updateUserProfile,
+    joinClub,
+    leaveClub
+}; 

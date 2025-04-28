@@ -6,6 +6,7 @@
     <title>beGAK.com - Kayıt Ol</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/main/register/register_style.css">
     <style>
         :root {
             --primary-color: #4361ee;
@@ -487,264 +488,93 @@
             <div class="brand-logo">
                 <i class="fas fa-users"></i>
             </div>
-            <a href="index.html" class="brand-name">beGAK.com</a>
+            <a href="/anasayfa" class="brand-name">beGAK.com</a>
             <p class="brand-tagline">Fırat Üniversitesi Sosyal Platformu</p>
         </div>
         
-        <form id="registerForm" onsubmit="return handleRegister(event)">
-            <div class="form-group" style="--order: 1;">
-                <input type="text" id="firstName" placeholder=" " required>
-                <span class="floating-label">Ad</span>
+        <form id="registerForm">
+            <div class="form-group">
                 <i class="fas fa-user"></i>
+                <input type="text" id="firstName" placeholder="Ad" required>
             </div>
             
-            <div class="form-group" style="--order: 2;">
-                <input type="text" id="lastName" placeholder=" " required>
-                <span class="floating-label">Soyad</span>
-                <i class="fas fa-user-tag"></i>
+            <div class="form-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="lastName" placeholder="Soyad" required>
             </div>
             
-            <div class="form-group" style="--order: 3;">
-                <input type="email" id="email" placeholder=" " required>
-                <span class="floating-label">E-posta Adresi</span>
+            <div class="form-group">
                 <i class="fas fa-envelope"></i>
+                <input type="text" id="studentNumber" placeholder="Öğrenci Numarası" required>
+                <span class="email-suffix">@firat.edu.tr</span>
             </div>
             
-            <div class="form-group" style="--order: 4;">
+            <div class="form-group">
                 <i class="fas fa-lock"></i>
-                <input type="password" id="password" placeholder="Şifreniz" required oninput="checkPasswordStrength()">
-                <span class="floating-label">Şifre</span>
-                <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password')">
-                    <i class="fas fa-eye"></i>
-                    <i class="fas fa-eye-slash"></i>
-                </button>
-                <div class="password-strength">
-                    <div class="strength-bar" id="strengthBar"></div>
+                <div class="password-container">
+                    <input type="password" id="password" placeholder="Şifre" required>
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password')">
+                        <i class="fas fa-eye"></i>
+                        <i class="fas fa-eye-slash"></i>
+                    </button>
                 </div>
-                <div class="strength-text" id="strengthText">Şifre gücü: zayıf</div>
             </div>
             
-            <div class="form-group" style="--order: 5;">
+            <div class="form-group">
                 <i class="fas fa-lock"></i>
-                <input type="password" id="confirmPassword" placeholder="Şifrenizi Tekrar Girin" required oninput="checkPasswordMatch()">
-                <span class="floating-label">Şifre Tekrar</span>
-                <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmPassword')">
-                    <i class="fas fa-eye"></i>
-                    <i class="fas fa-eye-slash"></i>
-                </button>
-                <div class="password-match" id="passwordMatch">Şifreler eşleşmiyor!</div>
+                <div class="password-container">
+                    <input type="password" id="confirmPassword" placeholder="Şifre Tekrar" required>
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmPassword')">
+                        <i class="fas fa-eye"></i>
+                        <i class="fas fa-eye-slash"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <i class="fas fa-graduation-cap"></i>
+                <select id="department" required>
+                    <option value="">Bölüm Seçiniz</option>
+                    <option value="yazilim">Yazılım Mühendisliği</option>
+                    <option value="bilgisayar">Bilgisayar Mühendisliği</option>
+                    <option value="elektrik">Elektrik-Elektronik Mühendisliği</option>
+                    <option value="makine">Makine Mühendisliği</option>
+                    <!-- Diğer bölümler eklenebilir -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <i class="fas fa-calendar"></i>
+                <select id="year" required>
+                    <option value="">Sınıf Seçiniz</option>
+                    <option value="1">1. Sınıf</option>
+                    <option value="2">2. Sınıf</option>
+                    <option value="3">3. Sınıf</option>
+                    <option value="4">4. Sınıf</option>
+                </select>
             </div>
             
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage"></div>
             
-            <button type="submit" class="register-button">
-                <span>Kayıt Ol</span>
-                <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
-            </button>
+            <div class="form-actions">
+                <button type="submit" class="register-button">
+                    <span>Kayıt Ol</span>
+                    <i class="fas fa-user-plus"></i>
+                </button>
+            </div>
+            
+            <div class="terms">
+                Kayıt olarak <a href="#">Kullanım Koşullarını</a> ve <a href="#">Gizlilik Politikasını</a> kabul etmiş olursunuz.
+            </div>
+            
+            <div class="login-link">
+                Zaten hesabınız var mı? <a href="/login">Giriş Yap</a>
+            </div>
         </form>
-        
-        <p class="terms">
-            Kayıt olarak <a href="#">Kullanım Koşullarını</a> ve <a href="#">Gizlilik Politikasını</a> kabul etmiş olursunuz.
-        </p>
-        
-        <div class="login-link">
-            Zaten hesabınız var mı? <a href="../login/login_screen.html">Giriş Yap</a>
-        </div>
     </div>
 
     <script>
-        // Kullanıcı veritabanı simülasyonu
-        const usersDB = {
-            'admin@firat.edu.tr': {
-                firstName: 'Admin',
-                lastName: 'User',
-                email: 'admin@firat.edu.tr',
-                password: 'admin',
-                joinDate: new Date().toISOString()
-            }
-        };
-
-        function checkPasswordStrength() {
-            const password = document.getElementById('password').value;
-            const strengthBar = document.getElementById('strengthBar');
-            const strengthText = document.getElementById('strengthText');
-            
-            // Şifre güç hesaplama
-            let strength = 0;
-            
-            // Uzunluk kontrolü
-            if (password.length > 7) strength += 1;
-            if (password.length > 11) strength += 1;
-            
-            // Karakter çeşitliliği
-            if (password.match(/[a-z]/)) strength += 1; // Küçük harf
-            if (password.match(/[A-Z]/)) strength += 1; // Büyük harf
-            if (password.match(/[0-9]/)) strength += 1; // Rakam
-            if (password.match(/[^a-zA-Z0-9]/)) strength += 1; // Özel karakter
-            
-            // Güç seviyesine göre görsel güncelleme
-            let width = 0;
-            let color = '';
-            let text = '';
-            
-            if (password.length === 0) {
-                width = 0;
-                text = '';
-            } else if (strength <= 2) {
-                width = 30;
-                color = '#ff3333';
-                text = 'Zayıf';
-            } else if (strength <= 4) {
-                width = 60;
-                color = '#ffcc00';
-                text = 'Orta';
-            } else {
-                width = 100;
-                color = '#4bb543';
-                text = 'Güçlü';
-            }
-            
-            strengthBar.style.width = width + '%';
-            strengthBar.style.backgroundColor = color;
-            strengthText.textContent = password.length > 0 ? `Şifre gücü: ${text}` : '';
-            
-            // Şifre eşleşme kontrolünü de tetikle
-            checkPasswordMatch();
-        }
-        
-        function checkPasswordMatch() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const passwordMatch = document.getElementById('passwordMatch');
-            
-            if (confirmPassword.length === 0) {
-                passwordMatch.style.display = 'none';
-                return;
-            }
-            
-            if (password === confirmPassword) {
-                passwordMatch.style.display = 'none';
-            } else {
-                passwordMatch.style.display = 'block';
-                passwordMatch.style.color = 'var(--error-color)';
-                passwordMatch.textContent = 'Şifreler eşleşmiyor!';
-            }
-        }
-        
-        // Backend kayıt fonksiyonu
-        async function handleRegisterBackend(firstName, lastName, password, email) {
-            return new Promise((resolve, reject) => {
-                // E-posta kontrolü
-                if (usersDB[email]) {
-                    reject({
-                        success: false,
-                        message: 'Bu e-posta adresi zaten kullanılıyor!'
-                    });
-                    return;
-                }
-
-                // Yeni kullanıcı oluştur
-                usersDB[email] = {
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    password: password,
-                    joinDate: new Date().toISOString()
-                };
-
-                resolve({
-                    success: true,
-                    message: 'Kayıt başarılı!'
-                });
-            });
-        }
-        
-        // Frontend kayıt işlemi
-        async function handleRegister(event) {
-            event.preventDefault();
-            
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const errorMessage = document.getElementById('errorMessage');
-            const successMessage = document.getElementById('successMessage');
-
-            // Hata mesajlarını temizle
-            errorMessage.style.display = 'none';
-            successMessage.style.display = 'none';
-
-            // Şifre kontrolü
-            if (password.length < 8) {
-                errorMessage.textContent = 'Şifre en az 8 karakter olmalı!';
-                errorMessage.style.display = 'block';
-                return false;
-            }
-            
-            // Şifre eşleşme kontrolü
-            if (password !== confirmPassword) {
-                errorMessage.textContent = 'Şifreler eşleşmiyor!';
-                errorMessage.style.display = 'block';
-                document.getElementById('passwordMatch').style.display = 'block';
-                return false;
-            }
-            
-            // E-posta format kontrolü
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                errorMessage.textContent = 'Lütfen geçerli bir e-posta adresi girin!';
-                errorMessage.style.display = 'block';
-                return false;
-            }
-
-            try {
-                // Backend kayıt işlemi
-                const result = await handleRegisterBackend(firstName, lastName, password, email);
-                
-                if (result.success) {
-                    successMessage.textContent = 'Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...';
-                    successMessage.style.display = 'block';
-                    
-                    // Butonu devre dışı bırak ve yükleniyor efekti ekle
-                    const btn = event.target.querySelector('button[type="submit"]');
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yönlendiriliyor...';
-                    
-                    setTimeout(() => {
-                        window.location.href = '../login/login_screen.html';
-                    }, 2000);
-                } else {
-                    errorMessage.textContent = result.message || 'Kayıt sırasında bir hata oluştu!';
-                    errorMessage.style.display = 'block';
-                }
-            } catch (error) {
-                errorMessage.textContent = error.message || 'Kayıt sırasında bir hata oluştu! Lütfen tekrar deneyin.';
-                errorMessage.style.display = 'block';
-                console.error('Kayıt hatası:', error);
-            }
-
-            return false;
-        }
-        
-        // Sayfa yüklendiğinde animasyonları tetikle
-        document.addEventListener('DOMContentLoaded', function() {
-            // Floating label'ları başlangıç pozisyonuna getir
-            document.querySelectorAll('input').forEach(input => {
-                if (input.value) {
-                    const label = input.nextElementSibling;
-                    if (label && label.classList.contains('floating-label')) {
-                        label.style.top = '-10px';
-                        label.style.fontSize = '0.7rem';
-                        label.style.background = 'white';
-                        label.style.padding = '0 5px';
-                    }
-                }
-            });
-        });
-
-        // Toggle password visibility
         function togglePasswordVisibility(inputId) {
             const input = document.getElementById(inputId);
             const toggle = input.nextElementSibling;
@@ -758,5 +588,6 @@
             }
         }
     </script>
+    <script src="/main/register/register.js"></script>
 </body>
 </html>

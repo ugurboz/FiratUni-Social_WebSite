@@ -10,16 +10,17 @@
     --border-radius: 12px;
     --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --border-color: #e0e0e0;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
     background: #f5f7fa;
     min-height: 100vh;
     color: var(--dark-color);
@@ -37,7 +38,7 @@ body {
     width: 100%;
     top: 0;
     z-index: 1000;
-    height: 80px;
+    height: 72px;
 }
 
 .brand {
@@ -83,6 +84,9 @@ body {
     font-size: 1rem;
     transition: var(--transition);
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .nav-links a::after {
@@ -104,6 +108,16 @@ body {
     color: var(--secondary-color);
 }
 
+.nav-links a.active {
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.nav-links a.active::after {
+    width: 100%;
+    background: var(--secondary-color);
+}
+
 /* Main Content */
 .main-content {
     width: 100%;
@@ -112,37 +126,36 @@ body {
     display: grid;
     grid-template-columns: 280px 1fr 300px;
     grid-template-areas: "sidebar feed details";
+    padding: 1.5rem;
+    gap: 1.5rem;
 }
 
 /* Profile Sidebar - Sol Kenar */
 .profile-sidebar {
     grid-area: sidebar;
-    padding: 1.5rem;
     position: sticky;
-    top: 72px;
-    height: calc(100vh - 72px);
+    top: 88px;
+    height: calc(100vh - 88px);
     overflow-y: auto;
     background: white;
     box-shadow: var(--box-shadow);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
 }
 
 /* Profile Feed - Orta Kısım */
 .profile-feed {
     grid-area: feed;
-    padding: 1.5rem;
     overflow-y: auto;
 }
 
 /* Profile Details - Sağ Kenar */
 .profile-details {
     grid-area: details;
-    padding: 1.5rem;
     position: sticky;
-    top: 72px;
-    height: calc(100vh - 72px);
+    top: 88px;
+    height: calc(100vh - 88px);
     overflow-y: auto;
-    background: white;
-    box-shadow: var(--box-shadow);
 }
 
 .profile-card {
@@ -292,25 +305,14 @@ body {
     word-break: break-word;
 }
 
-/* Profile Content - Ana içerik */
-.profile-content-wrapper {
-    flex: 1;
-    padding: 2rem;
-    overflow-y: auto;
-}
-
-.profile-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-    gap: 1.5rem;
-}
-
+/* Kartlar için genel stiller */
 .content-card {
     background: white;
     border-radius: var(--border-radius);
     padding: 1.5rem;
     box-shadow: var(--box-shadow);
     transition: var(--transition);
+    margin-bottom: 1.5rem;
 }
 
 .content-card:hover {
@@ -370,35 +372,37 @@ body {
 /* Kulüpler Bölümü */
 .clubs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 1rem;
 }
 
 .club-card {
     background: white;
     border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: var(--box-shadow);
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     transition: var(--transition);
     text-align: center;
+    border: 1px solid #f0f0f0;
 }
 
 .club-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color);
 }
 
 .club-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 1rem;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 0.8rem;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 2rem;
+    font-size: 1.5rem;
 }
 
 .club-name {
@@ -407,123 +411,12 @@ body {
     font-size: 0.9rem;
 }
 
-/* Post Card */
-.post-card {
-    background: white;
-    border-radius: var(--border-radius);
-    margin-bottom: 1.5rem;
-    box-shadow: var(--box-shadow);
-    overflow: hidden;
-    transition: var(--transition);
-}
-
-.post-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-}
-
-.post-header {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid #f5f5f5;
-}
-
-/* Kullanıcı Avatarı */
-.new-post-avatar,
-.post-user-photo {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-right: 1rem;
-}
-
-.new-post-avatar img,
-.post-user-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.post-user-info {
-    flex: 1;
-}
-
-.post-username {
-    font-weight: 600;
-    color: var(--dark-color);
-    margin-bottom: 0.2rem;
-    display: block;
-}
-
-.post-time {
-    font-size: 0.8rem;
-    color: #777;
-}
-
-.post-content {
-    padding: 1rem;
-}
-
-.post-text {
-    margin-bottom: 1rem;
-    line-height: 1.5;
-}
-
-/* Gönderi Görselleri */
-.post-image {
-    width: 100%;
-    margin: 1rem 0;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--box-shadow);
-}
-
-.post-image img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    display: block;
-}
-
-.post-actions {
-    display: flex;
-    justify-content: space-around;
-    padding: 0.5rem 1rem 1rem;
-    border-top: 1px solid #f5f5f5;
-}
-
-.post-action {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.post-action:hover {
-    background: rgba(0,0,0,0.05);
-}
-
-.post-action i {
-    font-size: 1.2rem;
-    color: #777;
-}
-
-.post-action span {
-    font-size: 0.9rem;
-    color: #777;
-}
-
-/* Yeni Gönderi Oluşturma Alanı */
+/* Yeni Gönderi Oluşturma */
 .new-post-card {
     background: white;
     border-radius: var(--border-radius);
     padding: 1.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     box-shadow: var(--box-shadow);
 }
 
@@ -553,18 +446,13 @@ body {
     object-fit: cover;
 }
 
-.new-post-avatar i {
-    font-size: 1.5rem;
-}
-
 .new-post-input-wrapper {
     flex: 1;
-    position: relative;
 }
 
 .new-post-input {
     width: 100%;
-    min-height: 80px;
+    min-height: 100px;
     padding: 1rem;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
@@ -680,6 +568,21 @@ body {
     transform: translateY(-2px);
 }
 
+/* Gönderiler */
+.loading-posts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: var(--primary-color);
+}
+
+.loading-posts i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
 /* Responsive */
 @media (max-width: 1200px) {
     .main-content {
@@ -694,13 +597,14 @@ body {
             "sidebar"
             "feed"
             "details";
+        gap: 1rem;
     }
 
     .profile-sidebar,
     .profile-details {
         position: static;
         height: auto;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
     }
 
     .profile-photo-container {
@@ -709,7 +613,7 @@ body {
     }
 
     .profile-photo i {
-        font-size: 3rem;
+        font-size: 2.5rem;
     }
 }
 
@@ -719,11 +623,12 @@ body {
     }
 
     .nav-links {
-        gap: 1rem;
+        display: none;
     }
 
     .main-content {
         margin-top: 64px;
+        padding: 1rem;
     }
 
     .profile-sidebar, .profile-feed, .profile-details {
@@ -737,18 +642,6 @@ body {
 
     .profile-photo i {
         font-size: 2.5rem;
-    }
-
-    .new-post-avatar,
-    .post-user-photo {
-        width: 40px;
-        height: 40px;
-    }
-
-    .club-icon {
-        width: 60px;
-        height: 60px;
-        font-size: 1.5rem;
     }
 
     .new-post-card {
@@ -765,8 +658,7 @@ body {
     }
 
     .new-post-input {
-        min-height: 60px;
-        font-size: 0.9rem;
+        min-height: 80px;
     }
 
     .new-post-tools {
@@ -780,40 +672,5 @@ body {
 
     .new-post-tool i {
         font-size: 1rem;
-    }
-
-    .preview-content {
-        max-height: 200px;
-    }
-}
-
-@media (max-width: 480px) {
-    .profile-photo-container {
-        width: 80px;
-        height: 80px;
-    }
-
-    .profile-photo i {
-        font-size: 2rem;
-    }
-
-    .photo-edit-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 0.8rem;
-    }
-
-    .new-post-actions {
-        gap: 0.75rem;
-    }
-
-    .new-post-tools {
-        justify-content: space-between;
-    }
-
-    .new-post-submit {
-        width: 100%;
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
     }
 } 

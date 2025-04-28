@@ -6,34 +6,23 @@
     <title>beGAK.com - Profil</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="profil.css">
-    <script>
-        // Oturum kontrolü
-        window.onload = function() {
-            const authToken = localStorage.getItem('authToken');
-            const userData = JSON.parse(localStorage.getItem('user') || '{}');
-            
-            // Eğer authToken yoksa veya userData boşsa, login sayfasına yönlendir
-            if (!authToken || !userData.studentNumber) {
-                window.location.href = '../login/login_screen.html';
-                return;
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="/main/profil/profil.css">
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar">
         <div class="brand">
-            <div class="brand-logo">bG</div>
-            <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
+            <div class="brand-logo">
+                <i class="fas fa-users"></i>
+            </div>
+            <a href="/main/anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
         </div>
         <div class="nav-links">
-            <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
-            <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
-            <a href="../profil/profil_screen.html" class="active"><i class="fas fa-user"></i> Profil</a>
-            <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
-            <a href="../kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
+            <a href="/main/anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="/main/sosyal_etkinlikler/sosyal_etkinlikler_screen.html"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
+            <a href="/main/profil/profil_screen.html" class="active"><i class="fas fa-user"></i> Profil</a>
+            <a href="/main/mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
+            <a href="/main/kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
             <a href="#" onclick="return handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
         </div>
     </nav>
@@ -51,12 +40,12 @@
                     <div class="photo-edit-btn" onclick="document.getElementById('photoInput').click()">
                         <i class="fas fa-camera"></i>
                     </div>
-                    <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewProfilePhoto(event)">
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;">
                 </div>
-                <h2 class="profile-name" id="profileName">Kullanıcı Adı</h2>
+                <h2 class="profile-name" id="profileName">Yükleniyor...</h2>
                 <p class="profile-role" id="profileRole">Öğrenci</p>
                 <div class="profile-actions">
-                    <a href="edit_profile_screen.html" class="btn-edit">
+                    <a href="#" class="btn-edit" id="editProfileBtn">
                         <i class="fas fa-edit"></i> Profili Düzenle
                     </a>
                 </div>
@@ -70,7 +59,7 @@
                     </div>
                     <div class="sidebar-info-content">
                         <div class="sidebar-info-label">E-posta</div>
-                        <div class="sidebar-info-value" id="profileEmail">kullanici@firat.edu.tr</div>
+                        <div class="sidebar-info-value" id="profileEmail">Yükleniyor...</div>
                     </div>
                 </div>
                 
@@ -79,8 +68,8 @@
                         <i class="fas fa-phone"></i>
                     </div>
                     <div class="sidebar-info-content">
-                        <div class="sidebar-info-label">Telefon</div>
-                        <div class="sidebar-info-value" id="profilePhone">+90 555 123 4567</div>
+                        <div class="sidebar-info-label">Öğrenci No</div>
+                        <div class="sidebar-info-value" id="profileStudentNumber">Yükleniyor...</div>
                     </div>
                 </div>
                 
@@ -90,17 +79,17 @@
                     </div>
                     <div class="sidebar-info-content">
                         <div class="sidebar-info-label">Bölüm</div>
-                        <div class="sidebar-info-value" id="profileDepartment">Yazılım Mühendisliği</div>
+                        <div class="sidebar-info-value" id="profileDepartment">Yükleniyor...</div>
                     </div>
                 </div>
                 
                 <div class="sidebar-info-item">
                     <div class="sidebar-info-icon">
-                        <i class="fas fa-calendar-check"></i>
+                        <i class="fas fa-user-graduate"></i>
                     </div>
                     <div class="sidebar-info-content">
-                        <div class="sidebar-info-label">Mezuniyet Yılı</div>
-                        <div class="sidebar-info-value" id="profileGraduationYear">Belirtilmemiş</div>
+                        <div class="sidebar-info-label">Sınıf</div>
+                        <div class="sidebar-info-value" id="profileYear">Yükleniyor...</div>
                     </div>
                 </div>
                 
@@ -110,7 +99,7 @@
                     </div>
                     <div class="sidebar-info-content">
                         <div class="sidebar-info-label">Kayıt Tarihi</div>
-                        <div class="sidebar-info-value" id="profileJoinDate">15 Eylül 2023</div>
+                        <div class="sidebar-info-value" id="profileJoinDate">Yükleniyor...</div>
                     </div>
                 </div>
             </div>
@@ -131,279 +120,37 @@
                 <div class="new-post-actions">
                     <div class="new-post-tools">
                         <label class="new-post-tool" title="Fotoğraf Ekle">
-                            <input type="file" accept="image/*" id="imageInput" style="display: none;" onchange="handleImageUpload(event)">
+                            <input type="file" accept="image/*" id="imageInput" style="display: none;">
                             <i class="fas fa-image"></i>
                         </label>
                         <label class="new-post-tool" title="Video Ekle">
-                            <input type="file" accept="video/*" id="videoInput" style="display: none;" onchange="handleVideoUpload(event)">
+                            <input type="file" accept="video/*" id="videoInput" style="display: none;">
                             <i class="fas fa-video"></i>
                         </label>
                         <label class="new-post-tool" title="Dosya Ekle">
-                            <input type="file" id="fileInput" style="display: none;" onchange="handleFileUpload(event)">
+                            <input type="file" id="fileInput" style="display: none;">
                             <i class="fas fa-file-alt"></i>
                         </label>
-                        <div class="new-post-tool" title="Konum Ekle" onclick="handleLocationAdd()">
+                        <div class="new-post-tool" title="Konum Ekle">
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
                     </div>
                     <div class="new-post-preview" id="mediaPreview" style="display: none;">
                         <div class="preview-content"></div>
-                        <button class="preview-remove" onclick="removePreview()">
+                        <button class="preview-remove">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
-                    <button class="new-post-submit" onclick="createPost()">Paylaş</button>
+                    <button class="new-post-submit">Paylaş</button>
                 </div>
             </div>
 
-            <!-- Örnek Gönderi 1 -->
-            <div class="post-card">
-                <div class="post-header">
-                    <div class="post-user-photo">
-                        <img id="post1UserPhoto" src="" alt="Kullanıcı Fotoğrafı">
-                    </div>
-                    <div class="post-user-info">
-                        <span class="post-username" id="profileName2">Ad Soyad</span>
-                        <span class="post-time">2 saat önce</span>
-                    </div>
-                    <div class="post-options">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </div>
-                </div>
-                <div class="post-content">
-                    <div class="post-text">
-                        Bugün Yazılım Mühendisliği kulübünün düzenlediği etkinliğe katıldım. Harika bir deneyimdi!
-                    </div>
-                    <div class="post-image">
-                        <img src="https://picsum.photos/600/400?random=1" alt="Gönderi Görseli">
-                    </div>
-                    <div class="post-tags">
-                        <span class="post-tag">#YazılımMühendisliği</span>
-                        <span class="post-tag">#KulübEtkinlikleri</span>
-                    </div>
-                    <div class="post-attachment">
-                        <div class="attachment-icon">
-                            <i class="fas fa-file-pdf"></i>
-                        </div>
-                        <div class="attachment-info">
-                            <div class="attachment-name">EtkinlikRaporu.pdf</div>
-                            <div class="attachment-size">1.2 MB</div>
-                        </div>
-                        <div class="attachment-download">
-                            <i class="fas fa-download"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-actions">
-                    <div class="post-action">
-                        <i class="fas fa-thumbs-up"></i>
-                        <span>23 Beğeni</span>
-                    </div>
-                    <div class="post-action">
-                        <i class="fas fa-comment"></i>
-                        <span>8 Yorum</span>
-                    </div>
-                    <div class="post-action">
-                        <i class="fas fa-share"></i>
-                        <span>Paylaş</span>
-                    </div>
-                </div>
-                <div class="post-comments">
-                    <div class="post-comment">
-                        <div class="comment-avatar">
-                            <img src="https://picsum.photos/100/100?random=2" alt="Kullanıcı Avatarı">
-                        </div>
-                        <div class="comment-content">
-                            <div class="comment-username">Mehmet Demir</div>
-                            <div class="comment-text">Çok güzel görünüyor! Bir sonraki etkinliğe ben de geleceğim.</div>
-                            <div class="comment-time">1 saat önce</div>
-                        </div>
-                    </div>
-                    <div class="post-comment">
-                        <div class="comment-avatar">
-                            <img src="https://picsum.photos/100/100?random=3" alt="Kullanıcı Avatarı">
-                        </div>
-                        <div class="comment-content">
-                            <div class="comment-username">Ayşe Kaya</div>
-                            <div class="comment-text">Hangi konular tartışıldı? Biraz bilgi verebilir misin?</div>
-                            <div class="comment-time">40 dakika önce</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-comment-form">
-                    <div class="comment-avatar-small">
-                        <img id="commentUserPhoto1" src="" alt="Kullanıcı Avatarı">
-                    </div>
-                    <div class="comment-input-wrapper">
-                        <input type="text" class="comment-input" placeholder="Yorum yaz...">
-                        <button class="comment-submit">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Örnek Gönderi 2 -->
-            <div class="post-card">
-                <div class="post-header">
-                    <div class="post-user-photo">
-                        <img id="post2UserPhoto" src="" alt="Kullanıcı Fotoğrafı">
-                    </div>
-                    <div class="post-user-info">
-                        <span class="post-username" id="profileName3">Ad Soyad</span>
-                        <span class="post-time">Dün</span>
-                    </div>
-                    <div class="post-options">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </div>
-                </div>
-                <div class="post-content">
-                    <div class="post-text">
-                        Veri Yapıları ve Algoritmalar dersindeki final projemi tamamladım! 🎉
-                    </div>
-                    <div class="post-tags">
-                        <span class="post-tag">#VeriYapıları</span>
-                        <span class="post-tag">#Algoritma</span>
-                        <span class="post-tag">#Programlama</span>
-                    </div>
-                    <div class="post-attachment">
-                        <div class="attachment-icon">
-                            <i class="fas fa-file-pdf"></i>
-                        </div>
-                        <div class="attachment-info">
-                            <div class="attachment-name">VeriYapılarıFinalProjesi.pdf</div>
-                            <div class="attachment-size">2.4 MB</div>
-                        </div>
-                        <div class="attachment-download">
-                            <i class="fas fa-download"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-actions">
-                    <div class="post-action liked">
-                        <i class="fas fa-thumbs-up"></i>
-                        <span>47 Beğeni</span>
-                    </div>
-                    <div class="post-action">
-                        <i class="fas fa-comment"></i>
-                        <span>12 Yorum</span>
-                    </div>
-                    <div class="post-action">
-                        <i class="fas fa-share"></i>
-                        <span>Paylaş</span>
-                    </div>
-                </div>
-                <div class="post-comments">
-                    <div class="post-comment">
-                        <div class="comment-avatar">
-                            <img src="https://picsum.photos/100/100?random=4" alt="Kullanıcı Avatarı">
-                        </div>
-                        <div class="comment-content">
-                            <div class="comment-username">Prof. Dr. Ahmet Yılmaz</div>
-                            <div class="comment-text">Tebrikler! Çok başarılı bir proje olmuş. Özellikle ikili ağaç implementasyonu çok etkileyici.</div>
-                            <div class="comment-time">Dün</div>
-                        </div>
-                    </div>
-                    <div class="post-comment">
-                        <div class="comment-avatar">
-                            <img src="https://picsum.photos/100/100?random=5" alt="Kullanıcı Avatarı">
-                        </div>
-                        <div class="comment-content">
-                            <div class="comment-username">Burak Kaya</div>
-                            <div class="comment-text">Benimle paylaşabilir misin? Benim de projeme yardımcı olabilir.</div>
-                            <div class="comment-time">Dün</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-comment-form">
-                    <div class="comment-avatar-small">
-                        <img id="commentUserPhoto2" src="" alt="Kullanıcı Avatarı">
-                    </div>
-                    <div class="comment-input-wrapper">
-                        <input type="text" class="comment-input" placeholder="Yorum yaz...">
-                        <button class="comment-submit">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Örnek Gönderi 3 - Fotoğraf Galerisi -->
-            <div class="post-card">
-                <div class="post-header">
-                    <div class="post-user-photo">
-                        <img id="post3UserPhoto" src="" alt="Kullanıcı Fotoğrafı">
-                    </div>
-                    <div class="post-user-info">
-                        <span class="post-username" id="profileName4">Ad Soyad</span>
-                        <span class="post-time">Geçen hafta</span>
-                    </div>
-                    <div class="post-options">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </div>
-                </div>
-                <div class="post-content">
-                    <div class="post-text">
-                        Robotik Kulübü'nün düzenlediği Teknoloji Festivali'nden kareler 🤖 Harika bir deneyimdi!
-                    </div>
-                    <div class="post-gallery">
-                        <div class="gallery-item gallery-main">
-                            <img src="https://picsum.photos/800/450?random=10" alt="Festival Ana Görseli">
-                        </div>
-                        <div class="gallery-item">
-                            <img src="https://picsum.photos/400/300?random=11" alt="Festival Görseli 1">
-                        </div>
-                        <div class="gallery-item">
-                            <img src="https://picsum.photos/400/300?random=12" alt="Festival Görseli 2">
-                        </div>
-                    </div>
-                </div>
-                <div class="post-actions">
-                    <div class="post-action">
-                        <i class="fas fa-thumbs-up"></i>
-                        <span>89 Beğeni</span>
-                    </div>
-                    <div class="post-action">
-                        <i class="fas fa-comment"></i>
-                        <span>15 Yorum</span>
-                    </div>
-                    <div class="post-action">
-                        <i class="fas fa-share"></i>
-                        <span>Paylaş</span>
-                    </div>
-                </div>
-                <div class="post-comments">
-                    <div class="post-comment">
-                        <div class="comment-avatar">
-                            <img src="https://picsum.photos/100/100?random=6" alt="Kullanıcı Avatarı">
-                        </div>
-                        <div class="comment-content">
-                            <div class="comment-username">Deniz Şahin</div>
-                            <div class="comment-text">Bu yılki festival gerçekten muhteşemdi! Özellikle drone yarışması çok heyecanlıydı.</div>
-                            <div class="comment-time">Geçen hafta</div>
-                        </div>
-                    </div>
-                    <div class="post-comment">
-                        <div class="comment-avatar">
-                            <img src="https://picsum.photos/100/100?random=7" alt="Kullanıcı Avatarı">
-                        </div>
-                        <div class="comment-content">
-                            <div class="comment-username">Elif Yılmaz</div>
-                            <div class="comment-text">Bir sonraki festivalde ben de katılmak istiyorum. Katılım koşulları nelerdi?</div>
-                            <div class="comment-time">Geçen hafta</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-comment-form">
-                    <div class="comment-avatar-small">
-                        <img id="commentUserPhoto3" src="" alt="Kullanıcı Avatarı">
-                    </div>
-                    <div class="comment-input-wrapper">
-                        <input type="text" class="comment-input" placeholder="Yorum yaz...">
-                        <button class="comment-submit">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
+            <!-- Gönderiler burada gösterilecek -->
+            <div id="userPosts">
+                <!-- Gönderiler JavaScript ile yüklenecek -->
+                <div class="loading-posts">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Gönderiler yükleniyor...</p>
                 </div>
             </div>
         </div>
@@ -439,352 +186,132 @@
             <div class="content-card">
                 <h3 class="section-title"><i class="fas fa-users"></i> Üye Olduğu Kulüpler</h3>
                 
-                <div class="clubs-grid">
-                    <div class="club-card">
-                        <div class="club-icon">
-                            <i class="fas fa-code"></i>
-                        </div>
-                        <div class="club-name">Yazılım Kulübü</div>
-                    </div>
-                    
-                    <div class="club-card">
-                        <div class="club-icon">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="club-name">Robotik Kulübü</div>
-                    </div>
-                    
-                    <div class="club-card">
-                        <div class="club-icon">
-                            <i class="fas fa-paint-brush"></i>
-                        </div>
-                        <div class="club-name">Tasarım Kulübü</div>
-                    </div>
+                <div class="clubs-grid" id="userClubs">
+                    <!-- Kulüpler JavaScript ile yüklenecek -->
+                    <p>Henüz kulüp üyeliği bulunmuyor.</p>
                 </div>
             </div>
             
             <!-- Aktiviteler Bölümü -->
             <div class="content-card">
-                <h3 class="section-title"><i class="fas fa-calendar-week"></i> Son Aktiviteler</h3>
+                <h3 class="section-title"><i class="fas fa-calendar-week"></i> Yaklaşan Etkinlikler</h3>
                 
-                <div class="info-item">
-                    <div class="info-icon">
-                        <i class="fas fa-comment-alt"></i>
-                    </div>
-                    <div class="info-content">
-                        <div class="info-label">Etkinlik</div>
-                        <div class="info-value">Yazılım Kulübü'nün "Web Geliştirme" etkinliğine katıldı.</div>
-                    </div>
-                </div>
-                
-                <div class="info-item">
-                    <div class="info-icon">
-                        <i class="fas fa-certificate"></i>
-                    </div>
-                    <div class="info-content">
-                        <div class="info-label">Başarı</div>
-                        <div class="info-value">Python programlama kursunu tamamladı.</div>
-                    </div>
-                </div>
-                
-                <div class="info-item">
-                    <div class="info-icon">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div class="info-content">
-                        <div class="info-label">Üyelik</div>
-                        <div class="info-value">Veri Bilimi Topluluğu'na katıldı.</div>
-                    </div>
+                <div id="upcomingEvents">
+                    <!-- Etkinlikler JavaScript ile yüklenecek -->
+                    <p>Yaklaşan etkinlik bulunmuyor.</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Sayfa yüklendiğinde kullanıcı bilgilerini yükle
+        // Oturum kontrolü
         document.addEventListener('DOMContentLoaded', async function() {
-            // Oturum kontrolü
-            const isLoggedIn = await checkSession();
-            if (!isLoggedIn) {
-                window.location.href = '../login/login_screen.html';
-                return;
-            }
-
-            // Kullanıcı bilgilerini al
+            const authToken = localStorage.getItem('authToken');
             const userData = JSON.parse(localStorage.getItem('user') || '{}');
-            if (!userData.studentNumber) {
-                window.location.href = '../login/login_screen.html';
+            
+            if (!authToken || !userData.email) {
+                window.location.href = '/main/login/login_screen.html';
                 return;
             }
 
-            // Profil bilgilerini yükle
-            loadProfile(userData.email.split('@')[0]);
-            
-            // Kullanıcı fotoğraflarını yükle
-            loadUserPhotos();
+            try {
+                // Profil bilgilerini API'den al
+                const response = await fetch(`/api/profile?email=${userData.email}`, {
+                    headers: {
+                        'Authorization': authToken
+                    }
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    const user = result.user;
+                    
+                    // Profil bilgilerini güncelle
+                    updateProfileUI(user);
+                } else {
+                    console.error('Profil bilgileri alınamadı:', result.message);
+                    alert('Profil bilgileri alınırken bir hata oluştu: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Profil bilgileri yüklenirken hata:', error);
+                alert('Profil bilgileri yüklenirken bir hata oluştu. Lütfen tekrar deneyin.');
+            }
         });
 
-        // Kullanıcı fotoğraflarını yükle
-        function loadUserPhotos() {
-            const userData = JSON.parse(localStorage.getItem('user') || '{}');
-            const userPhoto = userData.photo || '';
+        // Profil arayüzünü güncelle
+        function updateProfileUI(user) {
+            // Temel bilgiler
+            document.getElementById('profileName').textContent = `${user.firstName || ''} ${user.lastName || ''}`;
+            document.getElementById('profileRole').textContent = user.department ? `${user.department} Öğrencisi` : 'Öğrenci';
+            document.getElementById('profileEmail').textContent = user.email || '-';
+            document.getElementById('profileStudentNumber').textContent = user.studentNumber || '-';
+            document.getElementById('profileDepartment').textContent = user.department || '-';
             
-            // Avatar fotoğraflarını güncelle
-            const avatarElements = [
-                document.getElementById('userAvatar'),
-                document.getElementById('post1UserPhoto'),
-                document.getElementById('post2UserPhoto'),
-                document.getElementById('post3UserPhoto'),
-                document.getElementById('commentUserPhoto1'),
-                document.getElementById('commentUserPhoto2'),
-                document.getElementById('commentUserPhoto3')
-            ];
-            
-            avatarElements.forEach(element => {
-                if (element) {
-                    if (userPhoto) {
-                        element.src = userPhoto;
-                        element.style.display = 'block';
-                    } else {
-                        element.style.display = 'none';
-                        element.parentElement.style.background = 'linear-gradient(135deg, var(--primary-color), var(--accent-color))';
-                        element.parentElement.textContent = userData.username?.charAt(0).toUpperCase() || 'U';
-                    }
-                }
-            });
-            
-            // Profil adını gönderilerde güncelle
-            const profileNames = [
-                document.getElementById('profileName2'),
-                document.getElementById('profileName3'),
-                document.getElementById('profileName4')
-            ];
-            
-            profileNames.forEach(element => {
-                if (element) {
-                    element.textContent = userData.firstName && userData.lastName 
-                        ? `${userData.firstName} ${userData.lastName}` 
-                        : userData.username || 'Ad Soyad';
-                }
-            });
-        }
-
-        // Profil bilgilerini yükle
-        async function loadProfile(username) {
-            try {
-                const profile = await getProfile(username);
-                updateProfileUI(profile);
-            } catch (error) {
-                console.error('Profil yüklenirken hata:', error);
-            }
-        }
-
-        // Profil bilgilerini arayüze yansıt
-        function updateProfileUI(profile) {
-            const profilePhoto = document.getElementById('profilePhotoPreview');
-            if (profile.photo) {
-                profilePhoto.style.backgroundImage = `url(${profile.photo})`;
-                profilePhoto.style.backgroundSize = 'cover';
-                profilePhoto.style.backgroundPosition = 'center';
+            // Sınıf bilgisini kontrol et ve formatla
+            if (user.year) {
+                document.getElementById('profileYear').textContent = `${user.year}. Sınıf`;
             } else {
-                profilePhoto.style.backgroundImage = 'none';
+                document.getElementById('profileYear').textContent = '-';
+            }
+            
+            // Katılım tarihini formatla
+            if (user.createdAt) {
+                const joinDate = new Date(user.createdAt);
+                document.getElementById('profileJoinDate').textContent = joinDate.toLocaleDateString('tr-TR');
+            } else {
+                document.getElementById('profileJoinDate').textContent = '-';
+            }
+
+            // Profil fotoğrafı
+            const profilePhoto = document.getElementById('profilePhotoPreview');
+            if (user.profilePhoto) {
+                profilePhoto.innerHTML = `<img src="${user.profilePhoto}" alt="Profil Fotoğrafı">`;
+            } else {
                 profilePhoto.innerHTML = '<i class="fas fa-user"></i>';
             }
-            document.getElementById('profileName').textContent = profile.username;
-            document.getElementById('profileRole').textContent = profile.title || 'Öğrenci';
-            document.getElementById('profileEmail').textContent = profile.email;
-            document.getElementById('profilePhone').textContent = profile.phone || 'Belirtilmemiş';
-            document.getElementById('profileDepartment').textContent = profile.department || 'Belirtilmemiş';
-            document.getElementById('profileGraduationYear').textContent = profile.graduationYear || 'Belirtilmemiş';
-            document.getElementById('profileJoinDate').textContent = formatDate(profile.joinDate);
-            document.getElementById('profileBio').textContent = profile.bio || 'Henüz bir biyografi eklenmemiş.';
-            document.getElementById('profileInterests').textContent = profile.interests || 'Henüz ilgi alanı eklenmemiş.';
-            
-            // Profil istatistiklerini güncelle
-            const statValues = document.querySelectorAll('.stat-value');
-            if(statValues.length >= 3) {
-                statValues[0].textContent = profile.stats.posts;
-                statValues[1].textContent = profile.stats.followers;
-                statValues[2].textContent = profile.stats.following;
-            }
 
-            // Kulüpleri yükle
-            const clubsGrid = document.querySelector('.clubs-grid');
-            clubsGrid.innerHTML = '';
-            
-            if (profile.clubs && profile.clubs.length > 0) {
-                profile.clubs.forEach(club => {
-                    const clubCard = document.createElement('div');
-                    clubCard.className = 'club-card';
-                    clubCard.innerHTML = `
+            // Diğer alanlar
+            document.getElementById('profileBio').textContent = user.bio || 'Henüz bir biyografi eklenmemiş.';
+            document.getElementById('profileInterests').textContent = user.interests || 'Henüz ilgi alanı eklenmemiş.';
+
+            // Kulüpler
+            const clubsGrid = document.getElementById('userClubs');
+            if (user.clubs && user.clubs.length > 0) {
+                clubsGrid.innerHTML = '';
+                user.clubs.forEach(club => {
+                    const clubElement = document.createElement('div');
+                    clubElement.className = 'club-card';
+                    clubElement.innerHTML = `
                         <div class="club-icon">
-                            <i class="${club.icon || 'fas fa-users'}"></i>
+                            <i class="fas fa-users"></i>
                         </div>
-                        <div class="club-name">${club.name}</div>
+                        <div class="club-name">${club}</div>
                     `;
-                    clubsGrid.appendChild(clubCard);
+                    clubsGrid.appendChild(clubElement);
                 });
             } else {
-                clubsGrid.innerHTML = '<p>Henüz hiç kulübe üye değilsiniz.</p>';
+                clubsGrid.innerHTML = '<p>Henüz kulüp üyeliği bulunmuyor.</p>';
             }
         }
 
-        // Tarih formatı
-        function formatDate(dateString) {
-            const options = { day: 'numeric', month: 'long', year: 'numeric' };
-            return new Date(dateString).toLocaleDateString('tr-TR', options);
-        }
-
-        // Çıkış yapma
+        // Çıkış yapma fonksiyonu
         function handleLogout() {
-            // Çıkış için onay al
-            if (confirm("Çıkış yapmak istediğinize emin misiniz?")) {
-                // Kullanıcı onayladıysa çıkış işlemleri yap
+            if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('user');
-                window.location.href = '../login/login_screen.html';
+                window.location.href = '/main/login/login_screen.html';
                 return true;
             }
-            // Kullanıcı onaylamadıysa hiçbir şey yapma
             return false;
         }
 
-        /* Backend Fonksiyonları (simüle edilmiş) */
-
-        // Oturum kontrolü
-        async function checkSession() {
-            return !!localStorage.getItem('authToken');
-        }
-
-        // Profil bilgilerini getir
-        async function getProfile(username) {
-            // localStorage'dan kullanıcı bilgilerini al
-            const userData = JSON.parse(localStorage.getItem('user') || '{}');
-            
-            // Bölüm seçeneklerini tanımla
-            const departments = {
-                'bilgisayar': 'Bilgisayar Mühendisliği',
-                'yazilim': 'Yazılım Mühendisliği',
-                'elektrik': 'Elektrik-Elektronik Mühendisliği',
-                'makine': 'Makine Mühendisliği',
-                'endustri': 'Endüstri Mühendisliği',
-                'insaat': 'İnşaat Mühendisliği',
-                'mimarlik': 'Mimarlık',
-                'tip': 'Tıp',
-                'dis': 'Diş Hekimliği',
-                'eczacilik': 'Eczacılık',
-                'hukuk': 'Hukuk',
-                'iktisat': 'İktisat',
-                'isletme': 'İşletme',
-                'egitim': 'Eğitim Bilimleri',
-                'fen': 'Fen-Edebiyat',
-                'ilahiyat': 'İlahiyat',
-                'iletisim': 'İletişim',
-                'diger': 'Diğer'
-            };
-
-            // Seçilen bölümün tam adını al
-            const selectedDepartment = userData?.department ? departments[userData.department] || userData.department : 'Bölüm Seçilmedi';
-            
-            // Mezuniyet yılı bilgisini al
-            const graduationYear = userData?.graduationYear === 'mezun_degil' ? 'Henüz mezun değilim' : userData?.graduationYear || 'Belirtilmemiş';
-            
-            return {
-                username: userData.username || username,
-                email: userData.email || `${username}@firat.edu.tr`,
-                phone: userData.phone || 'Belirtilmemiş',
-                department: selectedDepartment,
-                title: selectedDepartment !== 'Bölüm Seçilmedi' ? `${selectedDepartment} Öğrencisi` : 'Öğrenci',
-                graduationYear: graduationYear,
-                joinDate: new Date('2023-09-15').toISOString(),
-                photo: userData.photo || '',
-                bio: userData.bio || 'Henüz bir biyografi eklenmemiş.',
-                interests: userData.interests || 'Henüz ilgi alanı eklenmemiş.',
-                stats: {
-                    posts: 128,
-                    followers: 456,
-                    following: 234
-                },
-                clubs: [
-                    { name: 'Yazılım Kulübü', icon: 'fas fa-code' },
-                    { name: 'Robotik Kulübü', icon: 'fas fa-robot' },
-                    { name: 'Tasarım Kulübü', icon: 'fas fa-paint-brush' }
-                ]
-            };
-        }
-
-        // Profil fotoğrafı yükleme
-        const profilePhoto = document.getElementById('profilePhotoPreview');
-        const photoUploadOverlay = document.querySelector('.photo-upload-overlay');
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = 'image/*';
-        fileInput.style.display = 'none';
-
-        profilePhoto.parentElement.addEventListener('click', () => {
-            fileInput.click();
+        // Profil düzenleme butonuna tıklama
+        document.getElementById('editProfileBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Profil düzenleme özelliği yakında eklenecek!');
         });
-
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    profilePhoto.style.backgroundImage = `url(${e.target.result})`;
-                    profilePhoto.style.backgroundSize = 'cover';
-                    profilePhoto.style.backgroundPosition = 'center';
-                    
-                    // Fotoğrafı localStorage'a kaydet
-                    const userData = JSON.parse(localStorage.getItem('user') || '{}');
-                    userData.photo = e.target.result;
-                    localStorage.setItem('user', JSON.stringify(userData));
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Sayfa yüklendiğinde profil fotoğrafını yükle
-        document.addEventListener('DOMContentLoaded', () => {
-            const userData = JSON.parse(localStorage.getItem('user') || '{}');
-            if (userData.photo) {
-                profilePhoto.style.backgroundImage = `url(${userData.photo})`;
-                profilePhoto.style.backgroundSize = 'cover';
-                profilePhoto.style.backgroundPosition = 'center';
-            } else {
-                profilePhoto.style.backgroundImage = 'none';
-                profilePhoto.innerHTML = '<i class="fas fa-user"></i>';
-            }
-        });
-
-        function loadUserData() {
-            const userData = JSON.parse(localStorage.getItem('user')) || {};
-            
-            // Profil fotoğrafı ve gizlilik kontrolü
-            const profilePhoto = document.querySelector('.profile-photo');
-            if (userData.isPrivate) {
-                // Gizlilik açık olduğunda tüm bilgileri gizle
-                document.querySelector('.profile-name').textContent = 'Gizli Profil';
-                document.querySelector('.profile-role').textContent = 'Bu profil gizli';
-                document.querySelector('.profile-stats').style.display = 'none';
-                document.querySelector('.sidebar-info').style.display = 'none';
-                document.querySelector('.profile-details').style.display = 'none';
-                document.querySelector('.new-post-card').style.display = 'none';
-                document.querySelector('.post-card').style.display = 'none';
-                
-                // Hayalet fotoğrafı göster
-                profilePhoto.classList.add('ghost');
-                profilePhoto.innerHTML = '<i class="fas fa-ghost"></i>';
-            } else if (userData.photo) {
-                profilePhoto.style.backgroundImage = `url(${userData.photo})`;
-                profilePhoto.style.backgroundSize = 'cover';
-                profilePhoto.style.backgroundPosition = 'center';
-            } else {
-                profilePhoto.innerHTML = '<i class="fas fa-user"></i>';
-            }
-            
-            // ... existing code ...
-        }
     </script>
 </body>
-</html>
 </html>

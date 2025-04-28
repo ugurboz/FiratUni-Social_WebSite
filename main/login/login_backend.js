@@ -1,126 +1,237 @@
-// Giriş backend işlevleri
+// Gerekli modülleri içe aktarma
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const bcrypt = require('bcrypt'); // Şifreleri güvenli bir şekilde saklamak için
+const crypto = require('crypto'); // authToken oluşturmak için
 
-// Kullanıcı veritabanı
-const users = [
-    {
-        studentNumber: "2023123456",
-        email: "2023123456@firat.edu.tr",
-        password: "test123",
-        name: "Test User"
-    }
-];
-
-// Giriş işlemi
-async function handleLogin(email, password) {
-    return new Promise((resolve, reject) => {
-        try {
-            // E-posta formatını kontrol et
-            if (!email.endsWith('@firat.edu.tr')) {
-                reject(new Error('Lütfen Fırat Üniversitesi e-posta adresinizi kullanın.'));
-                return;
-            }
-
-            // Öğrenci numarasını e-postadan çıkar
-            const studentNumber = email.split('@')[0];
-            
-            // Kullanıcıyı bul
-            const user = users.find(u => u.studentNumber === studentNumber);
-            
-            if (!user) {
-                reject(new Error('Kullanıcı bulunamadı.'));
-                return;
-            }
-
-            if (user.password !== password) {
-                reject(new Error('Hatalı şifre.'));
-                return;
-            }
-
-            resolve({
-                success: true,
-                user: {
-                    studentNumber: user.studentNumber,
-                    email: user.email,
-                    name: user.name
-                }
-            });
-        } catch (error) {
-            reject(error);
-        }
-    });
+// Bağlantı URI'sini kontrol et ve kullan
+const uri = process.env.MONGODB_URI;
+if (!uri) {
+    console.error("MONGODB_URI bulunamadı! .env dosyanızı kontrol edin.");
+    process.exit(1);
 }
 
-// Kayıt işlemini gerçekleştiren fonksiyon
-function handleRegister(password, email) {
-    return new Promise((resolve, reject) => {
-        // E-posta kontrolü
-        if (usersDB[email]) {
-            reject({
-                success: false,
-                message: 'Bu e-posta adresi zaten kullanılıyor!'
-            });
-            return;
+// Veritabanı ve koleksiyon isimleri
+const dbName = "firatuni_social";
+const usersCollection = "users";
+
+// Kullanıcı girişi fonksiyonu
+async function loginUser(email, password) {
+    console.log('Login attempt for email:', email); // Debug log
+    
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        },
+        maxPoolSize: 10,
+        minPoolSize: 1,
+        maxIdleTimeMS: 30000,
+        connectTimeoutMS: 10000
+    });
+
+    try {
+        console.log('Connecting to MongoDB...'); // Debug log
+        await client.connect();
+        console.log('Connected to MongoDB'); // Debug log
+        
+        const database = client.db(dbName);
+        const users = database.collection(usersCollection);
+
+        // Kullanıcıyı e-posta ile bul
+        console.log('Searching for user...'); // Debug log
+        const user = await users.findOne({ email: email });
+        console.log('User found:', user ? 'Yes' : 'No'); // Debug log
+        
+        if (!user) {
+            console.log('User not found'); // Debug log
+            return { success: false, message: "Kullanıcı bulunamadı" };
         }
 
-        // Yeni kullanıcı oluştur
-        usersDB[email] = {
-            email: email,
-            password: password,
-            joinDate: new Date().toISOString()
+        // Şifre kontrolü
+        console.log('Checking password...'); // Debug log
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        console.log('Password valid:', isPasswordValid); // Debug log
+        
+        if (!isPasswordValid) {
+            console.log('Invalid password'); // Debug log
+            return { success: false, message: "Hatalı şifre" };
+        }
+
+        // AuthToken oluştur
+        const authToken = crypto.randomBytes(32).toString('hex');
+
+        // Giriş başarılı
+        console.log('Login successful'); // Debug log
+        return {
+            success: true,
+            message: "Giriş başarılı",
+            authToken: authToken, // AuthToken'ı ekle
+            user: {
+                id: user._id,
+                name: user.name,
+                surname: user.surname,
+                email: user.email,
+                studentNumber: user.studentNumber,
+                department: user.department,
+                year: user.year
+            }
         };
 
-        resolve({
-            success: true,
-            message: 'Kayıt başarılı!'
-        });
-    });
+    } catch (error) {
+        console.error("Giriş hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
+    } finally {
+        await client.close();
+        console.log('MongoDB connection closed'); // Debug log
+    }
 }
 
-// Şifre sıfırlama
-async function handlePasswordReset(email) {
-    return new Promise((resolve, reject) => {
-        try {
-            // E-posta formatını kontrol et
-            if (!email.endsWith('@firat.edu.tr')) {
-                reject(new Error('Lütfen Fırat Üniversitesi e-posta adresinizi kullanın.'));
-                return;
-            }
+// Şifre sıfırlama fonksiyonu
+async function resetPassword(email) {
+    try {
+        await client.connect();
+        const database = client.db(dbName);
+        const users = database.collection(usersCollection);
 
-            // Öğrenci numarasını e-postadan çıkar
-            const studentNumber = email.split('@')[0];
-            
-            // Kullanıcıyı bul
-            const user = users.find(u => u.studentNumber === studentNumber);
-            
-            if (!user) {
-                reject(new Error('Bu e-posta adresi ile kayıtlı kullanıcı bulunamadı.'));
-                return;
-            }
+        // Kullanıcıyı kontrol et
+        const user = await users.findOne({ email: email });
 
-            // Şifre sıfırlama e-postası gönderildi
-            resolve({
-                success: true,
-                message: 'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.'
-            });
-        } catch (error) {
-            reject(error);
+        if (!user) {
+            return { success: false, message: "Bu e-posta adresi kayıtlı değil" };
+        }
+
+        // Gerçek uygulamada burada:
+        // 1. Geçici bir token oluştur
+        // 2. Token'ı veritabanına kaydet
+        // 3. Kullanıcıya e-posta gönder
+        // Şimdilik basit bir yanıt döndürelim
+        return {
+            success: true,
+            message: "Şifre sıfırlama bağlantısı e-posta adresinize gönderildi"
+        };
+
+    } catch (error) {
+        console.error("Şifre sıfırlama hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
+    } finally {
+        await client.close();
+    }
+}
+
+// Oturum kontrolü fonksiyonu
+async function checkSession(sessionId) {
+    try {
+        await client.connect();
+        const database = client.db(dbName);
+        const sessions = database.collection("sessions");
+
+        const session = await sessions.findOne({ sessionId: sessionId });
+        return session ? true : false;
+
+    } catch (error) {
+        console.error("Oturum kontrolü hatası:", error);
+        return false;
+    } finally {
+        await client.close();
+    }
+}
+
+// Kullanıcı kayıt fonksiyonu
+async function registerUser(userData) {
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        },
+        maxPoolSize: 10,
+        minPoolSize: 1,
+        maxIdleTimeMS: 30000,
+        connectTimeoutMS: 10000
+    });
+
+    try {
+        await client.connect();
+        const database = client.db(dbName);
+        const users = database.collection(usersCollection);
+
+        // E-posta kontrolü
+        const existingUser = await users.findOne({ email: userData.email });
+        if (existingUser) {
+            return { success: false, message: "Bu e-posta adresi zaten kayıtlı" };
+        }
+
+        // Şifreyi hashle
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+
+        // Kullanıcı verilerini hazırla
+        const newUser = {
+            ...userData,
+            password: hashedPassword,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+
+        // Kullanıcıyı veritabanına ekle
+        const result = await users.insertOne(newUser);
+
+        return {
+            success: true,
+            message: "Kullanıcı başarıyla kaydedildi",
+            userId: result.insertedId
+        };
+
+    } catch (error) {
+        console.error("Kayıt hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
+    } finally {
+        await client.close();
+    }
+}
+
+// Test fonksiyonu
+async function testDatabaseConnection() {
+    const client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
         }
     });
+    
+    try {
+        await client.connect();
+        // Send a ping to confirm a successful connection
+        await client.db("admin").command({ ping: 1 });
+        console.log("MongoDB'ye başarıyla bağlandı!");
+        
+        const database = client.db(dbName);
+        const collections = await database.listCollections().toArray();
+        
+        console.log("Mevcut koleksiyonlar:");
+        collections.forEach(collection => {
+            console.log(` - ${collection.name}`);
+        });
+
+    } catch (error) {
+        console.error("Bağlantı hatası:", error);
+    } finally {
+        await client.close();
+    }
 }
 
-// Oturum kontrolü
-async function checkSession() {
-    return new Promise((resolve) => {
-        const token = localStorage.getItem('authToken');
-        resolve(!!token);
-    });
-}
+// Fonksiyonları dışa aktar
+module.exports = {
+    loginUser,
+    resetPassword,
+    checkSession,
+    testDatabaseConnection,
+    registerUser
+};
 
-// Çıkış yapma fonksiyonu
-async function handleLogout() {
-    return new Promise((resolve) => {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
-        resolve(true);
-    });
-}
+// Bağlantıyı test et
+testDatabaseConnection().catch(console.error);

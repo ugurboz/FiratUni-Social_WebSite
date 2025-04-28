@@ -154,3 +154,57 @@ Bu proje, Agile (Çevik) yazılım geliştirme metodolojisi kullanılarak geliş
 - [Özal Yıldırım]
 - Yazılım Mühendisliği Bölümü
 - Fırat Üniversitesi
+
+## Kurulum
+
+### Gereksinimler
+- Node.js (v16 veya üstü)
+- MongoDB
+- npm veya yarn
+
+### Adımlar
+
+1. Projeyi klonlayın:
+   ```bash
+   git clone https://github.com/username/FiratUni-Social_WebSite.git
+   cd FiratUni-Social_WebSite
+   ```
+
+2. Bağımlılıkları yükleyin:
+   ```bash
+   npm install
+   # veya
+   yarn install
+   ```
+
+3. Çevre değişkenlerini ayarlayın:
+   - `env.example` dosyasını `.env` olarak kopyalayın
+   ```bash
+   cp env.example .env
+   ```
+   - `.env` dosyasını kendi bilgilerinizle düzenleyin (MongoDB URI, JWT Secret, vs.)
+
+4. Sunucuyu başlatın:
+   ```bash
+   npm start
+   # veya
+   yarn start
+   ```
+
+5. Tarayıcınızda aşağıdaki adresi açın:
+   ```
+   http://localhost:3000
+   ```
+
+### Çevre Değişkenleri (.env)
+
+Proje aşağıdaki çevre değişkenlerini kullanmaktadır:
+
+| Değişken      | Açıklama                                  | Örnek Değer                                         |
+|---------------|-------------------------------------------|----------------------------------------------------|
+| MONGODB_URI   | MongoDB bağlantı adresi                   | mongodb+srv://username:password@cluster.mongodb.net/dbname |
+| PORT          | Sunucunun çalışacağı port                 | 3000                                                |
+| NODE_ENV      | Çalışma ortamı (development, production)  | development                                         |
+| JWT_SECRET    | JWT token şifreleme anahtarı              | your_jwt_secret_key                                 |
+
+> **ÖNEMLİ:** `.env` dosyanızı asla GitHub'a veya herhangi bir versiyon kontrol sistemine eklemeyin! Bu dosya hassas bilgiler içerir ve daima `.gitignore` dosyasında belirtilmelidir.
