@@ -1,90 +1,61 @@
 // Gerekli modülleri içe aktarma
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const bcrypt = require('bcrypt');
-
-// Bağlantı URI'sini kontrol et ve kullan
-const uri = process.env.MONGODB_URI;
-if (!uri) {
-    console.error("MONGODB_URI bulunamadı! .env dosyanızı kontrol edin.");
-    process.exit(1);
-}
-
-// Veritabanı ve koleksiyon isimleri
-const dbName = "firatuni_social";
-const usersCollection = "users";
+const { getDb } = require('../../db/config'); // DB bağlantısı için
+const bcrypt = require('bcryptjs'); // Şifre hashlemek için
 
 // Kayıt işlemi
 async function handleRegister(userData) {
-    const client = new MongoClient(uri, {
-        serverApi: {
-            version: ServerApiVersion.v1,
-            strict: true,
-            deprecationErrors: true,
-        },
-        maxPoolSize: 10,
-        minPoolSize: 1,
-        maxIdleTimeMS: 30000,
-        connectTimeoutMS: 10000
-    });
-
+    console.log('Register attempt with data:', JSON.stringify(userData)); // Debug log
     try {
-        await client.connect();
-        const database = client.db(dbName);
-        const users = database.collection(usersCollection);
-
+        // Veritabanına bağlan
+        const db = await getDb();
+        console.log('Connected to database'); // Debug log
+        
+        const usersCollection = db.collection('users');
+        console.log('Accessing users collection'); // Debug log
+        
         // E-posta kontrolü
-        const existingUser = await users.findOne({ email: userData.email });
+        console.log('Checking if email exists:', userData.email); // Debug log
+        const existingUser = await usersCollection.findOne({ email: userData.email });
+        console.log('Existing user found:', existingUser ? 'Yes' : 'No'); // Debug log
+        
         if (existingUser) {
+            console.log('User already exists'); // Debug log
             return { success: false, message: "Bu e-posta adresi zaten kayıtlı" };
         }
 
         // Şifreyi hashle
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
-
-        // Kullanıcı verilerini hazırla
-        const newUser = {
-            ...userData,
-            password: hashedPassword,
-            createdAt: new Date(),
-            updatedAt: new Date()
-        };
-
-        // Kullanıcıyı veritabanına ekle
-        const result = await users.insertOne(newUser);
-
+        console.log('Hashing password'); // Debug log
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(userData.password, salt);
+        userData.password = hashedPassword;
+        
+        // Kullanıcıyı oluştur
+        console.log('Inserting new user to database'); // Debug log
+        const result = await usersCollection.insertOne(userData);
+        console.log('Insert result:', result); // Debug log
+        
+        console.log('User registered successfully'); // Debug log
         return {
             success: true,
-            message: "Kullanıt başarıyla kaydedildi",
+            message: "Kullanıcı başarıyla kaydedildi",
             userId: result.insertedId
         };
 
     } catch (error) {
         console.error("Kayıt hatası:", error);
         return { success: false, message: "Bir hata oluştu" };
-    } finally {
-        await client.close();
     }
 }
 
 // Kullanıcı bilgilerini getir
-async function getUser(username) {
-    const client = new MongoClient(uri, {
-        serverApi: {
-            version: ServerApiVersion.v1,
-            strict: true,
-            deprecationErrors: true,
-        }
-    });
-
+async function getUser(email) {
     try {
-        await client.connect();
-        const database = client.db(dbName);
-        const users = database.collection(usersCollection);
-
-        const user = await users.findOne({ username: username });
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        const user = await usersCollection.findOne({ email: email });
         if (user) {
             return user;
         } else {
@@ -92,60 +63,34 @@ async function getUser(username) {
         }
     } catch (error) {
         throw error;
-    } finally {
-        await client.close();
     }
 }
 
 // E-posta kontrolü
 async function checkEmail(email) {
-    const client = new MongoClient(uri, {
-        serverApi: {
-            version: ServerApiVersion.v1,
-            strict: true,
-            deprecationErrors: true,
-        }
-    });
-
     try {
-        await client.connect();
-        const database = client.db(dbName);
-        const users = database.collection(usersCollection);
-
-        const existingUser = await users.findOne({ email: email });
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        const existingUser = await usersCollection.findOne({ email: email });
         return !!existingUser;
-
     } catch (error) {
         console.error("E-posta kontrolü hatası:", error);
         return false;
-    } finally {
-        await client.close();
     }
 }
 
-// Kullanıcı adı kontrolü
-async function checkUsername(username) {
-    const client = new MongoClient(uri, {
-        serverApi: {
-            version: ServerApiVersion.v1,
-            strict: true,
-            deprecationErrors: true,
-        }
-    });
-
+// Kullanıcı adı kontrolü (studentNumber kontrolü olarak güncellenebilir)
+async function checkUsername(studentNumber) {
     try {
-        await client.connect();
-        const database = client.db(dbName);
-        const users = database.collection(usersCollection);
-
-        const existingUser = await users.findOne({ username: username });
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        const existingUser = await usersCollection.findOne({ studentNumber: studentNumber });
         return !!existingUser;
-
     } catch (error) {
-        console.error("Kullanıcı adı kontrolü hatası:", error);
+        console.error("Öğrenci numarası kontrolü hatası:", error);
         return false;
-    } finally {
-        await client.close();
     }
 }
 
@@ -154,4 +99,4 @@ module.exports = {
     getUser,
     checkEmail,
     checkUsername
-}; 
+};

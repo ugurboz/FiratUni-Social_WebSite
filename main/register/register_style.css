@@ -21,26 +21,28 @@ body {
     align-items: center;
     min-height: 100vh;
     background: linear-gradient(45deg, #FF1493, #6C63FF);
-    padding: 20px;
+    padding: 10px;
+    margin: 0;
 }
 
 .register-container {
     background: white;
-    padding: 40px;
+    padding: 25px;
     border-radius: 20px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 500px;
+    max-width: 450px;
+    margin: 10px;
 }
 
 .brand {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .brand-logo {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     background: var(--primary-color);
     border-radius: 50%;
     display: flex;
@@ -50,7 +52,7 @@ body {
 }
 
 .brand-logo i {
-    font-size: 40px;
+    font-size: 35px;
     color: white;
 }
 
@@ -68,7 +70,28 @@ body {
 
 .form-group {
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.form-group.half-width {
+    display: inline-block;
+    width: calc(50% - 5px);
+}
+
+.form-group.half-width:nth-child(2n) {
+    margin-left: 10px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
 }
 
 .form-group i {
@@ -77,24 +100,7 @@ body {
     top: 50%;
     transform: translateY(-50%);
     color: #666;
-    font-size: 18px;
-}
-
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 12px 45px;
-    border: 1px solid var(--border-color);
-    border-radius: 25px;
     font-size: 16px;
-    transition: all 0.3s ease;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.1);
 }
 
 .password-container {
@@ -158,7 +164,8 @@ body {
 }
 
 .form-actions {
-    margin-top: 30px;
+    margin-top: 20px;
+    text-align: center;
 }
 
 .register-button {
@@ -167,19 +174,17 @@ body {
     background: var(--primary-color);
     color: white;
     border: none;
-    border-radius: 25px;
+    border-radius: 10px;
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+    margin-top: 10px;
     transition: all 0.3s ease;
 }
 
 .register-button:hover {
     background: #5650e6;
+    transform: translateY(-1px);
 }
 
 .register-button:disabled {
@@ -188,7 +193,7 @@ body {
 }
 
 .terms {
-    margin-top: 20px;
+    margin-top: 15px;
     text-align: center;
     font-size: 12px;
     color: #666;
@@ -204,7 +209,7 @@ body {
 }
 
 .login-link {
-    margin-top: 20px;
+    margin-top: 15px;
     text-align: center;
     font-size: 14px;
     color: #666;
@@ -221,6 +226,11 @@ body {
 }
 
 @media (max-width: 480px) {
+    .form-group.half-width {
+        width: 100%;
+        margin-left: 0 !important;
+    }
+    
     .register-container {
         padding: 20px;
     }

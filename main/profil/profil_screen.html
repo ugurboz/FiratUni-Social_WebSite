@@ -80,16 +80,6 @@
                         <div class="info-value" id="profileYear">Yükleniyor...</div>
                     </div>
                 </div>
-                
-                <div class="info-item">
-                    <div class="info-icon">
-                        <i class="fas fa-calendar-alt"></i>
-                    </div>
-                    <div class="info-content">
-                        <div class="info-label">Kayıt Tarihi</div>
-                        <div class="info-value" id="profileJoinDate">Yükleniyor...</div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -145,10 +135,13 @@
                     Üye Olduğu Kulüpler
                 </h3>
                 <div class="section-content" id="userClubs">
-                    <p>Henüz kulüp üyeliği bulunmuyor.</p>
+                    <div class="clubs-list">
+                        <!-- Kulüpler buraya dinamik olarak eklenecek -->
                     </div>
+                    <p id="noClubsMessage" style="display: none;">Henüz kulüp üyeliği bulunmuyor.</p>
                 </div>
-                
+            </div>
+            
             <div class="section">
                 <h3 class="section-title">
                     <i class="fas fa-calendar-week"></i>
@@ -162,42 +155,130 @@
     </div>
 
     <script>
-        // Sayfa yüklendiğinde profil bilgilerini getir
-        document.addEventListener('DOMContentLoaded', async function() {
-            const userData = JSON.parse(localStorage.getItem('user') || '{}');
-            
-            if (!userData.email) {
-                window.location.href = '../login/login_screen.html';
+        // Kullanıcı bilgilerini yükle
+        async function loadUserProfile() {
+            try {
+                // Local storage'dan email'i al
+                const userDataStr = localStorage.getItem('user');
+                if (!userDataStr) {
+                    console.error('Kullanıcı oturumu bulunamadı');
+                    window.location.href = '../login/login_screen.html';
+                    return;
+                }
+
+                const userData = JSON.parse(userDataStr);
+                const email = userData.email;
+
+                // API'den profil bilgilerini al
+                const response = await fetch(`/api/profile?email=${email}`);
+                const data = await response.json();
+                console.log('API yanıtı:', data);
+
+                if (data.success) {
+                    const profileData = data.user;
+                    
+                    // Profil bilgilerini güncelle
+                    document.getElementById('profileName').textContent = 
+                        `${profileData.firstName || ''} ${profileData.lastName || ''}`;
+                    document.getElementById('profileRole').textContent = 
+                        profileData.department ? `${profileData.department} Öğrencisi` : 'Öğrenci';
+                    document.getElementById('profileEmail').textContent = profileData.email || '-';
+                    document.getElementById('profileStudentNumber').textContent = profileData.studentNumber || '-';
+                    document.getElementById('profileDepartment').textContent = profileData.department || '-';
+                    document.getElementById('profileYear').textContent = 
+                        profileData.year ? `${profileData.year}. Sınıf` : '-';
+                    
+                    // Profil fotoğrafını güncelle
+                    const profilePhoto = document.getElementById('profilePhotoPreview');
+                    if (profileData.profileImage) {
+                        profilePhoto.style.backgroundImage = `url(${profileData.profileImage})`;
+                        profilePhoto.innerHTML = '';
+                    }
+
+                    // Biyografi ve ilgi alanlarını güncelle
+                    document.getElementById('profileBio').textContent = 
+                        profileData.bio || 'Henüz bir biyografi eklenmemiş.';
+                    document.getElementById('profileInterests').textContent = 
+                        profileData.interests || 'Henüz ilgi alanı eklenmemiş.';
+
+                    // Kulüp üyeliklerini güncelle
+                    updateClubsList(profileData.clubs || [], profileData.clubDetails || []);
+                } else {
+                    console.error('Profil yükleme hatası:', data.message);
+                    alert('Profil bilgileri yüklenirken bir hata oluştu.');
+                }
+            } catch (error) {
+                console.error('Profil yükleme hatası:', error);
+                alert('Profil bilgileri yüklenirken bir hata oluştu.');
+            }
+        }
+
+        // Kulüp listesini güncelle
+        function updateClubsList(clubs, clubDetails) {
+            const clubsList = document.querySelector('.clubs-list');
+            const noClubsMessage = document.getElementById('noClubsMessage');
+
+            if (!clubs || clubs.length === 0) {
+                clubsList.innerHTML = '';
+                noClubsMessage.style.display = 'block';
                 return;
             }
 
+            noClubsMessage.style.display = 'none';
+            clubsList.innerHTML = clubDetails.map(club => `
+                <div class="club-item">
+                    <div class="club-info">
+                        <h4>${club.name}</h4>
+                        <p>${club.description || ''}</p>
+                    </div>
+                    <button class="leave-club-btn" onclick="leaveClub('${club.name}')">
+                        <i class="fas fa-sign-out-alt"></i> Ayrıl
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Kulüpten ayrılma işlevi
+        async function leaveClub(clubName) {
             try {
-                // Profil bilgilerini güncelle
-                document.getElementById('profileName').textContent = `${userData.firstName || ''} ${userData.lastName || ''}`;
-                document.getElementById('profileRole').textContent = userData.department ? `${userData.department} Öğrencisi` : 'Öğrenci';
-                document.getElementById('profileEmail').textContent = userData.email || '-';
-                document.getElementById('profileStudentNumber').textContent = userData.studentNumber || '-';
-                document.getElementById('profileDepartment').textContent = userData.department || '-';
-                document.getElementById('profileYear').textContent = userData.year ? `${userData.year}. Sınıf` : '-';
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (!user) {
+                    alert('Kullanıcı oturumu bulunamadı');
+                    return;
+                }
+
+                const response = await fetch('/leave-club', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        clubName,
+                        email: user.email 
+                    })
+                });
                 
-                const joinDate = userData.createdAt ? new Date(userData.createdAt).toLocaleDateString('tr-TR') : '-';
-                document.getElementById('profileJoinDate').textContent = joinDate;
-
-                // Paylaşımları yükle
-                loadPosts();
-
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Kulüpten başarıyla ayrıldınız');
+                    loadUserProfile(); // Profili yeniden yükle
+                } else {
+                    alert(data.message || 'Kulüpten ayrılırken bir hata oluştu');
+                }
             } catch (error) {
-                console.error('Profil bilgileri yüklenirken hata:', error);
+                console.error('Kulüpten ayrılırken hata oluştu:', error);
+                alert('Kulüpten ayrılırken bir hata oluştu');
             }
-        });
+        }
 
-        // Çıkış yapma işlemi
+        // Sayfa yüklendiğinde profil bilgilerini getir
+        document.addEventListener('DOMContentLoaded', loadUserProfile);
+
+        // Çıkış yapma işlevi
         function handleLogout() {
-            if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
-                localStorage.removeItem('user');
-                window.location.href = '../login/login_screen.html';
-                return true;
-            }
+            localStorage.removeItem('user');
+            window.location.href = '../login/login_screen.html';
             return false;
         }
 
@@ -278,5 +359,67 @@
             }
         }
     </script>
+
+    <style>
+        .clubs-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .club-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+
+        .club-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .club-info {
+            flex: 1;
+        }
+
+        .club-info h4 {
+            color: var(--primary-dark);
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .club-info p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .leave-club-btn {
+            background: var(--error-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .leave-club-btn:hover {
+            background: #ff0000;
+            transform: translateY(-2px);
+        }
+
+        .leave-club-btn i {
+            font-size: 0.8rem;
+        }
+    </style>
 </body>
 </html>

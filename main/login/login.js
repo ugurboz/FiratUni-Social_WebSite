@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Kullanıcı bilgilerini ve authToken'ı localStorage'a kaydet
                 localStorage.setItem('user', JSON.stringify(result.user));
                 localStorage.setItem('authToken', result.authToken);
+                localStorage.setItem('userEmail', result.user.email); // userEmail'i kaydet
                 
                 // Show success message
                 successMessage.textContent = 'Giriş başarılı! Yönlendiriliyorsunuz...';

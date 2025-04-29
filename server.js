@@ -1,8 +1,11 @@
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 const { loginUser } = require('./main/login/login_backend');
 const { handleRegister } = require('./main/register/register_backend');
 const { getUserProfile } = require('./main/profil/profil_backend');
+const { getClubs, joinClub, leaveClub, getClubDetails, initializeClubs } = require('./main/kulupler/kulupler_backend');
+const { testConnection, getDb, initializeTestData } = require('./db/config');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -40,22 +43,88 @@ app.post('/api/register', async (req, res) => {
 // Profil bilgilerini getirme endpoint'i
 app.get('/api/profile', async (req, res) => {
     try {
-        const authToken = req.headers.authorization;
-        if (!authToken) {
-            return res.status(401).json({ success: false, message: 'Oturum bulunamadı' });
-        }
-
         const userEmail = req.query.email;
+        console.log('Profil isteği alındı, email:', userEmail);
+
         if (!userEmail) {
+            console.log('E-posta adresi eksik');
             return res.status(400).json({ success: false, message: 'E-posta adresi gerekli' });
         }
 
         const result = await getUserProfile(userEmail);
+        console.log('Profil sonucu:', result);
         res.json(result);
     } catch (error) {
         console.error('Profile API error:', error);
         res.status(500).json({ success: false, message: 'Bir hata oluştu' });
     }
+});
+
+// Veritabanı içeriğini görmek için geliştirici endpoint'i
+app.get('/api/debug/users', async (req, res) => {
+    try {
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        // In-memory veritabanında users koleksiyonunu doğrudan döndür
+        const allUsers = usersCollection.data || [];
+        console.log(`Total users in database: ${allUsers.length}`);
+        
+        // Güvenlik nedeniyle şifreleri gizle
+        const sanitizedUsers = allUsers.map(user => {
+            const { password, ...userData } = user;
+            return { ...userData, hasPassword: !!password };
+        });
+        
+        res.json({ success: true, users: sanitizedUsers });
+    } catch (error) {
+        console.error('Debug API error:', error);
+        res.status(500).json({ success: false, message: 'Bir hata oluştu' });
+    }
+});
+
+// Kulüp işlemleri için endpoint'ler
+app.get('/api/clubs', async (req, res) => {
+    try {
+        const result = await getClubs();
+        res.json(result);
+    } catch (error) {
+        console.error('Kulüpleri getirme hatası:', error);
+        res.status(500).json({ success: false, message: 'Bir hata oluştu' });
+    }
+});
+
+app.get('/api/clubs/:clubId', async (req, res) => {
+    try {
+        const { clubId } = req.params;
+        const result = await getClubDetails(clubId);
+        res.json(result);
+    } catch (error) {
+        console.error('Kulüp detayları getirme hatası:', error);
+        res.status(500).json({ success: false, message: 'Bir hata oluştu' });
+    }
+});
+
+app.post('/join-club', async (req, res) => {
+    const { clubName, email } = req.body;
+
+    if (!email) {
+        return res.json({ success: false, message: 'Oturum açmanız gerekiyor' });
+    }
+
+    const result = await joinClub(clubName, email);
+    res.json(result);
+});
+
+app.post('/leave-club', async (req, res) => {
+    const { clubName, email } = req.body;
+
+    if (!email) {
+        return res.json({ success: false, message: 'Oturum açmanız gerekiyor' });
+    }
+
+    const result = await leaveClub(clubName, email);
+    res.json(result);
 });
 
 // Route handlers for pages - Her zaman tam dosya yolunu kullan
@@ -104,8 +173,13 @@ app.use((req, res) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`Server is running on port ${PORT}`);
+    
+    // Test verilerini oluştur
+    await initializeTestData();
+    await initializeClubs();
+    
     // Log the available routes
     console.log('Available routes:');
     console.log('- GET  /', path.join(__dirname, 'main', 'anasayfa', 'anasayfa_screen.html'));
@@ -115,4 +189,9 @@ app.listen(PORT, () => {
     console.log('- POST /api/login');
     console.log('- POST /api/register');
     console.log('- GET  /api/profile');
+    console.log('- GET  /api/debug/users');
+    console.log('- GET  /api/clubs');
+    console.log('- GET  /api/clubs/:clubId');
+    console.log('- POST /join-club');
+    console.log('- POST /leave-club');
 }); 

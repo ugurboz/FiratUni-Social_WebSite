@@ -1,4 +1,4 @@
-# Fırat Üniversitesi Sosyal Web Sitesi
+# Fırat Üniversitesi Sosyal Platformu
 
 Bu proje, Fırat Üniversitesi Yazılım Mühendisliği Bölümü "Yazılım Mühendisliği Temelleri" dersi kapsamında geliştirilmiş bir ödev projesidir.
 
@@ -6,14 +6,14 @@ Fırat Üniversitesi öğrencileri ve personeli için modern bir sosyal ağ plat
 
 ## 📋 Görev Dağılımı
 
-| Görev | Sorumlular | Açıklama |
-|-------|------------|-----------|
-| Proje Yönetimi & Planlama | Tüm ekip | Toplantılar, görev takibi, GitHub yönetimi. |
-| Backend (API & Veritabanı) | Hüseyin & Baran | Kullanıcı kayıt/giriş, forum API, etkinlik yönetimi, veritabanı tasarımı (PostgreSQL/MySQL). |
+| Görev Alanı | Sorumlular | Açıklama |
+|------------|------------|----------|
+| Frontend (UI/UX) | Uğur & Baran | Kullanıcı arayüzü tasarımı, responsive tasarım, kullanıcı deneyimi optimizasyonu. |
+| Backend (API & Veritabanı) | Hüseyin & Baran | Kullanıcı kayıt/giriş, forum API, etkinlik yönetimi, veritabanı tasarımı (MongoDB). |
+| Güvenlik ve Performans | Hüseyin & Uğur | API güvenliği, veri şifreleme, performans optimizasyonu. |
+| Veritabanı Tasarımı ve Yönetimi | Hüseyin & Uğur | MongoDB şeması oluşturma, optimizasyon. |
 | Kimlik Doğrulama (Login, Kayıt, JWT) | Hüseyin & Uğur | Kullanıcı yetkilendirme, JWT token sistemi. |
-| Frontend (Arayüz Geliştirme) | İbrahim & Elif | React veya Blazor ile giriş ekranı, forum sayfası, etkinlik listesi ve UI tasarımı. |
 | Frontend - Backend Entegrasyonu | Baran & Elif | API bağlantılarının yapılması, veri akışının sağlanması. |
-| Veritabanı Tasarımı ve Yönetimi | Hüseyin & Uğur | PostgreSQL veya MySQL şeması oluşturma, optimizasyon. |
 | Forum ve Etkinlik Modülü | Baran & İbrahim | Forum mesajlaşma ve etkinlik planlama sisteminin backend ve frontend tasarımı. |
 | Kulüpler ve Sosyal Sayfalar | Elif & İbrahim | Kulüplerin tanıtım sayfaları, sosyal etkinlik duyuruları. |
 | Test ve Hata Ayıklama | Tüm ekip (Özellikle İbrahim & Uğur) | Backend & frontend testleri, hata ayıklama, Postman ile API testleri. |
