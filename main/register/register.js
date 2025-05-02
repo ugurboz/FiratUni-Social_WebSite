@@ -1,84 +1,57 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
     const registerForm = document.getElementById('registerForm');
-    const errorMessage = document.getElementById('errorMessage');
-    const successMessage = document.getElementById('successMessage');
-    
-    registerForm.addEventListener('submit', async (e) => {
+    const errorMessage = document.createElement('div');
+    errorMessage.className = 'error-message';
+    registerForm.appendChild(errorMessage);
+
+    registerForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const firstName = document.getElementById('firstName').value;
-        const lastName = document.getElementById('lastName').value;
-        const studentNumber = document.getElementById('studentNumber').value;
-        const password = document.getElementById('password').value;
+        // Form verilerini al
+        const formData = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            studentNumber: document.getElementById('studentNumber').value,
+            password: document.getElementById('password').value,
+            department: document.getElementById('department').value,
+            year: document.getElementById('year').value
+        };
+
+        // Şifre kontrolü
         const confirmPassword = document.getElementById('confirmPassword').value;
-        const department = document.getElementById('department').value;
-        const year = document.getElementById('year').value;
-        
-        // Hide any existing messages
-        errorMessage.style.display = 'none';
-        successMessage.style.display = 'none';
-        
-        // Basic validation
-        if (!firstName || !lastName || !studentNumber || !password || !confirmPassword || !department || !year) {
-            errorMessage.textContent = 'Lütfen tüm alanları doldurun';
-            errorMessage.style.display = 'block';
+        if (formData.password !== confirmPassword) {
+            showError('Şifreler eşleşmiyor');
             return;
         }
-        
-        if (password !== confirmPassword) {
-            errorMessage.textContent = 'Şifreler eşleşmiyor';
-            errorMessage.style.display = 'block';
-            return;
-        }
-        
-        if (password.length < 6) {
-            errorMessage.textContent = 'Şifre en az 6 karakter olmalıdır';
-            errorMessage.style.display = 'block';
-            return;
-        }
-        
-        if (studentNumber.length < 8) {
-            errorMessage.textContent = 'Geçerli bir öğrenci numarası giriniz';
-            errorMessage.style.display = 'block';
-            return;
-        }
-        
+
         try {
-            const email = `${studentNumber}@firat.edu.tr`;
-            
             const response = await fetch('/api/register', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    firstName,
-                    lastName,
-                    email,
-                    password,
-                    studentNumber,
-                    department,
-                    year
-                })
+                body: JSON.stringify(formData)
             });
-            
+
             const result = await response.json();
-            
+
             if (result.success) {
-                successMessage.textContent = 'Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...';
-                successMessage.style.display = 'block';
-                
-                setTimeout(() => {
-                    window.location.href = '/login';
-                }, 2000);
+                // Başarılı kayıt
+                errorMessage.style.display = 'none';
+                alert(result.message);
+                window.location.href = '/login';
             } else {
-                errorMessage.textContent = result.message;
-                errorMessage.style.display = 'block';
+                // Hata durumu
+                showError(result.message);
             }
         } catch (error) {
             console.error('Kayıt hatası:', error);
-            errorMessage.textContent = 'Bir hata oluştu. Lütfen tekrar deneyin.';
-            errorMessage.style.display = 'block';
+            showError('Bir hata oluştu. Lütfen tekrar deneyin.');
         }
     });
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+    }
 }); 

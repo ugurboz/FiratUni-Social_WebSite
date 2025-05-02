@@ -16,24 +16,35 @@ async function handleRegister(userData) {
         console.log('Accessing users collection'); // Debug log
         
         // E-posta kontrolü
-        console.log('Checking if email exists:', userData.email); // Debug log
-        const existingUser = await usersCollection.findOne({ email: userData.email });
+        console.log('Checking if email exists:', userData.studentNumber); // Debug log
+        const existingUser = await usersCollection.findOne({ studentNumber: userData.studentNumber });
         console.log('Existing user found:', existingUser ? 'Yes' : 'No'); // Debug log
         
         if (existingUser) {
             console.log('User already exists'); // Debug log
-            return { success: false, message: "Bu e-posta adresi zaten kayıtlı" };
+            return { success: false, message: "Bu öğrenci numarası zaten kayıtlı" };
         }
 
         // Şifreyi hashle
         console.log('Hashing password'); // Debug log
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(userData.password, salt);
-        userData.password = hashedPassword;
+        
+        // Kullanıcı verilerini hazırla
+        const newUser = {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            studentNumber: userData.studentNumber,
+            email: userData.studentNumber + '@firat.edu.tr', // Öğrenci numarasından e-posta oluştur
+            password: hashedPassword,
+            department: userData.department,
+            year: userData.year,
+            createdAt: new Date()
+        };
         
         // Kullanıcıyı oluştur
         console.log('Inserting new user to database'); // Debug log
-        const result = await usersCollection.insertOne(userData);
+        const result = await usersCollection.insertOne(newUser);
         console.log('Insert result:', result); // Debug log
         
         console.log('User registered successfully'); // Debug log

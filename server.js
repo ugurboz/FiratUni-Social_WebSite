@@ -5,7 +5,7 @@ const { loginUser } = require('./main/login/login_backend');
 const { handleRegister } = require('./main/register/register_backend');
 const { getUserProfile } = require('./main/profil/profil_backend');
 const { getClubs, joinClub, leaveClub, getClubDetails, initializeClubs } = require('./main/kulupler/kulupler_backend');
-const { testConnection, getDb, initializeTestData } = require('./db/config');
+const { testConnection, getDb } = require('./db/config');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -176,8 +176,7 @@ app.use((req, res) => {
 app.listen(PORT, async () => {
     console.log(`Server is running on port ${PORT}`);
     
-    // Test verilerini oluştur
-    await initializeTestData();
+    // Sadece kulüpleri başlat
     await initializeClubs();
     
     // Log the available routes
