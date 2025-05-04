@@ -64,7 +64,9 @@
             box-shadow: var(--box-shadow);
             width: 100%;
             max-width: 500px;
-            padding: 2.5rem;
+            padding: 2.375rem;
+            transform: scale(0.95);
+            transform-origin: center;
             transition: var(--transition);
             position: relative;
             z-index: 1;
@@ -179,6 +181,11 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
         }
 
         .form-group {
@@ -493,19 +500,22 @@
         </div>
         
         <form id="registerForm">
-            <div class="form-group half-width">
-                <i class="fas fa-user"></i>
-                <input type="text" id="firstName" placeholder="Ad" required>
-            </div>
-            
-            <div class="form-group half-width">
-                <i class="fas fa-user"></i>
-                <input type="text" id="lastName" placeholder="Soyad" required>
+            <div class="form-row">
+                <div class="form-group half-width">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="firstName" placeholder="Ad" required>
+                </div>
+                
+                <div class="form-group half-width">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="lastName" placeholder="Soyad" required>
+                </div>
             </div>
             
             <div class="form-group">
                 <i class="fas fa-envelope"></i>
-                <input type="text" id="studentNumber" placeholder="12345678@firat.edu.tr" required>
+                <input type="text" id="studentNumber" placeholder="Numaranızı giriniz" required>
+                <span class="email-suffix">@firat.edu.tr</span>
             </div>
             
             <div class="form-group">

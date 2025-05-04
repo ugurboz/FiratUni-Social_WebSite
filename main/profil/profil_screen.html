@@ -21,7 +21,7 @@
             <a href="../profil/profil_screen.html" class="active"><i class="fas fa-user"></i> Profil</a>
             <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
             <a href="../kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
-            <a href="#" onclick="return handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
+            <a href="../ayarlar/ayarlar_screen.html"><i class="fas fa-cog"></i> Ayarlar</a>
         </div>
     </nav>
 
@@ -29,9 +29,9 @@
     <div class="main-content">
         <!-- Sol Kenar Çubuğu - Profil Bilgileri -->
         <div class="profile-sidebar">
-                <div class="profile-photo-container">
-                    <div class="profile-photo" id="profilePhotoPreview">
-                        <i class="fas fa-user"></i>
+            <div class="profile-photo-container">
+                <div class="profile-photo" id="profilePhotoPreview">
+                    <i class="fas fa-user"></i>
                 </div>
             </div>
             <h2 class="profile-name" id="profileName">Yükleniyor...</h2>
@@ -155,11 +155,80 @@
     </div>
 
     <script>
+        let ws;
+        let reconnectAttempts = 0;
+        const maxReconnectAttempts = 5;
+
+        // WebSocket bağlantısını başlat
+        function connectWebSocket() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user || !user.token) return;
+
+            ws = new WebSocket(`ws://localhost:8080?token=${user.token}`);
+
+            ws.onopen = () => {
+                console.log('WebSocket bağlantısı kuruldu');
+                reconnectAttempts = 0;
+            };
+
+            ws.onclose = () => {
+                console.log('WebSocket bağlantısı kapandı');
+                if (reconnectAttempts < maxReconnectAttempts) {
+                    reconnectAttempts++;
+                    setTimeout(connectWebSocket, 3000);
+                }
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket hatası:', error);
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'profileUpdated') {
+                    // Profil bilgilerini güncelle
+                    updateProfileUI(data.data);
+                }
+            };
+        }
+
+        // Profil UI'ını güncelle
+        function updateProfileUI(updates) {
+            if (updates.department) {
+                document.getElementById('profile-department').textContent = updates.department;
+            }
+            if (updates.year) {
+                document.getElementById('profile-year').textContent = updates.year;
+            }
+            if (updates.bio) {
+                document.getElementById('profile-bio').textContent = updates.bio;
+            }
+            if (updates.interests) {
+                const interestsContainer = document.getElementById('profile-interests');
+                interestsContainer.innerHTML = '';
+                updates.interests.split(',').forEach(interest => {
+                    const interestTag = document.createElement('span');
+                    interestTag.className = 'interest-tag';
+                    interestTag.textContent = interest;
+                    interestsContainer.appendChild(interestTag);
+                });
+            }
+        }
+
+        // Sayfa yüklendiğinde WebSocket bağlantısını başlat
+        document.addEventListener('DOMContentLoaded', function() {
+            connectWebSocket();
+            loadUserProfile(); // Profil bilgilerini yükle
+        });
+
         // Kullanıcı bilgilerini yükle
         async function loadUserProfile() {
             try {
+                console.log('Profil yükleme başladı');
                 // Local storage'dan email'i al
                 const userDataStr = localStorage.getItem('user');
+                console.log('Local storage user data:', userDataStr);
+                
                 if (!userDataStr) {
                     console.error('Kullanıcı oturumu bulunamadı');
                     window.location.href = '../login/login_screen.html';
@@ -168,14 +237,17 @@
 
                 const userData = JSON.parse(userDataStr);
                 const email = userData.email;
+                console.log('Kullanıcı email:', email);
 
                 // API'den profil bilgilerini al
+                console.log('API isteği gönderiliyor...');
                 const response = await fetch(`/api/profile?email=${email}`);
                 const data = await response.json();
                 console.log('API yanıtı:', data);
 
                 if (data.success) {
                     const profileData = data.user;
+                    console.log('Profil verisi:', profileData);
                     
                     // Profil bilgilerini güncelle
                     document.getElementById('profileName').textContent = 
@@ -271,9 +343,6 @@
                 alert('Kulüpten ayrılırken bir hata oluştu');
             }
         }
-
-        // Sayfa yüklendiğinde profil bilgilerini getir
-        document.addEventListener('DOMContentLoaded', loadUserProfile);
 
         // Çıkış yapma işlevi
         function handleLogout() {
@@ -419,6 +488,21 @@
 
         .leave-club-btn i {
             font-size: 0.8rem;
+        }
+
+        .profile-photo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            box-shadow: var(--box-shadow);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
         }
     </style>
 </body>
