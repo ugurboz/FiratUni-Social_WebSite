@@ -1,70 +1,113 @@
-// Kayıt backend işlevleri
-
-// Kullanıcı veritabanı
-const usersDB = {
-    'admin': {
-        username: 'admin',
-        email: 'admin@firat.edu.tr',
-        password: 'admin',
-        joinDate: new Date().toISOString()
-    }
-};
+// Gerekli modülleri içe aktarma
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+const { getDb } = require('../../db/config'); // DB bağlantısı için
+const bcrypt = require('bcryptjs'); // Şifre hashlemek için
 
 // Kayıt işlemi
-function handleRegister(firstName, lastName, password, email) {
-    return new Promise((resolve, reject) => {
+async function handleRegister(userData) {
+    console.log('Register attempt with data:', JSON.stringify(userData)); // Debug log
+    try {
+        // Veritabanına bağlan
+        const db = await getDb();
+        console.log('Connected to database'); // Debug log
+        
+        const usersCollection = db.collection('users');
+        console.log('Accessing users collection'); // Debug log
+        
         // E-posta kontrolü
-        if (usersDB[email]) {
-            reject({
-                success: false,
-                message: 'Bu e-posta adresi zaten kullanılıyor!'
-            });
-            return;
+        console.log('Checking if email exists:', userData.studentNumber); // Debug log
+        const existingUser = await usersCollection.findOne({ studentNumber: userData.studentNumber });
+        console.log('Existing user found:', existingUser ? 'Yes' : 'No'); // Debug log
+        
+        if (existingUser) {
+            console.log('User already exists'); // Debug log
+            return { success: false, message: "Bu öğrenci numarası zaten kayıtlı" };
         }
 
-        // Yeni kullanıcı oluştur
-        usersDB[email] = {
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            password: password,
-            joinDate: new Date().toISOString()
+        // Şifreyi hashle
+        console.log('Hashing password'); // Debug log
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(userData.password, salt);
+        
+        // Kullanıcı verilerini hazırla
+        const newUser = {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            studentNumber: userData.studentNumber,
+            email: userData.studentNumber + '@firat.edu.tr', // Öğrenci numarasından e-posta oluştur
+            password: hashedPassword,
+            department: userData.department,
+            year: userData.year,
+            createdAt: new Date()
+        };
+        
+        // Kullanıcıyı oluştur
+        console.log('Inserting new user to database'); // Debug log
+        const result = await usersCollection.insertOne(newUser);
+        console.log('Insert result:', result); // Debug log
+        
+        console.log('User registered successfully'); // Debug log
+        return {
+            success: true,
+            message: "Kullanıcı başarıyla kaydedildi",
+            userId: result.insertedId
         };
 
-        resolve({
-            success: true,
-            message: 'Kayıt başarılı!'
-        });
-    });
+    } catch (error) {
+        console.error("Kayıt hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
+    }
 }
 
 // Kullanıcı bilgilerini getir
-async function getUser(username) {
-    return new Promise((resolve, reject) => {
-        try {
-            const user = usersDB[username];
-            if (user) {
-                resolve(user);
-            } else {
-                reject(new Error('Kullanıcı bulunamadı'));
-            }
-        } catch (error) {
-            reject(error);
+async function getUser(email) {
+    try {
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        const user = await usersCollection.findOne({ email: email });
+        if (user) {
+            return user;
+        } else {
+            throw new Error('Kullanıcı bulunamadı');
         }
-    });
+    } catch (error) {
+        throw error;
+    }
 }
 
 // E-posta kontrolü
 async function checkEmail(email) {
-    return new Promise((resolve) => {
-        const existingUser = Object.values(usersDB).find(user => user.email === email);
-        resolve(!!existingUser);
-    });
+    try {
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        const existingUser = await usersCollection.findOne({ email: email });
+        return !!existingUser;
+    } catch (error) {
+        console.error("E-posta kontrolü hatası:", error);
+        return false;
+    }
 }
 
-// Kullanıcı adı kontrolü
-async function checkUsername(username) {
-    return new Promise((resolve) => {
-        resolve(!!usersDB[username]);
-    });
-} 
+// Kullanıcı adı kontrolü (studentNumber kontrolü olarak güncellenebilir)
+async function checkUsername(studentNumber) {
+    try {
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        const existingUser = await usersCollection.findOne({ studentNumber: studentNumber });
+        return !!existingUser;
+    } catch (error) {
+        console.error("Öğrenci numarası kontrolü hatası:", error);
+        return false;
+    }
+}
+
+module.exports = {
+    handleRegister,
+    getUser,
+    checkEmail,
+    checkUsername
+};

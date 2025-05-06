@@ -1,0 +1,57 @@
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+.npm
+.eslintcache
+.node_repl_history
+
+# IDE and editor folders
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.theia/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+
+# Testing
+coverage/
+
+# Temp files
+tmp/
+temp/
+
+# Cache
+.cache/
+
+# Personal config files
+config.js
+secrets.js 

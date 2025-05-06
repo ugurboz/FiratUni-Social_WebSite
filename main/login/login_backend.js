@@ -1,126 +1,151 @@
-// Giriş backend işlevleri
+// Gerekli modülleri içe aktarma
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+const bcrypt = require('bcryptjs'); // Şifreleri güvenli bir şekilde saklamak için
+const crypto = require('crypto'); // authToken oluşturmak için
+const { getDb } = require('../../db/config'); // DB bağlantısı için
 
-// Kullanıcı veritabanı
-const users = [
-    {
-        studentNumber: "2023123456",
-        email: "2023123456@firat.edu.tr",
-        password: "test123",
-        name: "Test User"
-    }
-];
+// Kullanıcı girişi fonksiyonu
+async function loginUser(email, password) {
+    console.log('Login attempt for email:', email); // Debug log
+    
+    try {
+        console.log('Searching for user...'); // Debug log
+        
+        // Veritabanına bağlan
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        // Kullanıcıyı e-posta ile bul
+        const user = await usersCollection.findOne({ email: email });
+        console.log('User found:', user ? 'Yes' : 'No'); // Debug log
+        
+        if (!user) {
+            console.log('User not found'); // Debug log
+            return { success: false, message: "Kullanıcı bulunamadı" };
+        }
 
-// Giriş işlemi
-async function handleLogin(email, password) {
-    return new Promise((resolve, reject) => {
-        try {
-            // E-posta formatını kontrol et
-            if (!email.endsWith('@firat.edu.tr')) {
-                reject(new Error('Lütfen Fırat Üniversitesi e-posta adresinizi kullanın.'));
-                return;
-            }
-
-            // Öğrenci numarasını e-postadan çıkar
-            const studentNumber = email.split('@')[0];
-            
-            // Kullanıcıyı bul
-            const user = users.find(u => u.studentNumber === studentNumber);
-            
-            if (!user) {
-                reject(new Error('Kullanıcı bulunamadı.'));
-                return;
-            }
-
-            if (user.password !== password) {
-                reject(new Error('Hatalı şifre.'));
-                return;
-            }
-
-            resolve({
+        // Demo hesabı için geçici şifre kontrolü
+        if (email === "123456789@firat.edu.tr" && password === "123456789") {
+            console.log('Demo account - password valid'); // Debug log
+            const authToken = crypto.randomBytes(32).toString('hex');
+            return {
                 success: true,
+                message: "Giriş başarılı",
+                authToken: authToken, 
                 user: {
-                    studentNumber: user.studentNumber,
+                    id: user._id,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
                     email: user.email,
-                    name: user.name
+                    studentNumber: user.studentNumber,
+                    department: user.department,
+                    year: user.year
                 }
-            });
-        } catch (error) {
-            reject(error);
-        }
-    });
-}
-
-// Kayıt işlemini gerçekleştiren fonksiyon
-function handleRegister(password, email) {
-    return new Promise((resolve, reject) => {
-        // E-posta kontrolü
-        if (usersDB[email]) {
-            reject({
-                success: false,
-                message: 'Bu e-posta adresi zaten kullanılıyor!'
-            });
-            return;
+            };
         }
 
-        // Yeni kullanıcı oluştur
-        usersDB[email] = {
-            email: email,
-            password: password,
-            joinDate: new Date().toISOString()
+        // Normal şifre kontrolü
+        console.log('Checking password...'); // Debug log
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        console.log('Password valid:', isPasswordValid); // Debug log
+        
+        if (!isPasswordValid) {
+            console.log('Invalid password'); // Debug log
+            return { success: false, message: "Hatalı şifre" };
+        }
+
+        // AuthToken oluştur
+        const authToken = crypto.randomBytes(32).toString('hex');
+
+        // Giriş başarılı
+        console.log('Login successful'); // Debug log
+        return {
+            success: true,
+            message: "Giriş başarılı",
+            authToken: authToken, // AuthToken'ı ekle
+            user: {
+                id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                studentNumber: user.studentNumber,
+                department: user.department,
+                year: user.year
+            }
         };
 
-        resolve({
-            success: true,
-            message: 'Kayıt başarılı!'
-        });
-    });
+    } catch (error) {
+        console.error("Giriş hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
+    }
 }
 
-// Şifre sıfırlama
-async function handlePasswordReset(email) {
-    return new Promise((resolve, reject) => {
-        try {
-            // E-posta formatını kontrol et
-            if (!email.endsWith('@firat.edu.tr')) {
-                reject(new Error('Lütfen Fırat Üniversitesi e-posta adresinizi kullanın.'));
-                return;
-            }
+// Şifre sıfırlama fonksiyonu
+async function resetPassword(email) {
+    try {
+        // Veritabanına bağlan
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        // Kullanıcıyı kontrol et
+        const user = await usersCollection.findOne({ email: email });
 
-            // Öğrenci numarasını e-postadan çıkar
-            const studentNumber = email.split('@')[0];
-            
-            // Kullanıcıyı bul
-            const user = users.find(u => u.studentNumber === studentNumber);
-            
-            if (!user) {
-                reject(new Error('Bu e-posta adresi ile kayıtlı kullanıcı bulunamadı.'));
-                return;
-            }
-
-            // Şifre sıfırlama e-postası gönderildi
-            resolve({
-                success: true,
-                message: 'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.'
-            });
-        } catch (error) {
-            reject(error);
+        if (!user) {
+            return { success: false, message: "Bu e-posta adresi kayıtlı değil" };
         }
-    });
+
+        // Gerçek uygulamada burada:
+        // 1. Geçici bir token oluştur
+        // 2. Token'ı veritabanına kaydet
+        // 3. Kullanıcıya e-posta gönder
+        // Şimdilik basit bir yanıt döndürelim
+        return {
+            success: true,
+            message: "Şifre sıfırlama bağlantısı e-posta adresinize gönderildi"
+        };
+
+    } catch (error) {
+        console.error("Şifre sıfırlama hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
+    }
 }
 
-// Oturum kontrolü
-async function checkSession() {
-    return new Promise((resolve) => {
-        const token = localStorage.getItem('authToken');
-        resolve(!!token);
-    });
+// Oturum kontrolü fonksiyonu - JWT implementasyonu gerekli
+async function checkSession(sessionId) {
+    try {
+        // JWT verify yapılmalı
+        return false; // Şimdilik false döndür
+    } catch (error) {
+        console.error("Oturum kontrolü hatası:", error);
+        return false;
+    }
 }
 
-// Çıkış yapma fonksiyonu
-async function handleLogout() {
-    return new Promise((resolve) => {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
-        resolve(true);
-    });
+// Veritabanı bağlantı testi
+async function testDatabaseConnection() {
+    try {
+        const db = await getDb();
+        
+        // Koleksiyonları listele
+        const collections = await db.listCollections().toArray();
+        console.log("Mevcut koleksiyonlar:");
+        collections.forEach(collection => {
+            console.log(` - ${collection.name}`);
+        });
+        
+    } catch (error) {
+        console.error("Bağlantı hatası:", error);
+    }
 }
+
+// Fonksiyonları dışa aktar
+module.exports = {
+    loginUser,
+    resetPassword,
+    checkSession,
+    testDatabaseConnection
+};
+
+// Bağlantıyı test et (isteğe bağlı)
+// testDatabaseConnection().catch(console.error);

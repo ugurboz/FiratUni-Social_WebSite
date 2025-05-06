@@ -1,4 +1,4 @@
-# Fırat Üniversitesi Sosyal Web Sitesi
+# Fırat Üniversitesi Sosyal Platformu
 
 Bu proje, Fırat Üniversitesi Yazılım Mühendisliği Bölümü "Yazılım Mühendisliği Temelleri" dersi kapsamında geliştirilmiş bir ödev projesidir.
 
@@ -6,14 +6,14 @@ Fırat Üniversitesi öğrencileri ve personeli için modern bir sosyal ağ plat
 
 ## 📋 Görev Dağılımı
 
-| Görev | Sorumlular | Açıklama |
-|-------|------------|-----------|
-| Proje Yönetimi & Planlama | Tüm ekip | Toplantılar, görev takibi, GitHub yönetimi. |
-| Backend (API & Veritabanı) | Hüseyin & Baran | Kullanıcı kayıt/giriş, forum API, etkinlik yönetimi, veritabanı tasarımı (PostgreSQL/MySQL). |
+| Görev Alanı | Sorumlular | Açıklama |
+|------------|------------|----------|
+| Frontend (UI/UX) | Uğur & Baran | Kullanıcı arayüzü tasarımı, responsive tasarım, kullanıcı deneyimi optimizasyonu. |
+| Backend (API & Veritabanı) | Hüseyin & Baran | Kullanıcı kayıt/giriş, forum API, etkinlik yönetimi, veritabanı tasarımı (MongoDB). |
+| Güvenlik ve Performans | Hüseyin & Uğur | API güvenliği, veri şifreleme, performans optimizasyonu. |
+| Veritabanı Tasarımı ve Yönetimi | Hüseyin & Uğur | MongoDB şeması oluşturma, optimizasyon. |
 | Kimlik Doğrulama (Login, Kayıt, JWT) | Hüseyin & Uğur | Kullanıcı yetkilendirme, JWT token sistemi. |
-| Frontend (Arayüz Geliştirme) | İbrahim & Elif | React veya Blazor ile giriş ekranı, forum sayfası, etkinlik listesi ve UI tasarımı. |
 | Frontend - Backend Entegrasyonu | Baran & Elif | API bağlantılarının yapılması, veri akışının sağlanması. |
-| Veritabanı Tasarımı ve Yönetimi | Hüseyin & Uğur | PostgreSQL veya MySQL şeması oluşturma, optimizasyon. |
 | Forum ve Etkinlik Modülü | Baran & İbrahim | Forum mesajlaşma ve etkinlik planlama sisteminin backend ve frontend tasarımı. |
 | Kulüpler ve Sosyal Sayfalar | Elif & İbrahim | Kulüplerin tanıtım sayfaları, sosyal etkinlik duyuruları. |
 | Test ve Hata Ayıklama | Tüm ekip (Özellikle İbrahim & Uğur) | Backend & frontend testleri, hata ayıklama, Postman ile API testleri. |
@@ -154,3 +154,57 @@ Bu proje, Agile (Çevik) yazılım geliştirme metodolojisi kullanılarak geliş
 - [Özal Yıldırım]
 - Yazılım Mühendisliği Bölümü
 - Fırat Üniversitesi
+
+## Kurulum
+
+### Gereksinimler
+- Node.js (v16 veya üstü)
+- MongoDB
+- npm veya yarn
+
+### Adımlar
+
+1. Projeyi klonlayın:
+   ```bash
+   git clone https://github.com/username/FiratUni-Social_WebSite.git
+   cd FiratUni-Social_WebSite
+   ```
+
+2. Bağımlılıkları yükleyin:
+   ```bash
+   npm install
+   # veya
+   yarn install
+   ```
+
+3. Çevre değişkenlerini ayarlayın:
+   - `env.example` dosyasını `.env` olarak kopyalayın
+   ```bash
+   cp env.example .env
+   ```
+   - `.env` dosyasını kendi bilgilerinizle düzenleyin (MongoDB URI, JWT Secret, vs.)
+
+4. Sunucuyu başlatın:
+   ```bash
+   npm start
+   # veya
+   yarn start
+   ```
+
+5. Tarayıcınızda aşağıdaki adresi açın:
+   ```
+   http://localhost:3000
+   ```
+
+### Çevre Değişkenleri (.env)
+
+Proje aşağıdaki çevre değişkenlerini kullanmaktadır:
+
+| Değişken      | Açıklama                                  | Örnek Değer                                         |
+|---------------|-------------------------------------------|----------------------------------------------------|
+| MONGODB_URI   | MongoDB bağlantı adresi                   | mongodb+srv://username:password@cluster.mongodb.net/dbname |
+| PORT          | Sunucunun çalışacağı port                 | 3000                                                |
+| NODE_ENV      | Çalışma ortamı (development, production)  | development                                         |
+| JWT_SECRET    | JWT token şifreleme anahtarı              | your_jwt_secret_key                                 |
+
+> **ÖNEMLİ:** `.env` dosyanızı asla GitHub'a veya herhangi bir versiyon kontrol sistemine eklemeyin! Bu dosya hassas bilgiler içerir ve daima `.gitignore` dosyasında belirtilmelidir.

@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beGAK.com - Ayarlar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a0ca3;
+            --secondary-color: #4cc9f0;
+            --accent-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4bb543;
+            --error-color: #ff3333;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--box-shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-family: 'Righteous', cursive;
+        }
+
+        .brand-name {
+            font-family: 'Righteous', cursive;
+            color: white;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .nav-links a.active {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 6rem auto 2rem;
+            padding: 0 2rem;
+        }
+
+        /* Settings Tabs */
+        .settings-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 1rem;
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .tab:hover {
+            background: var(--light-color);
+        }
+
+        .tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Settings Content */
+        .settings-content {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .settings-section {
+            display: none;
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-family: 'Righteous', cursive;
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-color);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--light-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .form-control[readonly] {
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+            border-color: #e9ecef;
+        }
+
+        .form-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: var(--transition);
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ff0000;
+            transform: translateY(-2px);
+        }
+
+        /* Profile Picture */
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: var(--light-color);
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-picture i {
+            font-size: 3rem;
+            color: #666;
+        }
+
+        .change-picture {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .profile-picture:hover .change-picture {
+            opacity: 1;
+        }
+
+        /* Interests Styles */
+        .interests-container {
+            position: relative;
+        }
+
+        .interests-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid var(--light-color);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-top: 0.5rem;
+            box-shadow: var(--box-shadow);
+            z-index: 1000;
+        }
+
+        .interests-dropdown.active {
+            display: block;
+        }
+
+        .interests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .interest-tag {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--light-color);
+            border-radius: var(--border-radius);
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .interest-tag:hover {
+            border-color: var(--primary-color);
+        }
+
+        .interest-tag.selected {
+            background: #e3f2fd;
+            border-color: var(--primary-color);
+            color: var(--primary-dark);
+        }
+
+        .selected-interests {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .selected-interest {
+            background: #e3f2fd;
+            color: var(--primary-dark);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .selected-interest i {
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .settings-tabs {
+                flex-direction: column;
+            }
+
+            .main-content {
+                margin-top: 5rem;
+                padding: 0 1rem;
+            }
+        }
+
+        /* Settings Footer */
+        .settings-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--light-color);
+        }
+
+        .btn-apply {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-apply:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-logout {
+            color: var(--error-color);
+            background: none;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-logout:hover {
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="brand">
+            <div class="brand-logo">bG</div>
+            <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
+        </div>
+        <div class="nav-links">
+            <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
+            <a href="../profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
+            <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
+            <a href="../kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
+            <a href="../ayarlar/ayarlar_screen.html" class="active"><i class="fas fa-cog"></i> Ayarlar</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Settings Tabs -->
+        <div class="settings-tabs">
+            <div class="tab active" data-tab="profile">
+                <i class="fas fa-user"></i> Profil Ayarları
+            </div>
+            <div class="tab" data-tab="privacy">
+                <i class="fas fa-lock"></i> Gizlilik
+            </div>
+            <div class="tab" data-tab="notifications">
+                <i class="fas fa-bell"></i> Bildirimler
+            </div>
+        </div>
+
+        <!-- Settings Content -->
+        <div class="settings-content">
+            <!-- Profile Settings -->
+            <div class="settings-section active" id="profile-settings">
+                <h2 class="section-title">Profil Ayarları</h2>
+                
+                <div class="profile-picture">
+                    <i class="fas fa-user"></i>
+                    <div class="change-picture">Resmi Değiştir</div>
+                </div>
+
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label class="form-label">Ad</label>
+                        <input type="text" class="form-control" id="firstName" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Soyad</label>
+                        <input type="text" class="form-control" id="lastName" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">E-posta</label>
+                        <input type="email" class="form-control" id="email" readonly>
+                        <div class="form-text">E-posta adresiniz @firat.edu.tr ile bitmelidir</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Öğrenci Numarası</label>
+                        <input type="text" class="form-control" id="studentNumber" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Bölüm</label>
+                        <select class="form-control" id="department" required>
+                            <option value="">Bölüm Seçiniz</option>
+                            <option value="Bilgisayar Mühendisliği">Bilgisayar Mühendisliği</option>
+                            <option value="Elektrik-Elektronik Mühendisliği">Elektrik-Elektronik Mühendisliği</option>
+                            <option value="Endüstri Mühendisliği">Endüstri Mühendisliği</option>
+                            <option value="İnşaat Mühendisliği">İnşaat Mühendisliği</option>
+                            <option value="Makine Mühendisliği">Makine Mühendisliği</option>
+                            <option value="Mekatronik Mühendisliği">Mekatronik Mühendisliği</option>
+                            <option value="Metalurji ve Malzeme Mühendisliği">Metalurji ve Malzeme Mühendisliği</option>
+                            <option value="Yazılım Mühendisliği">Yazılım Mühendisliği</option>
+                            <option value="Biyomedikal Mühendisliği">Biyomedikal Mühendisliği</option>
+                            <option value="Çevre Mühendisliği">Çevre Mühendisliği</option>
+                            <option value="Enerji Sistemleri Mühendisliği">Enerji Sistemleri Mühendisliği</option>
+                            <option value="Gıda Mühendisliği">Gıda Mühendisliği</option>
+                            <option value="Harita Mühendisliği">Harita Mühendisliği</option>
+                            <option value="Jeoloji Mühendisliği">Jeoloji Mühendisliği</option>
+                            <option value="Kimya Mühendisliği">Kimya Mühendisliği</option>
+                            <option value="Maden Mühendisliği">Maden Mühendisliği</option>
+                            <option value="Petrol ve Doğalgaz Mühendisliği">Petrol ve Doğalgaz Mühendisliği</option>
+                            <option value="Tekstil Mühendisliği">Tekstil Mühendisliği</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Sınıf</label>
+                        <input type="number" class="form-control" id="year" min="1" max="4" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Biyografi</label>
+                        <textarea class="form-control" id="bio" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">İlgi Alanları</label>
+                        <div class="interests-container">
+                            <input type="text" class="form-control" id="interests" placeholder="İlgi alanlarınızı seçin" readonly>
+                            <div class="interests-dropdown">
+                                <div class="interests-grid">
+                                    <div class="interest-tag" data-interest="Futbol">Futbol</div>
+                                    <div class="interest-tag" data-interest="Basketbol">Basketbol</div>
+                                    <div class="interest-tag" data-interest="Voleybol">Voleybol</div>
+                                    <div class="interest-tag" data-interest="Masa Tenisi">Masa Tenisi</div>
+                                    <div class="interest-tag" data-interest="Tenis">Tenis</div>
+                                    <div class="interest-tag" data-interest="Enstrüman">Enstrüman</div>
+                                    <div class="interest-tag" data-interest="Kodlama">Kodlama</div>
+                                    <div class="interest-tag" data-interest="Yapay Zeka">Yapay Zeka</div>
+                                </div>
+                                <div class="selected-interests"></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="settings-footer">
+                    <button type="button" class="btn-apply" id="applyProfile">Uygula</button>
+                    <button type="button" class="btn-logout" id="logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Çıkış Yap
+                    </button>
+                </div>
+            </div>
+
+            <!-- Privacy Settings -->
+            <div class="settings-section" id="privacy-settings">
+                <h2 class="section-title">Gizlilik Ayarları</h2>
+
+                <div class="form-group">
+                    <label class="form-label">Profil Görünürlüğü</label>
+                    <select class="form-control" id="profileVisibility">
+                        <option value="public">Herkes</option>
+                        <option value="friends">Arkadaşlar</option>
+                        <option value="private">Sadece Ben</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Paylaşımların Görünürlüğü</label>
+                    <select class="form-control" id="postVisibility">
+                        <option value="public">Herkes</option>
+                        <option value="friends">Arkadaşlar</option>
+                        <option value="private">Sadece Ben</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Etkinlik Katılımlarının Görünürlüğü</label>
+                    <select class="form-control" id="eventVisibility">
+                        <option value="public">Herkes</option>
+                        <option value="friends">Arkadaşlar</option>
+                        <option value="private">Sadece Ben</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Kulüp Üyeliklerinin Görünürlüğü</label>
+                    <select class="form-control" id="clubVisibility">
+                        <option value="public">Herkes</option>
+                        <option value="friends">Arkadaşlar</option>
+                        <option value="private">Sadece Ben</option>
+                    </select>
+                </div>
+
+                <div class="settings-footer">
+                    <button type="button" class="btn-apply" id="applyPrivacy">Uygula</button>
+                    <button type="button" class="btn-logout" id="logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Çıkış Yap
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notification Settings -->
+            <div class="settings-section" id="notification-settings">
+                <h2 class="section-title">Bildirim Ayarları</h2>
+
+                <div class="form-group">
+                    <label class="form-label">E-posta Bildirimleri</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="emailNotifications">
+                        <span class="slider"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Yeni Mesaj Bildirimleri</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="messageNotifications">
+                        <span class="slider"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Etkinlik Bildirimleri</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="eventNotifications">
+                        <span class="slider"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Kulüp Bildirimleri</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="clubNotifications">
+                        <span class="slider"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Beğeni ve Yorum Bildirimleri</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="interactionNotifications">
+                        <span class="slider"></span>
+                    </div>
+                </div>
+
+                <div class="settings-footer">
+                    <button type="button" class="btn-apply" id="applyNotifications">Uygula</button>
+                    <button type="button" class="btn-logout" id="logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Çıkış Yap
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ws;
+        let reconnectAttempts = 0;
+        const maxReconnectAttempts = 5;
+
+        // WebSocket bağlantısını başlat
+        function connectWebSocket() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user || !user.token) return;
+
+            ws = new WebSocket(`ws://localhost:8080?token=${user.token}`);
+
+            ws.onopen = () => {
+                console.log('WebSocket bağlantısı kuruldu');
+                reconnectAttempts = 0;
+            };
+
+            ws.onclose = () => {
+                console.log('WebSocket bağlantısı kapandı');
+                if (reconnectAttempts < maxReconnectAttempts) {
+                    reconnectAttempts++;
+                    setTimeout(connectWebSocket, 3000);
+                }
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket hatası:', error);
+            };
+        }
+
+        // Sayfa yüklendiğinde WebSocket bağlantısını başlat
+        document.addEventListener('DOMContentLoaded', function() {
+            connectWebSocket();
+            // ... existing DOMContentLoaded code ...
+        });
+
+        // Profile form submission
+        document.getElementById('profile-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user) return;
+
+            try {
+                // Güncellenecek verileri hazırla
+                const updates = {
+                    department: document.getElementById('department').value,
+                    year: document.getElementById('year').value,
+                    bio: document.getElementById('bio').value,
+                    interests: Array.from(selectedInterests).join(',')
+                };
+
+                // API'ye istek gönder
+                const response = await fetch('http://localhost:3000/api/users/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${user.token}`
+                    },
+                    body: JSON.stringify({
+                        userId: user._id,
+                        updates: updates
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Profil güncellenirken bir hata oluştu');
+                }
+
+                // Başarılı güncelleme sonrası localStorage'ı güncelle
+                const updatedUser = {
+                    ...user,
+                    ...updates
+                };
+                localStorage.setItem('user', JSON.stringify(updatedUser));
+
+                // WebSocket üzerinden profil güncelleme mesajı gönder
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({
+                        type: 'profileUpdate',
+                        userId: user._id,
+                        updates: updates
+                    }));
+                }
+
+                // Başarı mesajı göster
+                alert('Profil bilgileriniz başarıyla güncellendi!');
+
+                // Profil sayfasını yenile
+                window.location.href = '../profil/profil_screen.html';
+            } catch (error) {
+                console.error('Profil güncelleme hatası:', error);
+                alert(error.message || 'Profil güncellenirken bir hata oluştu');
+            }
+        });
+
+        // Profile picture change
+        document.querySelector('.change-picture').addEventListener('click', function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const profilePicture = document.querySelector('.profile-picture');
+                        profilePicture.innerHTML = `
+                            <img src="${e.target.result}" alt="Profile Picture">
+                            <div class="change-picture">Resmi Değiştir</div>
+                        `;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            
+            input.click();
+        });
+
+        // Interests selection
+        const interestsInput = document.getElementById('interests');
+        const interestsDropdown = document.querySelector('.interests-dropdown');
+        const selectedInterestsContainer = document.querySelector('.selected-interests');
+        let selectedInterests = new Set();
+
+        // Load saved interests
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user && user.interests) {
+                selectedInterests = new Set(user.interests.split(',').map(i => i.trim()).filter(i => i));
+                updateSelectedInterests();
+            }
+        });
+
+        interestsInput.addEventListener('click', function() {
+            interestsDropdown.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.interest-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                const interest = this.dataset.interest;
+                if (selectedInterests.has(interest)) {
+                    selectedInterests.delete(interest);
+                    this.classList.remove('selected');
+                } else {
+                    selectedInterests.add(interest);
+                    this.classList.add('selected');
+                }
+                updateSelectedInterests();
+            });
+        });
+
+        function updateSelectedInterests() {
+            // Update input value
+            interestsInput.value = Array.from(selectedInterests).join(', ');
+
+            // Update selected tags in dropdown
+            document.querySelectorAll('.interest-tag').forEach(tag => {
+                if (selectedInterests.has(tag.dataset.interest)) {
+                    tag.classList.add('selected');
+                } else {
+                    tag.classList.remove('selected');
+                }
+            });
+
+            // Update selected interests display
+            selectedInterestsContainer.innerHTML = '';
+            selectedInterests.forEach(interest => {
+                const tag = document.createElement('div');
+                tag.className = 'selected-interest';
+                tag.innerHTML = `
+                    ${interest}
+                    <i class="fas fa-times"></i>
+                `;
+                tag.querySelector('i').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    selectedInterests.delete(interest);
+                    updateSelectedInterests();
+                });
+                selectedInterestsContainer.appendChild(tag);
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.interests-container')) {
+                interestsDropdown.classList.remove('active');
+            }
+        });
+
+        // Apply buttons
+        document.getElementById('applyPrivacy').addEventListener('click', function() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user) return;
+
+            // Update privacy settings
+            user.privacy = {
+                profileVisibility: document.getElementById('profileVisibility').value,
+                postVisibility: document.getElementById('postVisibility').value,
+                eventVisibility: document.getElementById('eventVisibility').value,
+                clubVisibility: document.getElementById('clubVisibility').value
+            };
+
+            // Save to localStorage
+            localStorage.setItem('user', JSON.stringify(user));
+
+            // Show success message
+            alert('Gizlilik ayarlarınız başarıyla güncellendi!');
+        });
+
+        document.getElementById('applyNotifications').addEventListener('click', function() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user) return;
+
+            // Update notification settings
+            user.notifications = {
+                email: document.getElementById('emailNotifications').checked,
+                messages: document.getElementById('messageNotifications').checked,
+                events: document.getElementById('eventNotifications').checked,
+                clubs: document.getElementById('clubNotifications').checked,
+                interactions: document.getElementById('interactionNotifications').checked
+            };
+
+            // Save to localStorage
+            localStorage.setItem('user', JSON.stringify(user));
+
+            // Show success message
+            alert('Bildirim ayarlarınız başarıyla güncellendi!');
+        });
+
+        // Logout button
+        document.getElementById('logout').addEventListener('click', function() {
+            if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
+                localStorage.removeItem('user');
+                window.location.href = '../login/login_screen.html';
+            }
+        });
+    </script>
+</body>
+</html> 

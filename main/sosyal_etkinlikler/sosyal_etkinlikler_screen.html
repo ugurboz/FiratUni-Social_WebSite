@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>beGAK.com - Sosyal Etkinlikler</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" href="sosyal_etkinlikler_style.css">
 </head>
 <body>
@@ -17,189 +17,333 @@
         </div>
         <div class="nav-links">
             <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
-            <a href="sosyal_etkinlikler_screen.html" class="active"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
+            <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html" class="active"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
             <a href="../profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
             <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
             <a href="../kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
-            <a href="#" onclick="return handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
+            <a href="../ayarlar/ayarlar_screen.html"><i class="fas fa-cog"></i> Ayarlar</a>
         </div>
     </nav>
 
-    <!-- Ana İçerik -->
-    <main class="main-content">
-        <!-- Sol Bölüm - Sosyal Etkinlikler -->
+    <!-- Main Content -->
+    <main class="container main-content">
+        <!-- Events Section -->
         <section class="events-section">
-            <header class="section-header">
-                <h1 class="section-title">Sosyal Etkinlikler</h1>
-                <div class="section-actions">
-                    <div class="search-box">
-                        <input type="text" placeholder="Etkinlik ara..." id="eventSearch">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <select class="filter-select" id="eventFilter">
-                        <option value="all">Tüm Etkinlikler</option>
-                        <option value="upcoming">Canlı Etkinlikler</option>
-                        <option value="ongoing">Devam Eden</option>
-                        <option value="past">Geçmiş Etkinlikler</option>
-                    </select>
+            <!-- Search and Filter -->
+            <div class="search-filter">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Etkinlik ara..." oninput="searchEvents()">
                 </div>
-            </header>
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">Tümü</button>
+                    <button class="filter-btn" data-filter="upcoming">Yaklaşan</button>
+                    <button class="filter-btn" data-filter="ongoing">Devam Eden</button>
+                    <button class="filter-btn" data-filter="past">Geçmiş</button>
+                    <button class="filter-btn" data-filter="joined">Katıldıklarım</button>
+                </div>
+            </div>
 
-            <div class="events-grid">
-                <!-- Örnek Etkinlik Kartları -->
-                <article class="event-card">
-                    <div class="event-image">
-                        <img src="https://via.placeholder.com/300x200" alt="Etkinlik">
+            <!-- Events Grid -->
+            <div class="events-grid" id="eventsGrid">
+                <!-- Event Card 1 -->
+                <div class="event-card" data-status="upcoming" style="--animation-order: 1;">
+                    <div class="event-header">
+                        <h3 class="event-title">Kodlama Workshop</h3>
                         <span class="event-status upcoming">Yaklaşan</span>
                     </div>
-                    <div class="event-content">
-                        <h3 class="event-title">Teknoloji Zirvesi 2024</h3>
-                        <div class="event-info">
-                            <i class="far fa-calendar"></i>
-                            <span>25 Mayıs 2024, 14:00</span>
+                    <div class="event-details">
+                        <div class="event-date">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>30 Mayıs 2023, 14:00 - 16:00</span>
                         </div>
-                        <div class="event-info">
+                        <div class="event-location">
                             <i class="fas fa-map-marker-alt"></i>
-                            <span>Konferans Salonu</span>
-                        </div>
-                        <p class="event-description">Teknoloji dünyasının önde gelen isimleri ile buluşma fırsatı.</p>
-                        <div class="event-footer">
-                            <button class="btn btn-primary">
-                                <i class="fas fa-user-plus"></i>
-                                <span>Katıl</span>
-                            </button>
-                            <button class="btn btn-secondary">
-                                <i class="fas fa-share-alt"></i>
-                                <span>Paylaş</span>
-                            </button>
+                            <span>Teknoloji Fakültesi, Lab 3</span>
                         </div>
                     </div>
-                </article>
+                    <div class="event-description">
+                        <p>Web geliştirme becerilerinizi geliştirmek için React.js ve Node.js odaklı pratik eğitim. Kendi bilgisayarınızı getirmeniz önerilir.</p>
+                    </div>
+                    <div class="event-actions">
+                        <button class="action-btn join-btn" onclick="joinEvent(1)">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Katıl</span>
+                        </button>
+                        <div class="participants-count">
+                            <i class="fas fa-users"></i>
+                            <span>45/75 Katılımcı</span>
+                        </div>
+                        <button class="action-btn share-btn" onclick="shareEvent(1)">
+                            <i class="fas fa-share-alt"></i>
+                            <span>Paylaş</span>
+                        </button>
+                    </div>
+                </div>
 
-                <article class="event-card">
-                    <div class="event-image">
-                        <img src="https://via.placeholder.com/300x200" alt="Etkinlik">
-                        <span class="event-status ongoing">Devam Ediyor</span>
-                    </div>
-                    <div class="event-content">
+                <!-- Event Card 2 -->
+                <div class="event-card" data-status="ongoing" style="--animation-order: 2;">
+                    <div class="event-header">
                         <h3 class="event-title">Müzik Festivali</h3>
-                        <div class="event-info">
-                            <i class="far fa-calendar"></i>
-                            <span>20 Mayıs 2024, 18:00</span>
+                        <span class="event-status ongoing">Devam Eden</span>
+                    </div>
+                    <div class="event-details">
+                        <div class="event-date">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>15-18 Mayıs 2023, Tüm gün</span>
                         </div>
-                        <div class="event-info">
+                        <div class="event-location">
                             <i class="fas fa-map-marker-alt"></i>
-                            <span>Açık Hava Sahnesi</span>
-                        </div>
-                        <p class="event-description">Yerel sanatçıların performansları ile eğlenceli bir akşam.</p>
-                        <div class="event-footer">
-                            <button class="btn btn-primary">
-                                <i class="fas fa-user-plus"></i>
-                                <span>Katıl</span>
-                            </button>
-                            <button class="btn btn-secondary">
-                                <i class="fas fa-share-alt"></i>
-                                <span>Paylaş</span>
-                            </button>
+                            <span>Kampüs Meydanı</span>
                         </div>
                     </div>
-                </article>
+                    <div class="event-description">
+                        <p>Bahar şenliği kapsamında düzenlenen müzik festivali. Öğrenci grupları ve profesyonel sanatçıların sahne alacağı etkinlik dört gün sürecektir.</p>
+                    </div>
+                    <div class="event-actions">
+                        <button class="action-btn join-btn" onclick="joinEvent(2)">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Katıl</span>
+                        </button>
+                        <div class="participants-count">
+                            <i class="fas fa-users"></i>
+                            <span>250/500 Katılımcı</span>
+                        </div>
+                        <button class="action-btn share-btn" onclick="shareEvent(2)">
+                            <i class="fas fa-share-alt"></i>
+                            <span>Paylaş</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Event Card 3 -->
+                <div class="event-card" data-status="past" style="--animation-order: 3;">
+                    <div class="event-header">
+                        <h3 class="event-title">Futbol Turnuvası</h3>
+                        <span class="event-status past">Geçmiş</span>
+                    </div>
+                    <div class="event-details">
+                        <div class="event-date">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>5-10 Nisan 2023</span>
+                        </div>
+                        <div class="event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Spor Salonu</span>
+                        </div>
+                    </div>
+                    <div class="event-description">
+                        <p>Fakülteler arası düzenlenen futbol turnuvası. Mühendislik Fakültesi şampiyon oldu. Gelecek dönem yeni turnuva için takım kayıtları yakında açılacak.</p>
+                    </div>
+                    <div class="event-actions">
+                        <button class="action-btn join-btn" onclick="joinEvent(3)" disabled>
+                            <i class="fas fa-user-plus"></i>
+                            <span>Tamamlandı</span>
+                        </button>
+                        <div class="participants-count">
+                            <i class="fas fa-users"></i>
+                            <span>120/120 Katılımcı</span>
+                        </div>
+                        <button class="action-btn share-btn" onclick="shareEvent(3)">
+                            <i class="fas fa-share-alt"></i>
+                            <span>Paylaş</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- No Events Message (hidden by default) -->
+                <div id="noEvents" style="display: none;">
+                    <i class="far fa-calendar-times"></i>
+                    <h3>Gösterilecek etkinlik bulunamadı</h3>
+                    <p>Farklı bir arama veya filtre deneyin</p>
+                </div>
             </div>
         </section>
 
-        <!-- Sağ Bölüm - Canlı Etkinlikler -->
-        <aside class="live-events-container">
-            <header class="live-events-header">
-                <h2>Canlı Etkinlikler</h2>
-                <button class="create-event-btn" onclick="toggleEventForm()">
+        <!-- Live Events Sidebar -->
+        <aside class="live-events">
+            <div class="sidebar-header">
+                <h3 class="sidebar-title">Etkinlik Oluştur</h3>
+                <button class="add-event-btn" onclick="toggleEventForm()">
                     <i class="fas fa-plus"></i>
-                    <span>Yeni Etkinlik</span>
+                    <span>Yeni</span>
                 </button>
-            </header>
-
-            <!-- Etkinlik Oluşturma Formu -->
-            <form id="eventForm" class="event-form" onsubmit="handleEventSubmit(event)">
-                <div class="form-group">
-                    <label for="eventName">Etkinlik Adı</label>
-                    <input type="text" id="eventName" required>
-                </div>
-                <div class="form-group">
-                    <label for="eventDate">Tarih ve Saat</label>
-                    <input type="datetime-local" id="eventDate" required>
-                </div>
-                <div class="form-group">
-                    <label for="eventLocation">Konum</label>
-                    <input type="text" id="eventLocation" required>
-                </div>
-                <div class="form-group">
-                    <label for="eventDesc">Açıklama</label>
-                    <textarea id="eventDesc" rows="4" required></textarea>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-check"></i>
-                        <span>Oluştur</span>
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="toggleEventForm()">
-                        <i class="fas fa-times"></i>
-                        <span>İptal</span>
-                    </button>
-                </div>
-            </form>
-
-            <!-- Canlı Etkinlikler Listesi -->
-            <div class="live-event-list">
-                <!-- Örnek Etkinlik -->
-                <div class="live-event-item" data-event-id="1">
-                    <div class="event-header">
-                        <h3 class="live-event-title">Hoş Geldiniz Partisi</h3>
-                        <span class="event-status status-active">Aktif</span>
-                    </div>
-                    <div class="live-event-info">
-                        <i class="far fa-calendar"></i>
-                        <span>1 Kasım 2023 03:00</span>
-                    </div>
-                    <div class="live-event-info">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>Üniversite Kampüsü</span>
-                    </div>
-                    <p class="live-event-description">Yeni öğrenciler için hoş geldiniz partisi.</p>
-                    <div class="live-event-actions">
-                        <button class="event-action-btn btn-finish" onclick="endEvent(this)">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Etkinliği Bitir</span>
-                        </button>
-                        <button class="event-action-btn btn-delete" onclick="deleteEvent(this)">
-                            <i class="fas fa-trash-alt"></i>
-                            <span>Sil</span>
-                        </button>
-                    </div>
-                </div>
+            </div>
+            <div class="live-events-content">
+                <p>Kendi etkinliğinizi oluşturun ve kampüs topluluğu ile paylaşın. Katılımcıları takip edin, etkinliğinizi yönetin.</p>
+                <p style="margin-top: 15px;">Akademik, sosyal, kültürel veya sportif her türlü etkinlik için platform sağlıyoruz.</p>
             </div>
         </aside>
     </main>
 
+    <!-- Event Form Modal -->
+    <div class="event-form-wrapper" id="eventFormWrapper">
+        <div class="event-form">
+            <div class="form-header">
+                <h3 class="form-title">Yeni Etkinlik Oluştur</h3>
+                <button class="close-btn" onclick="toggleEventForm()">&times;</button>
+            </div>
+            <div class="form-body">
+                <form id="eventForm">
+                    <div class="form-group">
+                        <label for="eventName" class="form-label">Etkinlik Adı</label>
+                        <input type="text" id="eventName" name="eventName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDate" class="form-label">Tarih ve Saat</label>
+                        <input type="datetime-local" id="eventDate" name="eventDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventLocation" class="form-label">Konum</label>
+                        <input type="text" id="eventLocation" name="eventLocation" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDescription" class="form-label">Açıklama</label>
+                        <textarea id="eventDescription" name="eventDescription" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventCategory" class="form-label">Kategori</label>
+                        <select id="eventCategory" name="eventCategory" class="form-control" required>
+                            <option value="">Kategori Seçin</option>
+                            <option value="academic">Akademik</option>
+                            <option value="cultural">Kültürel</option>
+                            <option value="social">Sosyal</option>
+                            <option value="sports">Spor</option>
+                            <option value="other">Diğer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="maxParticipants" class="form-label">Maksimum Katılımcı Sayısı</label>
+                        <input type="number" id="maxParticipants" name="maxParticipants" class="form-control" min="1" required>
+                    </div>
+                </form>
+            </div>
+            <div class="form-footer">
+                <button class="cancel-btn" onclick="toggleEventForm()">İptal</button>
+                <button class="submit-btn" onclick="submitEvent()">Oluştur</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function handleLogout() {
-            if (confirm("Çıkış yapmak istediğinize emin misiniz?")) {
-                localStorage.removeItem('authToken');
-                localStorage.removeItem('userData');
-                window.location.href = '../login/login_screen.html';
-                return true;
+        // Form toggle function
+        function toggleEventForm() {
+            const formWrapper = document.getElementById('eventFormWrapper');
+            formWrapper.classList.toggle('active');
+        }
+
+        // Submit event function
+        function submitEvent() {
+            const form = document.getElementById('eventForm');
+            if (form.checkValidity()) {
+                // Collect form data
+                const formData = {
+                    name: document.getElementById('eventName').value,
+                    date: document.getElementById('eventDate').value,
+                    location: document.getElementById('eventLocation').value,
+                    description: document.getElementById('eventDescription').value,
+                    category: document.getElementById('eventCategory').value,
+                    maxParticipants: document.getElementById('maxParticipants').value
+                };
+
+                // Here you would normally send the data to the server
+                console.log('Event data to submit:', formData);
+                
+                // Reset form and close modal
+                form.reset();
+                toggleEventForm();
+                
+                // Feedback to user
+                alert('Etkinlik başarıyla oluşturuldu! Onay sürecinden sonra yayınlanacaktır.');
+            } else {
+                form.reportValidity();
             }
+        }
+
+        // Event filter function
+        function filterEvents(filter) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.filter === filter) {
+                    btn.classList.add('active');
+                }
+            });
+
+            const cards = document.querySelectorAll('.event-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                if (filter === 'all' || card.dataset.status === filter) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Show or hide no events message
+            document.getElementById('noEvents').style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+
+        // Event search function
+        function searchEvents() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.event-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const title = card.querySelector('.event-title').textContent.toLowerCase();
+                const description = card.querySelector('.event-description p').textContent.toLowerCase();
+                const location = card.querySelector('.event-location span').textContent.toLowerCase();
+
+                if (title.includes(searchTerm) || description.includes(searchTerm) || location.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Show or hide no events message
+            document.getElementById('noEvents').style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+
+        // Join event function
+        function joinEvent(eventId) {
+            // Here you would normally send a request to the server
+            console.log(`Joining event with ID: ${eventId}`);
+            alert('Etkinliğe katılım talebiniz alındı!');
+        }
+
+        // Share event function
+        function shareEvent(eventId) {
+            // Here you would normally open a share dialog
+            console.log(`Sharing event with ID: ${eventId}`);
+            alert('Etkinlik paylaşım bağlantısı kopyalandı!');
+        }
+
+        // Logout function
+        function handleLogout() {
+            // Here you would normally send a logout request to the server
+            console.log('Logging out');
+            window.location.href = '../login/login_screen.html';
             return false;
         }
 
-        function toggleEventForm() {
-            const form = document.getElementById('eventForm');
-            form.classList.toggle('active');
-        }
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up filter buttons
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterEvents(this.dataset.filter);
+                });
+            });
 
-        function handleEventSubmit(event) {
-            event.preventDefault();
-            // Form işleme mantığı buraya eklenecek
-        }
+            // Initialize with "all" filter
+            filterEvents('all');
+        });
     </script>
-    <script src="sosyal_etkinlikler_backend.js"></script>
 </body>
 </html> 

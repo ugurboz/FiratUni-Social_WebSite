@@ -1,256 +1,200 @@
 // Profil backend işlevleri
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+const { getDb } = require('../../db/config'); // DB bağlantısı için
 
-// Örnek kullanıcı veritabanı
-const usersDB = {
-    'admin': {
-        username: 'admin',
-        email: 'admin@firat.edu.tr',
-        phone: '+90 555 123 4567',
-        department: 'Yazılım Mühendisliği',
-        joinDate: '01.09.2023',
-        stats: {
-            posts: 150,
-            followers: 500,
-            following: 300
-        },
-        clubs: ['Yazılım Kulübü', 'Robotik Kulübü']
-    }
-};
+// Veritabanından kullanıcı profilini getir
+async function getUserProfile(email) {
+    try {
+        console.log('getUserProfile çağrıldı, email:', email);
+        const db = await getDb();
+        const usersCollection = db.collection('users');
 
-// Profil bilgilerini getirme fonksiyonu
-async function getProfile(username) {
-    return new Promise((resolve, reject) => {
-        try {
-            const user = usersDB[username];
-            if (user) {
-                resolve(user);
-            } else {
-                reject(new Error('Kullanıcı bulunamadı'));
-            }
-        } catch (error) {
-            reject(error);
+        // E-posta ile kullanıcıyı bul
+        const user = await usersCollection.findOne({ email: email });
+        console.log('Bulunan kullanıcı:', user);
+
+        if (!user) {
+            console.log('Kullanıcı bulunamadı');
+            return { success: false, message: "Kullanıcı bulunamadı" };
         }
-    });
-}
 
-// Profil güncelleme fonksiyonu
-async function updateProfile(username, updates) {
-    return new Promise((resolve, reject) => {
-        try {
-            if (!usersDB[username]) {
-                reject(new Error('Kullanıcı bulunamadı'));
-                return;
-            }
+        // Şifreyi hariç tut
+        const { password, ...userProfile } = user;
 
-            // Güncellemeleri uygula
-            Object.keys(updates).forEach(key => {
-                if (key in usersDB[username]) {
-                    usersDB[username][key] = updates[key];
-                }
-            });
-
-            resolve(usersDB[username]);
-        } catch (error) {
-            reject(error);
+        // Kulüp bilgilerini getir
+        if (userProfile.clubs && userProfile.clubs.length > 0) {
+            const clubsCollection = db.collection('clubs');
+            const clubDetails = await clubsCollection.find({ 
+                name: { $in: userProfile.clubs } 
+            }).toArray();
+            userProfile.clubDetails = clubDetails;
         }
-    });
-}
 
-// Kulüp ekleme fonksiyonu
-async function joinClub(username, clubName) {
-    return new Promise((resolve, reject) => {
-        try {
-            if (!usersDB[username]) {
-                reject(new Error('Kullanıcı bulunamadı'));
-                return;
-            }
+        console.log('Döndürülen profil:', userProfile);
+        return {
+            success: true,
+            user: userProfile
+        };
 
-            if (!usersDB[username].clubs.includes(clubName)) {
-                usersDB[username].clubs.push(clubName);
-            }
-
-            resolve(usersDB[username].clubs);
-        } catch (error) {
-            reject(error);
-        }
-    });
-}
-
-// Kulüp çıkma fonksiyonu
-async function leaveClub(username, clubName) {
-    return new Promise((resolve, reject) => {
-        try {
-            if (!usersDB[username]) {
-                reject(new Error('Kullanıcı bulunamadı'));
-                return;
-            }
-
-            usersDB[username].clubs = usersDB[username].clubs.filter(club => club !== clubName);
-            resolve(usersDB[username].clubs);
-        } catch (error) {
-            reject(error);
-        }
-    });
-}
-
-// Oturum kontrolü
-async function checkSession() {
-    return new Promise((resolve) => {
-        const token = localStorage.getItem('authToken');
-        resolve(!!token);
-    });
-}
-
-// Çıkış yapma fonksiyonu
-async function handleLogout() {
-    return new Promise((resolve) => {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
-        resolve(true);
-    });
-}
-
-// Profil fotoğrafı ve gönderi işlevleri
-
-// Profil fotoğrafı önizleme
-function previewProfilePhoto(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const preview = document.getElementById('profilePhotoPreview');
-            preview.innerHTML = `<img src="${e.target.result}" alt="Profil Fotoğrafı">`;
-            
-            // Gönderi oluşturma alanındaki avatarı da güncelle
-            updateNewPostAvatar(e.target.result);
-        }
-        reader.readAsDataURL(file);
+    } catch (error) {
+        console.error("Profil bilgileri getirme hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
     }
 }
 
-// Gönderi oluşturma alanındaki avatarı güncelle
-function updateNewPostAvatar(imageUrl) {
-    const avatar = document.getElementById('newPostAvatar');
-    if (imageUrl) {
-        avatar.innerHTML = `<img src="${imageUrl}" alt="Kullanıcı Fotoğrafı">`;
-    } else {
-        avatar.innerHTML = '<i class="fas fa-user"></i>';
-    }
-}
+// Kullanıcı profil bilgilerini güncelle
+async function updateUserProfile(email, userData) {
+    try {
+        const db = await getDb();
+        const usersCollection = db.collection('users');
 
-// Medya yükleme işlevleri
-function handleImageUpload(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            showMediaPreview('image', e.target.result);
-        }
-        reader.readAsDataURL(file);
-    }
-}
+        // Güncellenebilir alanlar
+        const updatableFields = {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            department: userData.department,
+            year: userData.year
+        };
 
-function handleVideoUpload(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            showMediaPreview('video', e.target.result);
-        }
-        reader.readAsDataURL(file);
-    }
-}
-
-function handleFileUpload(event) {
-    const file = event.target.files[0];
-    if (file) {
-        showMediaPreview('file', file.name);
-    }
-}
-
-function handleLocationAdd() {
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            const location = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-            showMediaPreview('location', `${location.lat}, ${location.lng}`);
+        // Boş değerleri temizle
+        Object.keys(updatableFields).forEach(key => {
+            if (!updatableFields[key]) delete updatableFields[key];
         });
-    } else {
-        alert("Konum servisi kullanılamıyor.");
+
+        // Kullanıcıyı güncelle
+        const result = await usersCollection.updateOne(
+            { email: email },
+            { $set: updatableFields }
+        );
+
+        if (result.modifiedCount === 0) {
+            return { success: false, message: "Kullanıcı bulunamadı veya güncelleme yapılmadı" };
+        }
+
+        return {
+            success: true,
+            message: "Profil başarıyla güncellendi"
+        };
+
+    } catch (error) {
+        console.error("Profil güncelleme hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
     }
 }
 
-// Medya önizleme
-function showMediaPreview(type, content) {
-    const preview = document.getElementById('mediaPreview');
-    const previewContent = preview.querySelector('.preview-content');
-    
-    preview.style.display = 'block';
-    
-    switch(type) {
-        case 'image':
-            previewContent.innerHTML = `<img src="${content}" alt="Yüklenen Görsel">`;
-            break;
-        case 'video':
-            previewContent.innerHTML = `<video src="${content}" controls></video>`;
-            break;
-        case 'file':
-            previewContent.innerHTML = `
-                <div class="file-preview">
-                    <i class="fas fa-file-alt"></i>
-                    <span>${content}</span>
-                </div>`;
-            break;
-        case 'location':
-            previewContent.innerHTML = `
-                <div class="location-preview">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>${content}</span>
-                </div>`;
-            break;
+// Kulübe katıl
+async function joinClub(email, clubName) {
+    try {
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        const clubsCollection = db.collection('clubs');
+
+        // Kulübün var olup olmadığını kontrol et
+        const club = await clubsCollection.findOne({ name: clubName });
+        if (!club) {
+            return { success: false, message: "Kulüp bulunamadı" };
+        }
+
+        // Kullanıcıyı bul
+        const user = await usersCollection.findOne({ email: email });
+        if (!user) {
+            return { success: false, message: "Kullanıcı bulunamadı" };
+        }
+
+        // Kullanıcı zaten kulüpte mi kontrol et
+        if (user.clubs && user.clubs.includes(clubName)) {
+            return { success: false, message: "Zaten bu kulübün üyesisiniz" };
+        }
+
+        // Kullanıcıyı kulübe ekle
+        await usersCollection.updateOne(
+            { email: email },
+            { $push: { clubs: clubName } }
+        );
+
+        // Kulüp üyelerine kullanıcıyı ekle
+        await clubsCollection.updateOne(
+            { name: clubName },
+            { $push: { members: email } }
+        );
+
+        return { success: true, message: "Kulübe başarıyla katıldınız" };
+    } catch (error) {
+        console.error("Kulübe katılma hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
     }
 }
 
-function removePreview() {
-    const preview = document.getElementById('mediaPreview');
-    preview.style.display = 'none';
-    preview.querySelector('.preview-content').innerHTML = '';
-    
-    // Input'ları sıfırla
-    document.getElementById('imageInput').value = '';
-    document.getElementById('videoInput').value = '';
-    document.getElementById('fileInput').value = '';
+// Kulüpten ayrıl
+async function leaveClub(email, clubName) {
+    try {
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        const clubsCollection = db.collection('clubs');
+
+        // Kullanıcıyı bul
+        const user = await usersCollection.findOne({ email: email });
+        if (!user) {
+            return { success: false, message: "Kullanıcı bulunamadı" };
+        }
+
+        // Kullanıcı kulüpte mi kontrol et
+        if (!user.clubs || !user.clubs.includes(clubName)) {
+            return { success: false, message: "Bu kulübün üyesi değilsiniz" };
+        }
+
+        // Kullanıcıyı kulüpten çıkar
+        await usersCollection.updateOne(
+            { email: email },
+            { $pull: { clubs: clubName } }
+        );
+
+        // Kulüp üyelerinden kullanıcıyı çıkar
+        await clubsCollection.updateOne(
+            { name: clubName },
+            { $pull: { members: email } }
+        );
+
+        return { success: true, message: "Kulüpten başarıyla ayrıldınız" };
+    } catch (error) {
+        console.error("Kulüpten ayrılma hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
+    }
 }
 
-// Gönderi oluşturma
-function createPost() {
-    const content = document.getElementById('postContent').value;
-    const preview = document.getElementById('mediaPreview');
-    const mediaContent = preview.querySelector('.preview-content').innerHTML;
-    
-    if (!content && !mediaContent) {
-        alert('Lütfen bir içerik girin veya medya ekleyin.');
-        return;
+// Kullanıcının kulüplerini getir
+async function getUserClubs(email) {
+    try {
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+
+        // Kullanıcıyı bul
+        const user = await usersCollection.findOne({ email: email });
+        if (!user) {
+            return { success: false, message: "Kullanıcı bulunamadı" };
+        }
+
+        // Kullanıcının kulüplerini getir
+        const clubsCollection = db.collection('clubs');
+        const clubs = await clubsCollection.find({
+            name: { $in: user.clubs || [] }
+        }).toArray();
+
+        return {
+            success: true,
+            clubs: clubs
+        };
+    } catch (error) {
+        console.error("Kulüpleri getirme hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
     }
-    
-    // Burada gönderi oluşturma API çağrısı yapılacak
-    console.log('Gönderi oluşturuluyor:', { content, mediaContent });
-    
-    // Formu temizle
-    document.getElementById('postContent').value = '';
-    removePreview();
-    
-    // Başarı mesajı göster
-    alert('Gönderi başarıyla paylaşıldı!');
 }
 
-// Sayfa yüklendiğinde çalışacak fonksiyonlar
-document.addEventListener('DOMContentLoaded', function() {
-    // Profil fotoğrafını yükle
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
-    if (userData.profilePhoto) {
-        updateNewPostAvatar(userData.profilePhoto);
-    }
-}); 
+module.exports = {
+    getUserProfile,
+    updateUserProfile,
+    joinClub,
+    leaveClub,
+    getUserClubs
+}; 

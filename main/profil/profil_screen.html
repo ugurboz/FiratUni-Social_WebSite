@@ -6,20 +6,7 @@
     <title>beGAK.com - Profil</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="profil.css">
-    <script>
-        // Oturum kontrolü
-        window.onload = function() {
-            const authToken = localStorage.getItem('authToken');
-            const userData = JSON.parse(localStorage.getItem('user') || '{}');
-            
-            // Eğer authToken yoksa veya userData boşsa, login sayfasına yönlendir
-            if (!authToken || !userData.studentNumber) {
-                window.location.href = '../login/login_screen.html';
-                return;
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="profil_style.css">
 </head>
 <body>
     <!-- Navbar -->
@@ -34,95 +21,83 @@
             <a href="../profil/profil_screen.html" class="active"><i class="fas fa-user"></i> Profil</a>
             <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
             <a href="../kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
-            <a href="#" onclick="return handleLogout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
+            <a href="../ayarlar/ayarlar_screen.html"><i class="fas fa-cog"></i> Ayarlar</a>
         </div>
     </nav>
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Profile Sidebar -->
+        <!-- Sol Kenar Çubuğu - Profil Bilgileri -->
         <div class="profile-sidebar">
-            <!-- Profile Card -->
-            <div class="profile-card">
-                <div class="profile-photo-container">
-                    <div class="profile-photo" id="profilePhotoPreview">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="photo-edit-btn" onclick="document.getElementById('photoInput').click()">
-                        <i class="fas fa-camera"></i>
-                    </div>
-                    <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewProfilePhoto(event)">
-                </div>
-                <h2 class="profile-name" id="profileName">Kullanıcı Adı</h2>
-                <p class="profile-role" id="profileRole">Öğrenci</p>
-                <div class="profile-actions">
-                    <a href="edit_profile_screen.html" class="btn-edit">
-                        <i class="fas fa-edit"></i> Profili Düzenle
-                    </a>
+            <div class="profile-photo-container">
+                <div class="profile-photo" id="profilePhotoPreview">
+                    <i class="fas fa-user"></i>
                 </div>
             </div>
+            <h2 class="profile-name" id="profileName">Yükleniyor...</h2>
+            <p class="profile-role" id="profileRole">Öğrenci</p>
+            <button class="edit-profile-btn" onclick="window.location.href='edit_profile_screen.html'">
+                <i class="fas fa-edit"></i> Profili Düzenle
+            </button>
 
-            <!-- Information Section -->
-            <div class="sidebar-info">
-                <div class="sidebar-info-item">
-                    <div class="sidebar-info-icon">
+            <div class="profile-info">
+                <div class="info-item">
+                    <div class="info-icon">
                         <i class="fas fa-envelope"></i>
                     </div>
-                    <div class="sidebar-info-content">
-                        <div class="sidebar-info-label">E-posta</div>
-                        <div class="sidebar-info-value" id="profileEmail">kullanici@firat.edu.tr</div>
+                    <div class="info-content">
+                        <div class="info-label">E-posta</div>
+                        <div class="info-value" id="profileEmail">Yükleniyor...</div>
                     </div>
                 </div>
                 
-                <div class="sidebar-info-item">
-                    <div class="sidebar-info-icon">
-                        <i class="fas fa-phone"></i>
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-id-card"></i>
                     </div>
-                    <div class="sidebar-info-content">
-                        <div class="sidebar-info-label">Telefon</div>
-                        <div class="sidebar-info-value" id="profilePhone">+90 555 123 4567</div>
+                    <div class="info-content">
+                        <div class="info-label">Öğrenci No</div>
+                        <div class="info-value" id="profileStudentNumber">Yükleniyor...</div>
                     </div>
                 </div>
                 
-                <div class="sidebar-info-item">
-                    <div class="sidebar-info-icon">
+                <div class="info-item">
+                    <div class="info-icon">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
-                    <div class="sidebar-info-content">
-                        <div class="sidebar-info-label">Bölüm</div>
-                        <div class="sidebar-info-value" id="profileDepartment">Yazılım Mühendisliği</div>
+                    <div class="info-content">
+                        <div class="info-label">Bölüm</div>
+                        <div class="info-value" id="profileDepartment">Yükleniyor...</div>
                     </div>
                 </div>
                 
-                <div class="sidebar-info-item">
-                    <div class="sidebar-info-icon">
-                        <i class="fas fa-calendar-check"></i>
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-user-graduate"></i>
                     </div>
-                    <div class="sidebar-info-content">
-                        <div class="sidebar-info-label">Mezuniyet Yılı</div>
-                        <div class="sidebar-info-value" id="profileGraduationYear">Belirtilmemiş</div>
-                    </div>
-                </div>
-                
-                <div class="sidebar-info-item">
-                    <div class="sidebar-info-icon">
-                        <i class="fas fa-calendar-alt"></i>
-                    </div>
-                    <div class="sidebar-info-content">
-                        <div class="sidebar-info-label">Kayıt Tarihi</div>
-                        <div class="sidebar-info-value" id="profileJoinDate">15 Eylül 2023</div>
+                    <div class="info-content">
+                        <div class="info-label">Sınıf</div>
+                        <div class="info-value" id="profileYear">Yükleniyor...</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Profile Feed - Orta Kısım (Gönderiler) -->
+        <!-- Orta Kısım - Paylaşımlar -->
         <div class="profile-feed">
-            <!-- Yeni Gönderi Oluşturma -->
-            <div class="new-post-card">
-                <div class="new-post-header">
-                    <div class="new-post-avatar" id="newPostAvatar">
-                        <i class="fas fa-user"></i>
+            <div class="posts-section">
+                <h3 class="section-title">
+                    <i class="fas fa-stream"></i>
+                    Paylaşımlarım
+                </h3>
+                <div id="userPosts">
+                    <!-- Paylaşımlar buraya yüklenecek -->
+                    <div class="no-posts" id="noPosts">
+                        <i class="far fa-comment-dots"></i>
+                        <p>Henüz bir paylaşım yapmadınız.</p>
+                        <a href="../anasayfa/anasayfa_screen.html" class="create-post-link">
+                            <i class="fas fa-plus-circle"></i> Ana Sayfada Paylaşım Yap
+                        </a>
                     </div>
                     <div class="new-post-input-wrapper">
                         <textarea class="new-post-input" id="postContent" placeholder="Ne düşünüyorsun?"></textarea>
@@ -217,15 +192,9 @@
                             <div class="comment-username">Mehmet Demir</div>
                             <div class="comment-text">Çok güzel görünüyor! Bir sonraki etkinliğe ben de geleceğim.</div>
                             <div class="comment-time">1 saat önce</div>
-                            <div class="comment-actions">
-                                <span class="comment-action">Beğen</span>
-                                <span class="comment-action">Yanıtla</span>
-                            </div>
                         </div>
                     </div>
-                    
-                    <!-- Yanıtlı Yorum Örneği -->
-                    <div class="post-comment" style="margin-left: 3rem;">
+                    <div class="post-comment">
                         <div class="comment-avatar">
                             <img src="https://picsum.photos/100/100?random=3" alt="Kullanıcı Avatarı">
                         </div>
@@ -233,10 +202,6 @@
                             <div class="comment-username">Ayşe Kaya</div>
                             <div class="comment-text">Hangi konular tartışıldı? Biraz bilgi verebilir misin?</div>
                             <div class="comment-time">40 dakika önce</div>
-                            <div class="comment-actions">
-                                <span class="comment-action">Beğen</span>
-                                <span class="comment-action">Yanıtla</span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -418,382 +383,404 @@
             </div>
         </div>
 
-        <!-- Profile Details - Sağ Kenar -->
+        <!-- Sağ Kenar Çubuğu - Profil Detayları -->
         <div class="profile-details">
-            <!-- Biyografi -->
-            <div class="content-card">
-                <h3 class="section-title"><i class="fas fa-user-edit"></i> Biyografi</h3>
-                
-                <div class="info-item">
-                    <div class="info-icon">
-                        <i class="fas fa-info-circle"></i>
-                    </div>
-                    <div class="info-content">
-                        <div class="info-label">Hakkımda</div>
-                        <div class="info-value" id="profileBio">Henüz bir biyografi eklenmemiş.</div>
-                    </div>
-                </div>
-                
-                <div class="info-item">
-                    <div class="info-icon">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <div class="info-content">
-                        <div class="info-label">İlgi Alanları</div>
-                        <div class="info-value" id="profileInterests">Henüz ilgi alanı eklenmemiş.</div>
-                    </div>
+            <div class="section">
+                <h3 class="section-title">
+                    <i class="fas fa-user-edit"></i>
+                    Biyografi
+                </h3>
+                <div class="section-content" id="bioSection">
+                    <p id="profileBio">Henüz bir biyografi eklenmemiş.</p>
                 </div>
             </div>
             
-            <!-- Kulüpler Bölümü -->
-            <div class="content-card">
-                <h3 class="section-title"><i class="fas fa-users"></i> Üye Olduğu Kulüpler</h3>
-                
-                <div class="clubs-grid">
-                    <div class="club-card">
-                        <div class="club-icon">
-                            <i class="fas fa-code"></i>
-                        </div>
-                        <div class="club-name">Yazılım Kulübü</div>
-                    </div>
-                    
-                    <div class="club-card">
-                        <div class="club-icon">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="club-name">Robotik Kulübü</div>
-                    </div>
-                    
-                    <div class="club-card">
-                        <div class="club-icon">
-                            <i class="fas fa-paint-brush"></i>
-                        </div>
-                        <div class="club-name">Tasarım Kulübü</div>
-                    </div>
+            <div class="section">
+                <h3 class="section-title">
+                    <i class="fas fa-heart"></i>
+                    İlgi Alanları
+                </h3>
+                <div class="section-content" id="interestsSection">
+                    <p id="profileInterests">Henüz ilgi alanı eklenmemiş.</p>
                 </div>
             </div>
             
-            <!-- Aktiviteler Bölümü -->
-            <div class="content-card">
-                <h3 class="section-title"><i class="fas fa-calendar-week"></i> Son Aktiviteler</h3>
-                
-                <div class="info-item">
-                    <div class="info-icon">
-                        <i class="fas fa-comment-alt"></i>
+            <div class="section">
+                <h3 class="section-title">
+                    <i class="fas fa-users"></i>
+                    Üye Olduğu Kulüpler
+                </h3>
+                <div class="section-content" id="userClubs">
+                    <div class="clubs-list">
+                        <!-- Kulüpler buraya dinamik olarak eklenecek -->
                     </div>
-                    <div class="info-content">
-                        <div class="info-label">Etkinlik</div>
-                        <div class="info-value">Yazılım Kulübü'nün "Web Geliştirme" etkinliğine katıldı.</div>
-                    </div>
+                    <p id="noClubsMessage" style="display: none;">Henüz kulüp üyeliği bulunmuyor.</p>
                 </div>
-                
-                <div class="info-item">
-                    <div class="info-icon">
-                        <i class="fas fa-certificate"></i>
-                    </div>
-                    <div class="info-content">
-                        <div class="info-label">Başarı</div>
-                        <div class="info-value">Python programlama kursunu tamamladı.</div>
-                    </div>
-                </div>
-                
-                <div class="info-item">
-                    <div class="info-icon">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div class="info-content">
-                        <div class="info-label">Üyelik</div>
-                        <div class="info-value">Veri Bilimi Topluluğu'na katıldı.</div>
-                    </div>
+            </div>
+            
+            <div class="section">
+                <h3 class="section-title">
+                    <i class="fas fa-calendar-week"></i>
+                    Yaklaşan Etkinlikler
+                </h3>
+                <div class="section-content" id="upcomingEvents">
+                    <p>Yaklaşan etkinlik bulunmuyor.</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Sayfa yüklendiğinde kullanıcı bilgilerini yükle
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Oturum kontrolü
-            const isLoggedIn = await checkSession();
-            if (!isLoggedIn) {
-                window.location.href = '../login/login_screen.html';
-                return;
-            }
+        let ws;
+        let reconnectAttempts = 0;
+        const maxReconnectAttempts = 5;
 
-            // Kullanıcı bilgilerini al
-            const userData = JSON.parse(localStorage.getItem('user') || '{}');
-            if (!userData.studentNumber) {
-                window.location.href = '../login/login_screen.html';
-                return;
-            }
+        // WebSocket bağlantısını başlat
+        function connectWebSocket() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user || !user.token) return;
 
-            // Profil bilgilerini yükle
-            loadProfile(userData.email.split('@')[0]);
-            
-            // Kullanıcı fotoğraflarını yükle
-            loadUserPhotos();
+            ws = new WebSocket(`ws://localhost:8080?token=${user.token}`);
+
+            ws.onopen = () => {
+                console.log('WebSocket bağlantısı kuruldu');
+                reconnectAttempts = 0;
+            };
+
+            ws.onclose = () => {
+                console.log('WebSocket bağlantısı kapandı');
+                if (reconnectAttempts < maxReconnectAttempts) {
+                    reconnectAttempts++;
+                    setTimeout(connectWebSocket, 3000);
+                }
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket hatası:', error);
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'profileUpdated') {
+                    // Profil bilgilerini güncelle
+                    updateProfileUI(data.data);
+                }
+            };
+        }
+
+        // Profil UI'ını güncelle
+        function updateProfileUI(updates) {
+            if (updates.department) {
+                document.getElementById('profile-department').textContent = updates.department;
+            }
+            if (updates.year) {
+                document.getElementById('profile-year').textContent = updates.year;
+            }
+            if (updates.bio) {
+                document.getElementById('profile-bio').textContent = updates.bio;
+            }
+            if (updates.interests) {
+                const interestsContainer = document.getElementById('profile-interests');
+                interestsContainer.innerHTML = '';
+                updates.interests.split(',').forEach(interest => {
+                    const interestTag = document.createElement('span');
+                    interestTag.className = 'interest-tag';
+                    interestTag.textContent = interest;
+                    interestsContainer.appendChild(interestTag);
+                });
+            }
+        }
+
+        // Sayfa yüklendiğinde WebSocket bağlantısını başlat
+        document.addEventListener('DOMContentLoaded', function() {
+            connectWebSocket();
+            loadUserProfile(); // Profil bilgilerini yükle
         });
 
-        // Kullanıcı fotoğraflarını yükle
-        function loadUserPhotos() {
-            const userData = JSON.parse(localStorage.getItem('user') || '{}');
-            const userPhoto = userData.photo || '';
-            
-            // Avatar fotoğraflarını güncelle
-            const avatarElements = [
-                document.getElementById('userAvatar'),
-                document.getElementById('post1UserPhoto'),
-                document.getElementById('post2UserPhoto'),
-                document.getElementById('post3UserPhoto'),
-                document.getElementById('commentUserPhoto1'),
-                document.getElementById('commentUserPhoto2'),
-                document.getElementById('commentUserPhoto3')
-            ];
-            
-            avatarElements.forEach(element => {
-                if (element) {
-                    if (userPhoto) {
-                        element.src = userPhoto;
-                        element.style.display = 'block';
-                    } else {
-                        element.style.display = 'none';
-                        element.parentElement.style.background = 'linear-gradient(135deg, var(--primary-color), var(--accent-color))';
-                        element.parentElement.textContent = userData.username?.charAt(0).toUpperCase() || 'U';
-                    }
-                }
-            });
-            
-            // Profil adını gönderilerde güncelle
-            const profileNames = [
-                document.getElementById('profileName2'),
-                document.getElementById('profileName3'),
-                document.getElementById('profileName4')
-            ];
-            
-            profileNames.forEach(element => {
-                if (element) {
-                    element.textContent = userData.firstName && userData.lastName 
-                        ? `${userData.firstName} ${userData.lastName}` 
-                        : userData.username || 'Ad Soyad';
-                }
-            });
-        }
-
-        // Profil bilgilerini yükle
-        async function loadProfile(username) {
+        // Kullanıcı bilgilerini yükle
+        async function loadUserProfile() {
             try {
-                const profile = await getProfile(username);
-                updateProfileUI(profile);
+                console.log('Profil yükleme başladı');
+                // Local storage'dan email'i al
+                const userDataStr = localStorage.getItem('user');
+                console.log('Local storage user data:', userDataStr);
+                
+                if (!userDataStr) {
+                    console.error('Kullanıcı oturumu bulunamadı');
+                    window.location.href = '../login/login_screen.html';
+                    return;
+                }
+
+                const userData = JSON.parse(userDataStr);
+                const email = userData.email;
+                console.log('Kullanıcı email:', email);
+
+                // API'den profil bilgilerini al
+                console.log('API isteği gönderiliyor...');
+                const response = await fetch(`/api/profile?email=${email}`);
+                const data = await response.json();
+                console.log('API yanıtı:', data);
+
+                if (data.success) {
+                    const profileData = data.user;
+                    console.log('Profil verisi:', profileData);
+                    
+                    // Profil bilgilerini güncelle
+                    document.getElementById('profileName').textContent = 
+                        `${profileData.firstName || ''} ${profileData.lastName || ''}`;
+                    document.getElementById('profileRole').textContent = 
+                        profileData.department ? `${profileData.department} Öğrencisi` : 'Öğrenci';
+                    document.getElementById('profileEmail').textContent = profileData.email || '-';
+                    document.getElementById('profileStudentNumber').textContent = profileData.studentNumber || '-';
+                    document.getElementById('profileDepartment').textContent = profileData.department || '-';
+                    document.getElementById('profileYear').textContent = 
+                        profileData.year ? `${profileData.year}. Sınıf` : '-';
+                    
+                    // Profil fotoğrafını güncelle
+                    const profilePhoto = document.getElementById('profilePhotoPreview');
+                    if (profileData.profileImage) {
+                        profilePhoto.style.backgroundImage = `url(${profileData.profileImage})`;
+                        profilePhoto.innerHTML = '';
+                    }
+
+                    // Biyografi ve ilgi alanlarını güncelle
+                    document.getElementById('profileBio').textContent = 
+                        profileData.bio || 'Henüz bir biyografi eklenmemiş.';
+                    document.getElementById('profileInterests').textContent = 
+                        profileData.interests || 'Henüz ilgi alanı eklenmemiş.';
+
+                    // Kulüp üyeliklerini güncelle
+                    updateClubsList(profileData.clubs || [], profileData.clubDetails || []);
+                } else {
+                    console.error('Profil yükleme hatası:', data.message);
+                    alert('Profil bilgileri yüklenirken bir hata oluştu.');
+                }
             } catch (error) {
-                console.error('Profil yüklenirken hata:', error);
+                console.error('Profil yükleme hatası:', error);
+                alert('Profil bilgileri yüklenirken bir hata oluştu.');
             }
         }
 
-        // Profil bilgilerini arayüze yansıt
-        function updateProfileUI(profile) {
-            const profilePhoto = document.getElementById('profilePhotoPreview');
-            if (profile.photo) {
-                profilePhoto.style.backgroundImage = `url(${profile.photo})`;
-                profilePhoto.style.backgroundSize = 'cover';
-                profilePhoto.style.backgroundPosition = 'center';
-            } else {
-                profilePhoto.style.backgroundImage = 'none';
-                profilePhoto.innerHTML = '<i class="fas fa-user"></i>';
-            }
-            document.getElementById('profileName').textContent = profile.username;
-            document.getElementById('profileRole').textContent = profile.title || 'Öğrenci';
-            document.getElementById('profileEmail').textContent = profile.email;
-            document.getElementById('profilePhone').textContent = profile.phone || 'Belirtilmemiş';
-            document.getElementById('profileDepartment').textContent = profile.department || 'Belirtilmemiş';
-            document.getElementById('profileGraduationYear').textContent = profile.graduationYear || 'Belirtilmemiş';
-            document.getElementById('profileJoinDate').textContent = formatDate(profile.joinDate);
-            document.getElementById('profileBio').textContent = profile.bio || 'Henüz bir biyografi eklenmemiş.';
-            document.getElementById('profileInterests').textContent = profile.interests || 'Henüz ilgi alanı eklenmemiş.';
-            
-            // Profil istatistiklerini güncelle
-            const statValues = document.querySelectorAll('.stat-value');
-            if(statValues.length >= 3) {
-                statValues[0].textContent = profile.stats.posts;
-                statValues[1].textContent = profile.stats.followers;
-                statValues[2].textContent = profile.stats.following;
+        // Kulüp listesini güncelle
+        function updateClubsList(clubs, clubDetails) {
+            const clubsList = document.querySelector('.clubs-list');
+            const noClubsMessage = document.getElementById('noClubsMessage');
+
+            if (!clubs || clubs.length === 0) {
+                clubsList.innerHTML = '';
+                noClubsMessage.style.display = 'block';
+                return;
             }
 
-            // Kulüpleri yükle
-            const clubsGrid = document.querySelector('.clubs-grid');
-            clubsGrid.innerHTML = '';
-            
-            if (profile.clubs && profile.clubs.length > 0) {
-                profile.clubs.forEach(club => {
-                    const clubCard = document.createElement('div');
-                    clubCard.className = 'club-card';
-                    clubCard.innerHTML = `
-                        <div class="club-icon">
-                            <i class="${club.icon || 'fas fa-users'}"></i>
-                        </div>
-                        <div class="club-name">${club.name}</div>
-                    `;
-                    clubsGrid.appendChild(clubCard);
+            noClubsMessage.style.display = 'none';
+            clubsList.innerHTML = clubDetails.map(club => `
+                <div class="club-item">
+                    <div class="club-info">
+                        <h4>${club.name}</h4>
+                        <p>${club.description || ''}</p>
+                    </div>
+                    <button class="leave-club-btn" onclick="leaveClub('${club.name}')">
+                        <i class="fas fa-sign-out-alt"></i> Ayrıl
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Kulüpten ayrılma işlevi
+        async function leaveClub(clubName) {
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (!user) {
+                    alert('Kullanıcı oturumu bulunamadı');
+                    return;
+                }
+
+                const response = await fetch('/leave-club', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        clubName,
+                        email: user.email 
+                    })
                 });
-            } else {
-                clubsGrid.innerHTML = '<p>Henüz hiç kulübe üye değilsiniz.</p>';
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Kulüpten başarıyla ayrıldınız');
+                    loadUserProfile(); // Profili yeniden yükle
+                } else {
+                    alert(data.message || 'Kulüpten ayrılırken bir hata oluştu');
+                }
+            } catch (error) {
+                console.error('Kulüpten ayrılırken hata oluştu:', error);
+                alert('Kulüpten ayrılırken bir hata oluştu');
             }
         }
 
-        // Tarih formatı
-        function formatDate(dateString) {
-            const options = { day: 'numeric', month: 'long', year: 'numeric' };
-            return new Date(dateString).toLocaleDateString('tr-TR', options);
-        }
-
-        // Çıkış yapma
+        // Çıkış yapma işlevi
         function handleLogout() {
-            // Çıkış için onay al
-            if (confirm("Çıkış yapmak istediğinize emin misiniz?")) {
-                // Kullanıcı onayladıysa çıkış işlemleri yap
-                localStorage.removeItem('authToken');
-                localStorage.removeItem('user');
-                window.location.href = '../login/login_screen.html';
-                return true;
-            }
-            // Kullanıcı onaylamadıysa hiçbir şey yapma
+            localStorage.removeItem('user');
+            window.location.href = '../login/login_screen.html';
             return false;
         }
 
-        /* Backend Fonksiyonları (simüle edilmiş) */
-
-        // Oturum kontrolü
-        async function checkSession() {
-            return !!localStorage.getItem('authToken');
+        // Paylaşımları yükle
+        function loadPosts() {
+            const posts = JSON.parse(localStorage.getItem('userPosts') || '[]');
+            const postsContainer = document.getElementById('userPosts');
+            const noPosts = document.getElementById('noPosts');
+            
+            // Eğer paylaşım yoksa, mesajı göster
+            if (posts.length === 0) {
+                noPosts.style.display = 'flex';
+                return;
+            }
+            
+            // Paylaşım varsa, mesajı gizle
+            noPosts.style.display = 'none';
+            
+            // Paylaşımları ekle
+            posts.forEach(post => addPostToDOM(post));
         }
 
-        // Profil bilgilerini getir
-        async function getProfile(username) {
-            // localStorage'dan kullanıcı bilgilerini al
-            const userData = JSON.parse(localStorage.getItem('user') || '{}');
-            
-            // Bölüm seçeneklerini tanımla
-            const departments = {
-                'bilgisayar': 'Bilgisayar Mühendisliği',
-                'yazilim': 'Yazılım Mühendisliği',
-                'elektrik': 'Elektrik-Elektronik Mühendisliği',
-                'makine': 'Makine Mühendisliği',
-                'endustri': 'Endüstri Mühendisliği',
-                'insaat': 'İnşaat Mühendisliği',
-                'mimarlik': 'Mimarlık',
-                'tip': 'Tıp',
-                'dis': 'Diş Hekimliği',
-                'eczacilik': 'Eczacılık',
-                'hukuk': 'Hukuk',
-                'iktisat': 'İktisat',
-                'isletme': 'İşletme',
-                'egitim': 'Eğitim Bilimleri',
-                'fen': 'Fen-Edebiyat',
-                'ilahiyat': 'İlahiyat',
-                'iletisim': 'İletişim',
-                'diger': 'Diğer'
-            };
+        // Paylaşımı DOM'a ekle
+        function addPostToDOM(post) {
+            const postElement = document.createElement('div');
+            postElement.className = 'post-card';
+            postElement.innerHTML = `
+                <div class="post-header">
+                    <div class="post-user">
+                        <div class="post-user-avatar">
+                            ${post.author?.avatar ? 
+                              `<img src="${post.author.avatar}" alt="Profil">` :
+                              '<i class="fas fa-user"></i>'}
+                        </div>
+                        <div class="post-user-info">
+                            <h4 class="post-user-name">${post.author?.name || 'Kullanıcı'}</h4>
+                            <span class="post-date">${new Date(post.date).toLocaleDateString('tr-TR')}</span>
+                        </div>
+                    </div>
+                    <div class="post-actions">
+                        <button class="post-action-btn" onclick="deletePost(${post.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>${post.content}</p>
+                </div>
+                <div class="post-footer">
+                    <button class="post-reaction-btn">
+                        <i class="far fa-heart"></i>
+                        <span>Beğen</span>
+                    </button>
+                    <button class="post-reaction-btn">
+                        <i class="far fa-comment"></i>
+                        <span>Yorum Yap</span>
+                    </button>
+                    <button class="post-reaction-btn">
+                        <i class="far fa-share-square"></i>
+                        <span>Paylaş</span>
+                    </button>
+                </div>
+            `;
 
-            // Seçilen bölümün tam adını al
-            const selectedDepartment = userData?.department ? departments[userData.department] || userData.department : 'Bölüm Seçilmedi';
-            
-            // Mezuniyet yılı bilgisini al
-            const graduationYear = userData?.graduationYear === 'mezun_degil' ? 'Henüz mezun değilim' : userData?.graduationYear || 'Belirtilmemiş';
-            
-            return {
-                username: userData.username || username,
-                email: userData.email || `${username}@firat.edu.tr`,
-                phone: userData.phone || 'Belirtilmemiş',
-                department: selectedDepartment,
-                title: selectedDepartment !== 'Bölüm Seçilmedi' ? `${selectedDepartment} Öğrencisi` : 'Öğrenci',
-                graduationYear: graduationYear,
-                joinDate: new Date('2023-09-15').toISOString(),
-                photo: userData.photo || '',
-                bio: userData.bio || 'Henüz bir biyografi eklenmemiş.',
-                interests: userData.interests || 'Henüz ilgi alanı eklenmemiş.',
-                stats: {
-                    posts: 128,
-                    followers: 456,
-                    following: 234
-                },
-                clubs: [
-                    { name: 'Yazılım Kulübü', icon: 'fas fa-code' },
-                    { name: 'Robotik Kulübü', icon: 'fas fa-robot' },
-                    { name: 'Tasarım Kulübü', icon: 'fas fa-paint-brush' }
-                ]
-            };
+            const postsContainer = document.getElementById('userPosts');
+            postsContainer.insertBefore(postElement, postsContainer.firstChild.nextSibling);
         }
 
-        // Profil fotoğrafı yükleme
-        const profilePhoto = document.getElementById('profilePhotoPreview');
-        const photoUploadOverlay = document.querySelector('.photo-upload-overlay');
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = 'image/*';
-        fileInput.style.display = 'none';
-
-        profilePhoto.parentElement.addEventListener('click', () => {
-            fileInput.click();
-        });
-
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    profilePhoto.style.backgroundImage = `url(${e.target.result})`;
-                    profilePhoto.style.backgroundSize = 'cover';
-                    profilePhoto.style.backgroundPosition = 'center';
-                    
-                    // Fotoğrafı localStorage'a kaydet
-                    const userData = JSON.parse(localStorage.getItem('user') || '{}');
-                    userData.photo = e.target.result;
-                    localStorage.setItem('user', JSON.stringify(userData));
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Sayfa yüklendiğinde profil fotoğrafını yükle
-        document.addEventListener('DOMContentLoaded', () => {
-            const userData = JSON.parse(localStorage.getItem('user') || '{}');
-            if (userData.photo) {
-                profilePhoto.style.backgroundImage = `url(${userData.photo})`;
-                profilePhoto.style.backgroundSize = 'cover';
-                profilePhoto.style.backgroundPosition = 'center';
-            } else {
-                profilePhoto.style.backgroundImage = 'none';
-                profilePhoto.innerHTML = '<i class="fas fa-user"></i>';
-            }
-        });
-
-        function loadUserData() {
-            const userData = JSON.parse(localStorage.getItem('user')) || {};
-            
-            // Profil fotoğrafı ve gizlilik kontrolü
-            const profilePhoto = document.querySelector('.profile-photo');
-            if (userData.isPrivate) {
-                // Gizlilik açık olduğunda tüm bilgileri gizle
-                document.querySelector('.profile-name').textContent = 'Gizli Profil';
-                document.querySelector('.profile-role').textContent = 'Bu profil gizli';
-                document.querySelector('.profile-stats').style.display = 'none';
-                document.querySelector('.sidebar-info').style.display = 'none';
-                document.querySelector('.profile-details').style.display = 'none';
-                document.querySelector('.new-post-card').style.display = 'none';
-                document.querySelector('.post-card').style.display = 'none';
+        // Paylaşım sil
+        function deletePost(postId) {
+            if (confirm('Bu paylaşımı silmek istediğinize emin misiniz?')) {
+                const posts = JSON.parse(localStorage.getItem('userPosts') || '[]');
+                const updatedPosts = posts.filter(post => post.id !== postId);
+                localStorage.setItem('userPosts', JSON.stringify(updatedPosts));
                 
-                // Hayalet fotoğrafı göster
-                profilePhoto.classList.add('ghost');
-                profilePhoto.innerHTML = '<i class="fas fa-ghost"></i>';
-            } else if (userData.photo) {
-                profilePhoto.style.backgroundImage = `url(${userData.photo})`;
-                profilePhoto.style.backgroundSize = 'cover';
-                profilePhoto.style.backgroundPosition = 'center';
-            } else {
-                profilePhoto.innerHTML = '<i class="fas fa-user"></i>';
+                // Sayfayı yenile
+                window.location.reload();
             }
-            
-            // ... existing code ...
         }
     </script>
+
+    <style>
+        .clubs-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .club-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+
+        .club-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .club-info {
+            flex: 1;
+        }
+
+        .club-info h4 {
+            color: var(--primary-dark);
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .club-info p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .leave-club-btn {
+            background: var(--error-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .leave-club-btn:hover {
+            background: #ff0000;
+            transform: translateY(-2px);
+        }
+
+        .leave-club-btn i {
+            font-size: 0.8rem;
+        }
+
+        .profile-photo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            box-shadow: var(--box-shadow);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+    </style>
 </body>
-</html></html>
+</html>
+</html>
