@@ -73,7 +73,7 @@ beGAKKOM, Fırat Üniversitesi öğrencileri için geliştirilmiş modern bir so
 
 ## 📞 İletişim
 
-- Proje Yöneticisi: [Uğur Boz](mailto:iletisim_ugurboz@gmail.com)
+- Proje Yöneticisi: [Uğur Boz](mailto:iletisim.ugurboz@gmail.com)
 - Akademik Danışman: [Özal Yıldırım](mailto:ozal@firat.edu.tr)
 
 ---
