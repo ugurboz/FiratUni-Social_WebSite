@@ -1,210 +1,82 @@
-# Fırat Üniversitesi Sosyal Platformu
+# beGAKKOM
 
-Bu proje, Fırat Üniversitesi Yazılım Mühendisliği Bölümü "Yazılım Mühendisliği Temelleri" dersi kapsamında geliştirilmiş bir ödev projesidir.
+<div align="center">
+  <pre>
+  ██████╗ ███████╗ ██████╗  █████╗ ██╗  ██╗██╗  ██╗ ██████╗ ███╗   ███╗
+  ██╔══██╗██╔════╝██╔════╝ ██╔══██╗██║ ██╔╝██║ ██╔╝██╔═══██╗████╗ ████║
+  ██████╔╝█████╗  ██║  ███╗███████║█████╔╝ █████╔╝ ██║   ██║██╔████╔██║
+  ██╔══██╗██╔══╝  ██║   ██║██╔══██║██╔═██╗ ██╔═██╗ ██║   ██║██║╚██╔╝██║
+  ██████╔╝███████╗╚██████╔╝██║  ██║██║  ██╗██║  ██╗╚██████╔╝██║ ╚═╝ ██║
+  ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝
+  </pre>
+  <p><strong>Fırat Üniversitesi Sosyal Platformu</strong></p>
 
-Fırat Üniversitesi öğrencileri ve personeli için modern bir sosyal ağ platformu.
+  [![Status](https://img.shields.io/badge/Status-Active-success.svg)](https://begakkom.firat.edu.tr)
+  [![Version](https://img.shields.io/badge/Version-1.0.0-blue.svg)](https://begakkom.firat.edu.tr)
+  [![License](https://img.shields.io/badge/License-ISC-blue.svg)](LICENSE)
+</div>
 
-## 📋 Görev Dağılımı
+## 📋 İçindekiler
 
-| Görev Alanı | Sorumlular | Açıklama |
-|------------|------------|----------|
-| Frontend (UI/UX) | Uğur & Baran | Kullanıcı arayüzü tasarımı, responsive tasarım, kullanıcı deneyimi optimizasyonu. |
-| Backend (API & Veritabanı) | Hüseyin & Baran | Kullanıcı kayıt/giriş, forum API, etkinlik yönetimi, veritabanı tasarımı (MongoDB). |
-| Güvenlik ve Performans | Hüseyin & Uğur | API güvenliği, veri şifreleme, performans optimizasyonu. |
-| Veritabanı Tasarımı ve Yönetimi | Hüseyin & Uğur | MongoDB şeması oluşturma, optimizasyon. |
-| Kimlik Doğrulama (Login, Kayıt, JWT) | Hüseyin & Uğur | Kullanıcı yetkilendirme, JWT token sistemi. |
-| Frontend - Backend Entegrasyonu | Baran & Elif | API bağlantılarının yapılması, veri akışının sağlanması. |
-| Forum ve Etkinlik Modülü | Baran & İbrahim | Forum mesajlaşma ve etkinlik planlama sisteminin backend ve frontend tasarımı. |
-| Kulüpler ve Sosyal Sayfalar | Elif & İbrahim | Kulüplerin tanıtım sayfaları, sosyal etkinlik duyuruları. |
-| Test ve Hata Ayıklama | Tüm ekip (Özellikle İbrahim & Uğur) | Backend & frontend testleri, hata ayıklama, Postman ile API testleri. |
-| Deployment (Canlıya Alma & Hosting) | Baran & Uğur | CI/CD entegrasyonu, Docker veya AWS/Azure kullanarak projeyi yayına alma. |
+- [Proje Hakkında](#-proje-hakkında)
+- [Özellikler](#-özellikler)
+- [Kullanım](#-kullanım)
+- [Güvenlik](#-güvenlik)
+- [İletişim](#-iletişim)
 
-## Gereksinimler
+## 🎯 Proje Hakkında
 
-### 1. Fonksiyonel Gereksinimler
+beGAKKOM, Fırat Üniversitesi öğrencileri için geliştirilmiş modern bir sosyal ağ platformudur. Bu proje, Yazılım Mühendisliği Temelleri dersi kapsamında geliştirilmiştir.
 
-#### 1.1 Kullanıcı Yönetimi
-- ✅ Kullanıcı kaydı (E-posta, öğrenci kimliği doğrulama)
-- ✅ Giriş & Çıkış (Şifre sıfırlama dahil)
-- ✅ Profil oluşturma ve düzenleme
-- ✅ Profil fotoğrafı ekleme
+### 🎨 Öne Çıkan Özellikler
 
-#### 1.2 Kulüpler Sekmesi
-- ✅ Üniversitedeki kulüplerin listelenmesi
-- ✅ Kulüpler hakkında detaylı bilgi sayfası
-- ✅ Kulüplere katılım linklerine ulaşma
+- 🔐 Güvenli kullanıcı kimlik doğrulama sistemi
+- 👥 Öğrenci profilleri
+- 🎯 Kulüp yönetim sistemi
+- 📅 Etkinlik organizasyonu
+- 💬 Gerçek zamanlı mesajlaşma
+- 📱 Responsive tasarım
 
-#### 1.3 Etkinlik Davet Sistemi
-- ✅ Kullanıcıların etkinlik oluşturabilmesi
-- ✅ Etkinlik türleri (Proje, Spor, Kültür, Sosyal vb.)
-- ✅ Etkinlik için kriter belirleme
-- ✅ Kullanıcıların etkinliklere başvurabilmesi
-- ✅ Etkinlik sahiplerinin katılımcıları onaylayabilmesi
-- ✅ Etkinliklere katılım durumunu gösterme
+## 🌐 Kullanım
 
-#### 1.4 Gönderi & Paylaşım
-- ✅ Metin, görsel ve video paylaşımı
-- ✅ Beğenme, yorum yapma ve paylaşma
-- ✅ Hashtag ve etiketleme sistemi
+### Giriş Yapma
+1. [beGAKKOM](https://begakkom.firat.edu.tr) adresine gidin
+2. Öğrenci numaranız ve şifrenizle giriş yapın
+3. Profilinizi oluşturun ve platformu kullanmaya başlayın
 
-#### 1.5 Bağlantı & İletişim
-- ✅ Takip etme / arkadaş ekleme
-- ✅ Direkt mesajlaşma (DM)
-- ✅ Gruplar & topluluklar oluşturma
+### Kulüplere Katılma
+1. Kulüpler sekmesine gidin
+2. İlgilendiğiniz kulübü seçin
+3. "Katıl" butonuna tıklayın
 
-#### 1.6 Bildirimler
-- ✅ Beğeniler, yorumlar ve takip istekleri için anlık bildirimler
-- ✅ Yeni etkinlikler ve duyurular için bildirimler
+### Etkinliklere Katılma
+1. Etkinlikler sekmesini ziyaret edin
+2. İlgilendiğiniz etkinliği seçin
+3. Katılım formunu doldurun
 
-#### 1.7 Arama & Keşif
-- ✅ Kullanıcı, gönderi ve etiket arama
-- ✅ Popüler gönderiler & öneriler
+## 🔒 Güvenlik
 
-#### 1.8 Güvenlik & Moderasyon
-- ✅ İçerik raporlama ve moderasyon
-- ✅ Spam ve kötüye kullanımı önleme
-- ✅ Veri güvenliği ve gizlilik ayarları
+- Şifreler güvenli bir şekilde saklanıyor
+- SSL sertifikası ile güvenli bağlantı
+- Kişisel verilerin korunması
+- Güvenli oturum yönetimi
 
+## 👥 Ekip
 
-### 2. Proje Yönetimi & Agile Süreci
+| Rol | İsim | Sorumluluklar |
+|-----|------|---------------|
+| Proje Yöneticisi | Uğur Boz | Proje koordinasyonu, Hata Ayıklama |
+| Geliştirici | Hüseyin Adıgüzel | Backend, Test |
+| Geliştirici | Baran Arda Kandemir | Frontend, Güvenlik |
+| Geliştirici | Elif Zehra Ünal | Frontend, Entegrasyon |
+| Geliştirici | İbrahim Taşkıran | API , Frontend |
 
-#### 2.1 Scrum Süreci
-- ✅ Product Backlog oluşturma
-- ✅ Sprint Planlama (2 hafta)
-- ✅ Günlük Standup Toplantıları
-- ✅ Sprint Review & Retrospective
+## 📞 İletişim
 
-#### 2.2 Kullanılacak Araçlar
-- 📌 GitHub → Kod Yönetimi
-- 📌 ozalyıldırım.com → İletişim
+- Proje Yöneticisi: [Uğur Boz](mailto:iletisim_ugurboz@gmail.com)
+- Akademik Danışman: [Özal Yıldırım](mailto:ozal@firat.edu.tr)
 
-## Proje Yönetimi
-
-Bu proje, Agile (Çevik) yazılım geliştirme metodolojisi kullanılarak geliştirilmektedir. Proje sürecinde:
-
-- Sprint'ler 2 haftalık periyotlarla yürütülmektedir
-- Her sprint sonunda çalışan bir ürün çıktısı hedeflenmektedir
-- Günlük stand-up toplantıları yapılmaktadır
-- Sprint planlama ve retrospektif toplantıları düzenlenmektedir
-- Kanban board üzerinden görev takibi yapılmaktadır
-
-## Sprint Hedefleri
-
-1. Sprint: Temel proje yapısı ve kullanıcı kimlik doğrulama sistemi
-   - Kullanıcı kaydı ve giriş sistemi
-   - JWT implementasyonu
-   - Temel UI bileşenleri
-
-2. Sprint: Profil yönetimi ve haber akışı
-   - Profil oluşturma ve düzenleme
-   - Profil fotoğrafı yükleme
-   - Ana sayfa tasarımı
-
-3. Sprint: Etkinlik ve duyuru sistemi
-   - Etkinlik oluşturma ve yönetme
-   - Etkinlik başvuru sistemi
-   - Duyuru sistemi
-
-4. Sprint: Kulüpler ve organizasyonlar
-   - Kulüp listeleme ve detay sayfaları
-   - Kulüp yönetim sistemi
-   - Katılım sistemi
-
-5. Sprint: Gönderi ve paylaşım sistemi
-   - Gönderi oluşturma ve paylaşma
-   - Beğeni ve yorum sistemi
-   - Medya yükleme sistemi
-
-6. Sprint: Mesajlaşma ve bildirimler
-   - Direkt mesajlaşma sistemi
-   - Gerçek zamanlı bildirimler
-   - WebSocket entegrasyonu
-
-7. Sprint: Arama ve keşif özellikleri
-   - Gelişmiş arama sistemi
-   - Öneri algoritması
-   - Hashtag sistemi
-
-8. Sprint: Güvenlik ve optimizasyon
-   - Güvenlik testleri
-   - Performans optimizasyonu
-   - Dokümantasyon
-
-## Özellikler
-
-- Kullanıcı kimlik doğrulama ve profilleri
-- Haber akışı ve güncellemeler
-- Etkinlik duyuruları
-- Akademik kaynak paylaşımı
-- Öğrenci kulüpleri ve organizasyonlar
-- Kampüs haritası entegrasyonu
-- Gerçek zamanlı bildirimler
-
-
-## Proje Ekibi
-
-- Proje Yöneticisi: [Ugur Boz]
-- Geliştirici: [Elif Zehra Unal]
-- Geliştirici: [Huseyin Adiguzel]
-- Geliştirici: [Ibrahim Taskiran]
-- Geliştirici: [Baran Arda Kandemir]
-
-## Akademik Danışman
-
-- [Özal Yıldırım]
-- Yazılım Mühendisliği Bölümü
-- Fırat Üniversitesi
-
-## Kurulum
-
-### Gereksinimler
-- Node.js (v16 veya üstü)
-- MongoDB
-- npm veya yarn
-
-### Adımlar
-
-1. Projeyi klonlayın:
-   ```bash
-   git clone https://github.com/username/FiratUni-Social_WebSite.git
-   cd FiratUni-Social_WebSite
-   ```
-
-2. Bağımlılıkları yükleyin:
-   ```bash
-   npm install
-   # veya
-   yarn install
-   ```
-
-3. Çevre değişkenlerini ayarlayın:
-   - `env.example` dosyasını `.env` olarak kopyalayın
-   ```bash
-   cp env.example .env
-   ```
-   - `.env` dosyasını kendi bilgilerinizle düzenleyin (MongoDB URI, JWT Secret, vs.)
-
-4. Sunucuyu başlatın:
-   ```bash
-   npm start
-   # veya
-   yarn start
-   ```
-
-5. Tarayıcınızda aşağıdaki adresi açın:
-   ```
-   http://localhost:3000
-   ```
-
-### Çevre Değişkenleri (.env)
-
-Proje aşağıdaki çevre değişkenlerini kullanmaktadır:
-
-| Değişken      | Açıklama                                  | Örnek Değer                                         |
-|---------------|-------------------------------------------|----------------------------------------------------|
-| MONGODB_URI   | MongoDB bağlantı adresi                   | mongodb+srv://username:password@cluster.mongodb.net/dbname |
-| PORT          | Sunucunun çalışacağı port                 | 3000                                                |
-| NODE_ENV      | Çalışma ortamı (development, production)  | development                                         |
-| JWT_SECRET    | JWT token şifreleme anahtarı              | your_jwt_secret_key                                 |
-
-> **ÖNEMLİ:** `.env` dosyanızı asla GitHub'a veya herhangi bir versiyon kontrol sistemine eklemeyin! Bu dosya hassas bilgiler içerir ve daima `.gitignore` dosyasında belirtilmelidir.
+---
+<div align="center">
+  <sub>Built with ❤️ by Fırat Üniversitesi Yazılım Mühendisliği Öğrencileri</sub>
+</div>
