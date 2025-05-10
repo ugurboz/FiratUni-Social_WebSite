@@ -3,343 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>beGAK.com - Kulüpler</title>
+    <title>beGAKkom - Kulüpler</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #4361ee;
-            --primary-dark: #3a0ca3;
-            --secondary-color: #4cc9f0;
-            --accent-color: #f72585;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --success-color: #4bb543;
-            --error-color: #ff3333;
-            --border-radius: 12px;
-            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f5f7fa;
-            min-height: 100vh;
-            color: var(--dark-color);
-            padding-top: 80px;
-        }
-
-        /* Navbar */
-        .navbar {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--box-shadow);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            height: 80px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .brand-logo {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-
-        .brand-logo:hover {
-            transform: scale(1.1);
-        }
-
-        .logo-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-        }
-
-        .brand-name {
-            font-family: 'Righteous', cursive;
-            color: white;
-            font-size: 1.8rem;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .nav-links a:hover {
-            color: var(--secondary-color);
-        }
-
-        .nav-links a.active {
-            color: var(--secondary-color);
-            font-weight: 600;
-        }
-
-        /* Main Content */
-        .main-content {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-        }
-
-        .page-header {
-            text-align: center;
-            padding: 3rem 2rem;
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
-            color: white;
-            margin-bottom: 2rem;
-        }
-
-        .page-title {
-            font-family: 'Righteous', cursive;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, #fff, var(--secondary-color));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .page-subtitle {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        /* Clubs Grid */
-        .clubs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 2rem;
-        }
-
-        .club-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .club-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-        }
-
-        .club-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        }
-
-        .club-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .club-title {
-            font-size: 1.5rem;
-            color: var(--primary-dark);
-            font-weight: 600;
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .club-description {
-            color: #666;
-            line-height: 1.6;
-            font-size: 1rem;
-            margin: 0;
-            flex-grow: 1;
-        }
-
-        .club-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: auto;
-        }
-
-        .join-btn, .leave-btn {
-            width: 100%;
-            padding: 0.8rem;
-            border: none;
-            border-radius: var(--border-radius);
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1rem;
-        }
-
-        .join-btn {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: white;
-        }
-
-        .join-btn:hover:not(:disabled) {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
-            transform: translateY(-2px);
-        }
-
-        .leave-btn {
-            background: var(--error-color);
-            color: white;
-        }
-
-        .leave-btn:hover:not(:disabled) {
-            background: #ff0000;
-            transform: translateY(-2px);
-        }
-
-        .join-btn:disabled, .leave-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            opacity: 0.7;
-        }
-
-        /* Loading State */
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            color: var(--primary-dark);
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.2rem;
-        }
-
-        .loading i {
-            margin-right: 0.5rem;
-            color: var(--primary-color);
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading i {
-            animation: spin 1s linear infinite;
-        }
-
-        /* Toast Messages */
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem 2rem;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            z-index: 1000;
-            transition: var(--transition);
-            transform: translateX(150%);
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .toast.show {
-            transform: translateX(0);
-        }
-
-        .toast.success {
-            border-left: 4px solid var(--success-color);
-        }
-
-        .toast.error {
-            border-left: 4px solid var(--error-color);
-        }
-
-        .toast i {
-            font-size: 1.5rem;
-        }
-
-        .toast.success i {
-            color: var(--success-color);
-        }
-
-        .toast.error i {
-            color: var(--error-color);
-        }
-
-        @media (max-width: 768px) {
-            .clubs-grid {
-                grid-template-columns: 1fr;
-                padding: 1rem;
-            }
-
-            .club-card {
-                padding: 1.5rem;
-            }
-
-            .page-header {
-                padding: 2rem 1rem;
-            }
-
-            .page-title {
-                font-size: 2rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../shared/theme.css">
+    <link rel="stylesheet" href="kulupler_style.css">
+    <script src="../shared/theme.js"></script>
+    <script>
+        // Sayfa yüklenmeden önce tema ayarını al
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 </head>
 <body>
     <!-- Toast Message -->
@@ -376,25 +52,137 @@
             <h1 class="page-title">Kulüpler</h1>
             <p class="page-subtitle">Fırat Üniversitesi'nin aktif öğrenci kulüplerini keşfedin ve ilgi alanlarınıza göre katılın</p>
         </div>
+        
+        <!-- Search and Filter -->
+        <div class="search-filter">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Kulüp ara..." oninput="searchClubs()">
+                <i class="fas fa-search"></i>
+            </div>
+            <select class="filter-select" id="categoryFilter" onchange="filterClubs()">
+                <option value="all">Tüm Kategoriler</option>
+                <option value="technology">Teknoloji</option>
+                <option value="art">Sanat</option>
+                <option value="sports">Spor</option>
+                <option value="science">Bilim</option>
+                <option value="social">Sosyal</option>
+            </select>
+        </div>
 
         <div class="clubs-grid" id="clubs-container">
             <!-- Loading state -->
-            <div class="loading">
-                <i class="fas fa-spinner"></i> Kulüpler yükleniyor...
+            <div class="loading" id="loading-indicator">
+                Kulüpler yükleniyor...
+            </div>
+            
+            <!-- Empty state - initially hidden -->
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <i class="fas fa-users-slash"></i>
+                <h3>Henüz kulüp bulunamadı</h3>
+                <p>Arama kriterlerinize uygun kulüp bulunmuyor. Filtrelerinizi değiştirmeyi veya yeni bir kulüp oluşturmayı deneyebilirsiniz.</p>
+                <a href="#" class="create-btn" id="create-club-btn">
+                    <i class="fas fa-plus-circle"></i>
+                    Yeni Kulüp Oluştur
+                </a>
             </div>
         </div>
     </div>
 
+    <script src="kulupler_backend.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tema ayarlarını kontrol et ve uygula
+            if (typeof loadUserTheme === 'function') {
+                loadUserTheme();
+                setTimeout(() => applyThemeToAllElements(), 100);
+            }
+            
+            // Tema değişikliklerini dinle
+            document.addEventListener('themeChange', function(e) {
+                console.log('Kulüpler sayfasında tema değişikliği algılandı:', e.detail.theme);
+                // Kulüp kartları ve bileşenleri için tema değişikliğini uygula
+                const themeElements = document.querySelectorAll('.club-card, .filter-select, .search-box input, .page-header');
+                themeElements.forEach(el => {
+                    el.style.transition = 'background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease';
+                });
+            });
+        });
+    </script>
+
+    <script>
+        // Örnek kulüp verileri
+        const mockClubs = [
+            {
+                id: 1,
+                name: "Yazılım Kulübü",
+                description: "Web geliştirme, mobil uygulama ve yapay zeka projeleri geliştiren öğrenci kulübü. Düzenli workshoplar ve hackathonlar düzenliyoruz.",
+                icon: "fa-code",
+                category: "technology",
+                memberCount: 76,
+                members: ["user1", "user2", "user3"]
+            },
+            {
+                id: 2,
+                name: "Müzik Kulübü",
+                description: "Çeşitli enstrümanlar çalma imkanı sunan ve düzenli konserler düzenleyen, müzik teorisi eğitimi veren kulüp.",
+                icon: "fa-music",
+                category: "art",
+                memberCount: 42,
+                members: ["user4", "user5"]
+            },
+            {
+                id: 3,
+                name: "Spor Kulübü",
+                description: "Futbol, basketbol, voleybol ve diğer birçok spor dalında aktif olarak çalışan ve turnuvalar düzenleyen spor kulübü.",
+                icon: "fa-futbol",
+                category: "sports",
+                memberCount: 89,
+                members: []
+            },
+            {
+                id: 4,
+                name: "Robotik Kulübü",
+                description: "Robotik projeler geliştiren, yarışmalara katılan ve dronlar üzerinde çalışan teknoloji odaklı kulüp.",
+                icon: "fa-robot",
+                category: "technology",
+                memberCount: 38,
+                members: ["user2"]
+            },
+            {
+                id: 5,
+                name: "Girişimcilik Kulübü",
+                description: "Startup fikirlerini geliştirmek, iş planı oluşturmak ve yatırımcı bulmak konusunda mentorluk ve eğitim sunan kulüp.",
+                icon: "fa-lightbulb",
+                category: "social",
+                memberCount: 51,
+                members: ["user3"]
+            },
+            {
+                id: 6,
+                name: "Fotoğrafçılık Kulübü",
+                description: "Fotoğrafçılık teknikleri öğreten, ekipman paylaşımı yapan ve fotoğraf gezileri düzenleyen sanat kulübü.",
+                icon: "fa-camera",
+                category: "art",
+                memberCount: 35,
+                members: []
+            }
+        ];
+
+        // Değişkenler
+        let allClubs = [];
+        let filteredClubs = [];
+        let currentCategory = 'all';
+        let currentSearch = '';
+
         // Giriş kontrolü
         function checkLogin() {
             const userEmail = localStorage.getItem('userEmail');
             const authToken = localStorage.getItem('authToken');
             const user = localStorage.getItem('user');
 
-            if (!userEmail || !authToken || !user) {
-                window.location.href = '../login/login_screen.html';
-                return false;
+            if (!userEmail && !authToken && !user) {
+                // Demo için oturum kontrolünü devre dışı bırakıyoruz
+                return true;
             }
             return true;
         }
@@ -420,50 +208,104 @@
             if (!checkLogin()) return;
 
             try {
-                const response = await fetch('/api/clubs');
-                const result = await response.json();
-                
-                if (result.success) {
-                    displayClubs(result.clubs);
-                } else {
-                    showToast(result.message, 'error');
-                }
+                // Gerçek API isteği yerine mock verileri kullanıyoruz
+                setTimeout(() => {
+                    allClubs = mockClubs;
+                    filteredClubs = [...allClubs];
+                    displayClubs(filteredClubs);
+                    document.getElementById('loading-indicator').style.display = 'none';
+                }, 1000);
             } catch (error) {
                 console.error('Kulüpler yüklenirken hata:', error);
                 showToast('Kulüpler yüklenirken bir hata oluştu', 'error');
             }
         }
 
+        // Kulüpleri filtrele
+        function filterClubs() {
+            const category = document.getElementById('categoryFilter').value;
+            currentCategory = category;
+            
+            filteredClubs = allClubs.filter(club => {
+                const matchesCategory = category === 'all' || club.category === category;
+                const matchesSearch = currentSearch === '' || 
+                    club.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                    club.description.toLowerCase().includes(currentSearch.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+            
+            displayClubs(filteredClubs);
+        }
+
+        // Kulüpleri ara
+        function searchClubs() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            currentSearch = searchTerm;
+            
+            filteredClubs = allClubs.filter(club => {
+                const matchesCategory = currentCategory === 'all' || club.category === currentCategory;
+                const matchesSearch = searchTerm === '' || 
+                    club.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    club.description.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+            
+            displayClubs(filteredClubs);
+        }
+
         // Kulüpleri göster
         function displayClubs(clubs) {
-            const clubsGrid = document.querySelector('.clubs-grid');
-            clubsGrid.innerHTML = '';
-
-            const userEmail = localStorage.getItem('userEmail');
-            if (!userEmail) {
-                showToast('Oturum bilgisi bulunamadı', 'error');
-                window.location.href = '../login/login_screen.html';
+            const clubsGrid = document.getElementById('clubs-container');
+            const emptyState = document.getElementById('empty-state');
+            
+            // Loading durumunu kaldır
+            document.getElementById('loading-indicator').style.display = 'none';
+            
+            // Mevcut kulüp kartlarını temizle (loading hariç)
+            const existingCards = clubsGrid.querySelectorAll('.club-card');
+            existingCards.forEach(card => card.remove());
+            
+            // Kulüp yok ise boş durum göster
+            if (clubs.length === 0) {
+                emptyState.style.display = 'block';
                 return;
+            } else {
+                emptyState.style.display = 'none';
             }
 
-            clubs.forEach(club => {
+            const userEmail = localStorage.getItem('userEmail') || 'demo@example.com';
+
+            clubs.forEach((club, index) => {
                 const isMember = club.members && club.members.includes(userEmail);
                 
                 const clubCard = document.createElement('div');
                 clubCard.className = 'club-card';
+                clubCard.style.setProperty('--animation-order', index + 1);
+                
+                const categoryLabel = getCategoryLabel(club.category);
+                
                 clubCard.innerHTML = `
                     <div class="club-icon">
                         <i class="fas ${club.icon}"></i>
                     </div>
-                    <h3 class="club-title">${club.name}</h3>
-                    <p class="club-description">${club.description}</p>
-                    <div class="club-actions">
+                    <div class="club-content">
+                        <h3 class="club-title">${club.name}</h3>
+                        <span class="category-tag">${categoryLabel}</span>
+                        <p class="club-description">${club.description}</p>
+                        
+                        <div class="club-meta">
+                            <div class="club-members">
+                                <i class="fas fa-users"></i>
+                                <span>${club.memberCount} Üye</span>
+                            </div>
+                        </div>
+                        
                         ${isMember ? `
-                            <button class="leave-btn" onclick="leaveClub('${club.name}')">
+                            <button class="leave-btn" onclick="leaveClub(${club.id})">
                                 <i class="fas fa-sign-out-alt"></i> Ayrıl
                             </button>
                         ` : `
-                            <button class="join-btn" onclick="joinClub('${club.name}')">
+                            <button class="join-btn" onclick="joinClub(${club.id})">
                                 <i class="fas fa-sign-in-alt"></i> Katıl
                             </button>
                         `}
@@ -473,36 +315,37 @@
             });
         }
 
+        // Kategori etiketini döndür
+        function getCategoryLabel(category) {
+            const categories = {
+                'technology': 'Teknoloji',
+                'art': 'Sanat',
+                'sports': 'Spor',
+                'science': 'Bilim',
+                'social': 'Sosyal'
+            };
+            return categories[category] || 'Diğer';
+        }
+
         // Kulübe katıl
-        async function joinClub(clubName) {
+        async function joinClub(clubId) {
             if (!checkLogin()) return;
 
-            const userEmail = localStorage.getItem('userEmail');
-            if (!userEmail) {
-                showToast('Oturum bilgisi bulunamadı', 'error');
-                window.location.href = '../login/login_screen.html';
-                return;
-            }
+            const userEmail = localStorage.getItem('userEmail') || 'demo@example.com';
 
             try {
-                const response = await fetch('/join-club', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        clubName,
-                        email: userEmail
-                    })
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    showToast(result.message);
-                    loadClubs();
-                } else {
-                    showToast(result.message, 'error');
+                // Gerçek API isteği yerine mock işlem
+                const club = allClubs.find(c => c.id === clubId);
+                if (club) {
+                    if (!club.members) club.members = [];
+                    if (!club.members.includes(userEmail)) {
+                        club.members.push(userEmail);
+                        club.memberCount++;
+                    }
+                    
+                    showToast(`${club.name} kulübüne başarıyla katıldınız`);
+                    // Kulüpleri yeniden göster
+                    filterClubs();
                 }
             } catch (error) {
                 console.error('Kulübe katılırken hata:', error);
@@ -511,35 +354,24 @@
         }
 
         // Kulüpten ayrıl
-        async function leaveClub(clubName) {
+        async function leaveClub(clubId) {
             if (!checkLogin()) return;
 
-            const userEmail = localStorage.getItem('userEmail');
-            if (!userEmail) {
-                showToast('Oturum bilgisi bulunamadı', 'error');
-                window.location.href = '../login/login_screen.html';
-                return;
-            }
+            const userEmail = localStorage.getItem('userEmail') || 'demo@example.com';
 
             try {
-                const response = await fetch('/leave-club', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        clubName,
-                        email: userEmail
-                    })
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    showToast(result.message);
-                    loadClubs();
-                } else {
-                    showToast(result.message, 'error');
+                // Gerçek API isteği yerine mock işlem
+                const club = allClubs.find(c => c.id === clubId);
+                if (club && club.members) {
+                    const index = club.members.indexOf(userEmail);
+                    if (index > -1) {
+                        club.members.splice(index, 1);
+                        club.memberCount--;
+                    }
+                    
+                    showToast(`${club.name} kulübünden ayrıldınız`);
+                    // Kulüpleri yeniden göster
+                    filterClubs();
                 }
             } catch (error) {
                 console.error('Kulüpten ayrılırken hata:', error);
@@ -547,19 +379,17 @@
             }
         }
 
-        // Çıkış yap
-        function handleLogout() {
-            localStorage.removeItem('userEmail');
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('user');
-            window.location.href = '../login/login_screen.html';
-        }
-
         // Sayfa yüklendiğinde
         document.addEventListener('DOMContentLoaded', () => {
             if (checkLogin()) {
                 loadClubs();
             }
+            
+            // Yeni kulüp oluştur butonuna tıklandığında
+            document.getElementById('create-club-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                showToast('Bu özellik şu anda geliştirme aşamasındadır', 'info');
+            });
         });
     </script>
 </body>

@@ -6,322 +6,42 @@
     <title>beGAK.com - Kulüp Detay</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #4361ee;
-            --primary-dark: #3a0ca3;
-            --secondary-color: #4cc9f0;
-            --accent-color: #f72585;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --success-color: #4bb543;
-            --error-color: #ff3333;
-            --border-radius: 12px;
-            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f5f7fa;
-            min-height: 100vh;
-            color: var(--dark-color);
-        }
-
-        /* Navbar */
-        .navbar {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--box-shadow);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .brand-logo {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-color);
-            font-weight: bold;
-            font-family: 'Righteous', cursive;
-        }
-
-        .brand-name {
-            font-family: 'Righteous', cursive;
-            color: white;
-            font-size: 1.5rem;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .brand-name:hover {
-            transform: translateY(-2px);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover {
-            color: var(--secondary-color);
-        }
-
-        /* Main Content */
-        .main-content {
-            max-width: 1200px;
-            margin: 6rem auto 2rem;
-            padding: 0 2rem;
-        }
-
-        /* Club Header */
-        .club-header {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--box-shadow);
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .club-icon-large {
-            width: 100px;
-            height: 100px;
-            border-radius: 25px;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2.5rem;
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-        }
-
-        .club-info {
-            flex: 1;
-        }
-
-        .club-title {
-            font-family: 'Righteous', cursive;
-            color: var(--primary-dark);
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .club-category {
-            display: inline-block;
-            background: var(--light-color);
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-
-        .club-meta {
-            display: flex;
-            gap: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .club-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #666;
-        }
-
-        .club-meta-item i {
-            color: var(--primary-color);
-        }
-
-        .join-button {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .join-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
-        }
-
-        .join-button.joined {
-            background: linear-gradient(135deg, var(--success-color) 0%, #2ecc71 100%);
-        }
-
-        /* Club Content */
-        .club-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-        }
-
-        .club-section {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            box-shadow: var(--box-shadow);
-        }
-
-        .section-title {
-            font-family: 'Righteous', cursive;
-            color: var(--primary-dark);
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--light-color);
-        }
-
-        .club-description {
-            color: #666;
-            line-height: 1.8;
-            margin-bottom: 2rem;
-        }
-
-        /* Events */
-        .events-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .event-card {
-            background: var(--light-color);
-            border-radius: var(--border-radius);
-            padding: 1rem;
-            transition: var(--transition);
-        }
-
-        .event-card:hover {
-            transform: translateX(5px);
-        }
-
-        .event-date {
-            color: var(--primary-color);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .event-title {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .event-description {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        /* Members */
-        .members-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-        }
-
-        .member-card {
-            background: var(--light-color);
-            border-radius: var(--border-radius);
-            padding: 1rem;
-            text-align: center;
-            transition: var(--transition);
-        }
-
-        .member-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .member-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            margin: 0 auto 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-        }
-
-        .member-name {
-            font-weight: 600;
-            margin-bottom: 0.3rem;
-        }
-
-        .member-role {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .club-content {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .club-header {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .club-meta {
-                justify-content: center;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../shared/theme.css">
+    <link rel="stylesheet" href="kulup_detay_style.css">
+    <script src="../shared/theme.js"></script>
+    <script>
+        // Sayfa yüklenmeden önce tema ayarını al
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 </head>
 <body>
+    <!-- Toast Message -->
+    <div id="toast" class="toast">
+        <i class="fas"></i>
+        <span id="toast-message"></span>
+    </div>
+
     <!-- Navbar -->
     <nav class="navbar">
         <div class="brand">
-            <div class="brand-logo">bG</div>
+            <div class="brand-logo">
+                <img src="/main/images/begakkom_logo (1).svg" alt="beGAKKOM Logo" class="logo-image">
+            </div>
             <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
         </div>
         <div class="nav-links">
-            <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="../anasayfa/anasayfa_screen.html">
+                <i class="fas fa-home"></i> Ana Sayfa
+            </a>
+            <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html">
+                <i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler
+            </a>
             <a href="../profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
             <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
-            <a href="../kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
+            <a href="../kulupler/kulupler_screen.html" class="active"><i class="fas fa-users"></i> Kulüpler</a>
             <a href="../ayarlar/ayarlar_screen.html"><i class="fas fa-cog"></i> Ayarlar</a>
         </div>
     </nav>
@@ -331,213 +51,452 @@
         <!-- Club Header -->
         <div class="club-header">
             <div class="club-icon-large">
-                <i class="fas" id="club-icon"></i>
+                <i class="fas fa-code" id="club-icon"></i>
             </div>
-            <div class="club-info">
-                <h1 class="club-title" id="club-title"></h1>
-                <span class="club-category" id="club-category"></span>
-                <div class="club-meta">
-                    <div class="club-meta-item">
-                        <i class="fas fa-users"></i>
-                        <span id="member-count">0 Üye</span>
-                    </div>
-                    <div class="club-meta-item">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span id="event-count">0 Etkinlik</span>
-                    </div>
+            <h1 class="club-title" id="club-title">Yazılım Kulübü</h1>
+            <div class="club-category" id="club-category">Teknoloji</div>
+            <p class="club-description" id="club-description">
+                Web geliştirme, mobil uygulama ve yapay zeka projeleri geliştiren öğrenci kulübü. Düzenli workshoplar ve hackathonlar düzenliyoruz.
+            </p>
+            
+            <div class="club-meta-info">
+                <div class="meta-item">
+                    <div class="meta-value" id="member-count">76</div>
+                    <div class="meta-label">Üye</div>
                 </div>
-                <button class="join-button" id="join-button">Kulübe Katıl</button>
+                <div class="meta-item">
+                    <div class="meta-value" id="event-count">12</div>
+                    <div class="meta-label">Etkinlik</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-value" id="year-count">5</div>
+                    <div class="meta-label">Yıldır Aktif</div>
+                </div>
             </div>
         </div>
-
-        <!-- Club Content -->
-        <div class="club-content">
-            <div class="club-section">
-                <h2 class="section-title">Hakkında</h2>
-                <p class="club-description" id="club-description"></p>
-
-                <h2 class="section-title">Yaklaşan Etkinlikler</h2>
-                <div class="events-list" id="events-list">
-                    <!-- Events will be loaded here -->
+        
+        <!-- Club Tabs -->
+        <div class="club-tabs">
+            <button class="tab-button active" onclick="openTab('about')">Hakkında</button>
+            <button class="tab-button" onclick="openTab('events')">Etkinlikler</button>
+            <button class="tab-button" onclick="openTab('members')">Üyeler</button>
+            <button class="tab-button" onclick="openTab('gallery')">Galeri</button>
+        </div>
+        
+        <!-- Tab Contents -->
+        <!-- About Tab -->
+        <div id="about" class="tab-content active">
+            <div class="about-section">
+                <div class="club-details">
+                    <h2 class="section-title">Kulüp Hakkında</h2>
+                    <div class="club-info">
+                        <p>
+                            Yazılım Kulübü, Fırat Üniversitesi'nin en aktif teknoloji kulüplerinden biridir. 2018 yılında kurulan kulübümüz, öğrencilere yazılım geliştirme, mobil uygulama, web teknolojileri ve yapay zeka alanlarında kendilerini geliştirme imkanı sunmaktadır.
+                        </p>
+                        <p>
+                            Her ay düzenli olarak workshop, seminer ve hackathon etkinlikleri düzenleyen kulübümüz, sektörden uzmanları da üniversitemize davet ederek öğrencilerin güncel teknolojileri yakından takip etmelerini sağlamaktadır.
+                        </p>
+                    </div>
+                    
+                    <div class="club-goals">
+                        <h3 class="section-title">Kulüp Hedeflerimiz</h3>
+                        <ul class="goal-list">
+                            <li class="goal-item">Öğrencilerin yazılım alanında teorik ve pratik bilgilerini artırmak</li>
+                            <li class="goal-item">Sektörle iş birliği yaparak staj ve iş imkanları sağlamak</li>
+                            <li class="goal-item">Öğrencilerin takım çalışması yeteneklerini geliştirmek</li>
+                            <li class="goal-item">Yeni teknolojileri yakından takip etmek ve uygulamak</li>
+                            <li class="goal-item">Ulusal ve uluslararası yarışmalara katılmak</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="contact-info">
+                    <h2 class="section-title">İletişim</h2>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>yazilimkulubu@firat.edu.tr</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>+90 424 123 45 67</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Mühendislik Fakültesi, 3. Kat, Oda 305</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Hafta içi: 09:00 - 17:00</span>
+                    </div>
+                    
+                    <h3 class="section-title" style="margin-top: 2rem;">Sosyal Medya</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    </div>
                 </div>
             </div>
-
-            <div class="club-section">
-                <h2 class="section-title">Üyeler</h2>
-                <div class="members-list" id="members-list">
-                    <!-- Members will be loaded here -->
+        </div>
+        
+        <!-- Events Tab -->
+        <div id="events" class="tab-content">
+            <h2 class="section-title">Yaklaşan Etkinlikler</h2>
+            <div class="events-list">
+                <div class="event-card">
+                    <div class="event-date">
+                        <div class="event-day">15</div>
+                        <div class="event-month">Haz</div>
+                    </div>
+                    <div class="event-details">
+                        <h3 class="event-title">Web Geliştirme Workshop</h3>
+                        <div class="event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Mühendislik Fakültesi, Amfi 2</span>
+                        </div>
+                        <div class="event-time">
+                            <i class="fas fa-clock"></i>
+                            <span>14:00 - 17:00</span>
+                        </div>
+                        <p class="event-description">
+                            Modern web uygulamaları geliştirme tekniklerini öğreneceğimiz interaktif bir workshop.
+                        </p>
+                        <div class="event-action">
+                            <button class="attend-btn">
+                                <i class="fas fa-check-circle"></i> Katıl
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="event-card">
+                    <div class="event-date">
+                        <div class="event-day">22</div>
+                        <div class="event-month">Haz</div>
+                    </div>
+                    <div class="event-details">
+                        <h3 class="event-title">Yapay Zeka Semineri</h3>
+                        <div class="event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Merkez Konferans Salonu</span>
+                        </div>
+                        <div class="event-time">
+                            <i class="fas fa-clock"></i>
+                            <span>13:30 - 16:00</span>
+                        </div>
+                        <p class="event-description">
+                            Yapay zeka ve makine öğrenmesi alanında uzman konuşmacılarla güncel gelişmeleri değerlendireceğiz.
+                        </p>
+                        <div class="event-action">
+                            <button class="attend-btn">
+                                <i class="fas fa-check-circle"></i> Katıl
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="event-card">
+                    <div class="event-date">
+                        <div class="event-day">30</div>
+                        <div class="event-month">Haz</div>
+                    </div>
+                    <div class="event-details">
+                        <h3 class="event-title">Hackathon 2023</h3>
+                        <div class="event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Teknoloji Fakültesi</span>
+                        </div>
+                        <div class="event-time">
+                            <i class="fas fa-clock"></i>
+                            <span>Tüm Gün</span>
+                        </div>
+                        <p class="event-description">
+                            24 saat sürecek hackathonda takımlar halinde projeler geliştirip, ödüller kazanma şansı yakalayacağız.
+                        </p>
+                        <div class="event-action">
+                            <button class="attend-btn">
+                                <i class="fas fa-check-circle"></i> Katıl
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+        
+        <!-- Members Tab -->
+        <div id="members" class="tab-content">
+            <h2 class="section-title">Kulüp Üyeleri</h2>
+            <div class="members-list">
+                <div class="member-card">
+                    <div class="member-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="member-name">Ahmet Yılmaz</h3>
+                    <div class="member-role">Kulüp Başkanı</div>
+                    <p class="member-info">
+                        Bilgisayar Mühendisliği 4. sınıf öğrencisi. Web geliştirme ve veri bilimi konularında uzmanlaşıyor.
+                    </p>
+                    <div class="member-contact">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <div class="member-card">
+                    <div class="member-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="member-name">Zeynep Kaya</h3>
+                    <div class="member-role">Başkan Yardımcısı</div>
+                    <p class="member-info">
+                        Yazılım Mühendisliği 3. sınıf öğrencisi. Mobil uygulama geliştirme konusunda uzmanlaşıyor.
+                    </p>
+                    <div class="member-contact">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <div class="member-card">
+                    <div class="member-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="member-name">Mehmet Demir</h3>
+                    <div class="member-role">Etkinlik Koordinatörü</div>
+                    <p class="member-info">
+                        Bilgisayar Mühendisliği 3. sınıf öğrencisi. Yapay zeka ve oyun geliştirme konularında çalışıyor.
+                    </p>
+                    <div class="member-contact">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <div class="member-card">
+                    <div class="member-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="member-name">Ayşe Şahin</h3>
+                    <div class="member-role">Medya Sorumlusu</div>
+                    <p class="member-info">
+                        Elektrik Elektronik Mühendisliği 2. sınıf öğrencisi. Web tasarımı ve sosyal medya yönetimi konularında deneyimli.
+                    </p>
+                    <div class="member-contact">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Gallery Tab -->
+        <div id="gallery" class="tab-content">
+            <h2 class="section-title">Etkinlik Galerisi</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="https://picsum.photos/id/180/500/500" alt="Etkinlik" class="gallery-image">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3 class="gallery-title">Yapay Zeka Semineri</h3>
+                            <div class="gallery-date">12 Mart 2023</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <img src="https://picsum.photos/id/160/500/500" alt="Etkinlik" class="gallery-image">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3 class="gallery-title">Web Geliştirme Workshop</h3>
+                            <div class="gallery-date">25 Şubat 2023</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <img src="https://picsum.photos/id/48/500/500" alt="Etkinlik" class="gallery-image">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3 class="gallery-title">Mobil Uygulama Geliştirme</h3>
+                            <div class="gallery-date">15 Ocak 2023</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <img src="https://picsum.photos/id/342/500/500" alt="Etkinlik" class="gallery-image">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3 class="gallery-title">Hackathon 2022</h3>
+                            <div class="gallery-date">5 Aralık 2022</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <img src="https://picsum.photos/id/239/500/500" alt="Etkinlik" class="gallery-image">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3 class="gallery-title">Sektör Buluşması</h3>
+                            <div class="gallery-date">20 Kasım 2022</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <img src="https://picsum.photos/id/142/500/500" alt="Etkinlik" class="gallery-image">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3 class="gallery-title">Veri Bilimi Eğitimi</h3>
+                            <div class="gallery-date">10 Ekim 2022</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Join Button -->
+        <div class="club-join">
+            <button class="join-button" id="joinButton">
+                <i class="fas fa-sign-in-alt"></i> Kulübe Katıl
+            </button>
         </div>
     </div>
 
     <script>
-        // URL'den kulüp ID'sini al
-        const urlParams = new URLSearchParams(window.location.search);
-        const clubId = parseInt(urlParams.get('id'));
-
-        // Kulüp veritabanı simülasyonu
-        const clubsDB = [
-            {
-                id: 1,
-                name: "Yazılım Kulübü",
-                description: "Yazılım geliştirme ve teknolojiye ilgi duyan öğrenciler için bir arayış platformu. Kulübümüzde düzenli olarak kodlama yarışmaları, hackathonlar ve teknoloji seminerleri düzenlenmektedir. Üyelerimiz arasında deneyim paylaşımı yapılarak birlikte öğrenme ve gelişme hedeflenmektedir.",
-                icon: "fa-code",
-                category: "Teknoloji",
-                members: ["admin", "user1", "user2"],
-                events: [
-                    {
-                        date: "2024-03-15",
-                        title: "Web Geliştirme Workshop",
-                        description: "Temel web teknolojileri ve modern framework'ler hakkında workshop"
-                    },
-                    {
-                        date: "2024-03-20",
-                        title: "Hackathon",
-                        description: "24 saatlik kodlama maratonu"
-                    }
-                ],
-                createdAt: "2023-01-15"
-            },
-            {
-                id: 2,
-                name: "Müzik Kulübü",
-                description: "Müziğin büyülü dünyasında birlikte yolculuk yapmak isteyenler için. Kulübümüzde çeşitli enstrüman kursları, konserler ve müzik atölyeleri düzenlenmektedir. Amatör ve profesyonel müzisyenlerin bir araya geldiği bir platform sunuyoruz.",
-                icon: "fa-music",
-                category: "Sanat",
-                members: ["user3", "user4"],
-                events: [
-                    {
-                        date: "2024-03-18",
-                        title: "Gitar Workshop",
-                        description: "Temel gitar teknikleri ve akorlar"
-                    }
-                ],
-                createdAt: "2023-02-20"
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tema ayarlarını kontrol et ve uygula
+            if (typeof loadUserTheme === 'function') {
+                loadUserTheme();
+                setTimeout(() => applyThemeToAllElements(), 100);
             }
-        ];
-
-        // DOM yüklendiğinde
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Oturum kontrolü
-            const isLoggedIn = await checkSession();
-            if (!isLoggedIn) {
-                window.location.href = '../../main/login/login_screen.html';
-                return;
+            
+            // Tema değişikliklerini dinle
+            document.addEventListener('themeChange', function(e) {
+                console.log('Kulüp detay sayfasında tema değişikliği algılandı:', e.detail.theme);
+                // Tüm sayfa için tema değişikliğini uygula
+                document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+            });
+            
+            // URL parametrelerini kontrol et
+            const urlParams = new URLSearchParams(window.location.search);
+            const clubId = urlParams.get('id');
+            
+            if (clubId) {
+                loadClubDetails(clubId);
             }
-
-            // Kulüp bilgilerini yükle
-            loadClubDetails();
-        });
-
-        // Kulüp detaylarını yükle
-        function loadClubDetails() {
-            const club = clubsDB.find(c => c.id === clubId);
-            if (!club) {
-                window.location.href = 'kulupler_screen.html';
-                return;
-            }
-
-            // Kulüp bilgilerini göster
-            document.getElementById('club-icon').classList.add(club.icon);
-            document.getElementById('club-title').textContent = club.name;
-            document.getElementById('club-category').textContent = club.category;
-            document.getElementById('club-description').textContent = club.description;
-            document.getElementById('member-count').textContent = `${club.members.length} Üye`;
-            document.getElementById('event-count').textContent = `${club.events.length} Etkinlik`;
-
-            // Üyeleri göster
-            const membersList = document.getElementById('members-list');
-            membersList.innerHTML = '';
-            club.members.forEach(member => {
-                const memberCard = document.createElement('div');
-                memberCard.className = 'member-card';
-                memberCard.innerHTML = `
-                    <div class="member-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="member-name">${member}</div>
-                    <div class="member-role">Üye</div>
-                `;
-                membersList.appendChild(memberCard);
-            });
-
-            // Etkinlikleri göster
-            const eventsList = document.getElementById('events-list');
-            eventsList.innerHTML = '';
-            club.events.forEach(event => {
-                const eventCard = document.createElement('div');
-                eventCard.className = 'event-card';
-                eventCard.innerHTML = `
-                    <div class="event-date">${formatDate(event.date)}</div>
-                    <div class="event-title">${event.title}</div>
-                    <div class="event-description">${event.description}</div>
-                `;
-                eventsList.appendChild(eventCard);
-            });
-
-            // Katıl butonunu güncelle
-            const user = JSON.parse(localStorage.getItem('user'));
-            const isMember = club.members.includes(user.username);
-            const joinButton = document.getElementById('join-button');
-            joinButton.textContent = isMember ? 'Kulüpten Ayrıl' : 'Kulübe Katıl';
-            joinButton.classList.toggle('joined', isMember);
-
-            // Katıl butonu event listener
-            joinButton.addEventListener('click', async function() {
-                await toggleMembership(clubId);
-                loadClubDetails();
-            });
-        }
-
-        // Tarihi formatla
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('tr-TR', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-        }
-
-        // Kulüp üyeliğini değiştir
-        async function toggleMembership(clubId) {
-            try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                const club = clubsDB.find(c => c.id === clubId);
-                const isMember = club.members.includes(user.username);
-
-                if (isMember) {
-                    club.members = club.members.filter(member => member !== user.username);
+            
+            // Katıl butonunu ayarla
+            const joinButton = document.getElementById('joinButton');
+            joinButton.addEventListener('click', function() {
+                if (joinButton.classList.contains('leave-button')) {
+                    leaveClub();
                 } else {
-                    club.members.push(user.username);
+                    joinClub();
                 }
-            } catch (error) {
-                console.error('Kulüp üyeliği değiştirilirken hata:', error);
-                alert(error.message);
+            });
+        });
+        
+        // Kulüp detaylarını yükle
+        function loadClubDetails(clubId) {
+            // API isteği yerine demo veri kullanıyoruz
+            // Gerçek uygulamada burada API'dan veri çekilecek
+            console.log('Kulüp ID:', clubId);
+            
+            // Kullanıcının kulüp üyeliğini kontrol et
+            checkMembership();
+        }
+        
+        // Üyelik durumunu kontrol et
+        function checkMembership() {
+            // Demo için kullanıcının üye olmadığını varsayalım
+            const isMember = false;
+            
+            const joinButton = document.getElementById('joinButton');
+            if (isMember) {
+                joinButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Kulüpten Ayrıl';
+                joinButton.classList.add('leave-button');
+            } else {
+                joinButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Kulübe Katıl';
+                joinButton.classList.remove('leave-button');
             }
         }
-
-        // Oturum kontrolü
-        async function checkSession() {
-            try {
-                const token = localStorage.getItem('authToken');
-                return !!token;
-            } catch (error) {
-                console.error('Oturum kontrolü yapılırken hata:', error);
-                return false;
+        
+        // Kulübe katıl
+        function joinClub() {
+            // Demo için katılma işlemini simüle ediyoruz
+            showToast('Kulübe başarıyla katıldınız!', 'success');
+            
+            const joinButton = document.getElementById('joinButton');
+            joinButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Kulüpten Ayrıl';
+            joinButton.classList.add('leave-button');
+            
+            // Üye sayısını güncelle
+            const memberCount = document.getElementById('member-count');
+            memberCount.textContent = parseInt(memberCount.textContent) + 1;
+        }
+        
+        // Kulüpten ayrıl
+        function leaveClub() {
+            // Demo için ayrılma işlemini simüle ediyoruz
+            showToast('Kulüpten ayrıldınız', 'error');
+            
+            const joinButton = document.getElementById('joinButton');
+            joinButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Kulübe Katıl';
+            joinButton.classList.remove('leave-button');
+            
+            // Üye sayısını güncelle
+            const memberCount = document.getElementById('member-count');
+            memberCount.textContent = parseInt(memberCount.textContent) - 1;
+        }
+        
+        // Sekme geçişi
+        function openTab(tabName) {
+            // Tüm sekme içeriklerini gizle
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Tüm sekme butonlarını pasif yap
+            const tabButtons = document.getElementsByClassName('tab-button');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('active');
+            }
+            
+            // Seçilen sekmeyi ve içeriğini aktif yap
+            document.getElementById(tabName).classList.add('active');
+            
+            // İlgili butonu aktif yap
+            const buttons = document.querySelectorAll(`.tab-button`);
+            for (let i = 0; i < buttons.length; i++) {
+                if (buttons[i].getAttribute('onclick') === `openTab('${tabName}')`) {
+                    buttons[i].classList.add('active');
+                }
             }
         }
-
-        // Çıkış yap
-        async function handleLogout() {
-            if (confirm("Çıkış yapmak istediğinize emin misiniz?")) {
-                localStorage.removeItem('authToken');
-                localStorage.removeItem('user');
-                window.location.href = '../../main/login/login_screen.html';
-                return true;
-            }
-            return false;
+        
+        // Toast mesajı göster
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('i');
+            const messageEl = document.getElementById('toast-message');
+            
+            toast.className = `toast ${type}`;
+            icon.className = `fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}`;
+            messageEl.textContent = message;
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
     </script>
 </body>

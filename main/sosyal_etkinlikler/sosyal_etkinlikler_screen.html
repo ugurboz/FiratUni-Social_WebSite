@@ -5,8 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>beGAK.com - Sosyal Etkinlikler</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../shared/theme.css">
     <link rel="stylesheet" href="sosyal_etkinlikler_style.css">
+    <script src="../shared/theme.js"></script>
+    <script>
+        // Sayfa yüklenmeden önce tema ayarını al
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 </head>
 <body>
     <!-- Navbar -->
@@ -199,18 +208,7 @@
                     </div>
                     <div class="form-group">
                         <label for="eventDescription" class="form-label">Açıklama</label>
-                        <textarea id="eventDescription" name="eventDescription" class="form-control" rows="4" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="eventCategory" class="form-label">Kategori</label>
-                        <select id="eventCategory" name="eventCategory" class="form-control" required>
-                            <option value="">Kategori Seçin</option>
-                            <option value="academic">Akademik</option>
-                            <option value="cultural">Kültürel</option>
-                            <option value="social">Sosyal</option>
-                            <option value="sports">Spor</option>
-                            <option value="other">Diğer</option>
-                        </select>
+                        <textarea id="eventDescription" name="eventDescription" class="form-control" rows="5" required></textarea>
                     </div>
                     <div class="form-group">
                         <label for="maxParticipants" class="form-label">Maksimum Katılımcı Sayısı</label>
@@ -220,83 +218,92 @@
             </div>
             <div class="form-footer">
                 <button class="cancel-btn" onclick="toggleEventForm()">İptal</button>
-                <button class="submit-btn" onclick="submitEvent()">Oluştur</button>
+                <button class="submit-btn" onclick="createEvent()">Etkinliği Oluştur</button>
             </div>
         </div>
     </div>
 
+    <script src="sosyal_etkinlikler_backend.js"></script>
     <script>
-        // Form toggle function
-        function toggleEventForm() {
-            const formWrapper = document.getElementById('eventFormWrapper');
-            formWrapper.classList.toggle('active');
-        }
-
-        // Submit event function
-        function submitEvent() {
-            const form = document.getElementById('eventForm');
-            if (form.checkValidity()) {
-                // Collect form data
-                const formData = {
-                    name: document.getElementById('eventName').value,
-                    date: document.getElementById('eventDate').value,
-                    location: document.getElementById('eventLocation').value,
-                    description: document.getElementById('eventDescription').value,
-                    category: document.getElementById('eventCategory').value,
-                    maxParticipants: document.getElementById('maxParticipants').value
-                };
-
-                // Here you would normally send the data to the server
-                console.log('Event data to submit:', formData);
-                
-                // Reset form and close modal
-                form.reset();
-                toggleEventForm();
-                
-                // Feedback to user
-                alert('Etkinlik başarıyla oluşturuldu! Onay sürecinden sonra yayınlanacaktır.');
-            } else {
-                form.reportValidity();
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tema ayarlarını kontrol et ve uygula
+            if (typeof loadUserTheme === 'function') {
+                loadUserTheme();
+                setTimeout(() => applyThemeToAllElements(), 100);
             }
-        }
-
-        // Event filter function
-        function filterEvents(filter) {
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.filter === filter) {
-                    btn.classList.add('active');
-                }
+            
+            // Tema değişikliklerini dinle
+            document.addEventListener('themeChange', function(e) {
+                console.log('Sosyal etkinlikler sayfasında tema değişikliği algılandı:', e.detail.theme);
+                // Etkinlik kartları ve form elemanları için tema değişikliğini uygula
+                const themeElements = document.querySelectorAll('.event-card, .events-section, .live-events, .form-control, .event-form');
+                themeElements.forEach(el => {
+                    el.style.transition = 'background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease';
+                });
             });
+        });
 
-            const cards = document.querySelectorAll('.event-card');
+        // Filtreleme işlevselliği
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filtre düğmelerine tıklama işleyicileri ekle
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Aktif filtre düğmesini güncelle
+                    document.querySelector('.filter-btn.active').classList.remove('active');
+                    this.classList.add('active');
+                    
+                    // Etkinlikleri filtrele
+                    const filter = this.getAttribute('data-filter');
+                    filterEvents(filter);
+                });
+            });
+            
+            // Sayfa yüklendiğinde tüm etkinlikleri göster
+            filterEvents('all');
+        });
+
+        // Etkinlik filtreleme fonksiyonu
+        function filterEvents(filter) {
+            const eventCards = document.querySelectorAll('.event-card');
             let visibleCount = 0;
-
-            cards.forEach(card => {
-                if (filter === 'all' || card.dataset.status === filter) {
+            
+            eventCards.forEach(card => {
+                const status = card.getAttribute('data-status');
+                const isJoined = card.classList.contains('joined');
+                
+                if (filter === 'all' || 
+                    (filter === 'upcoming' && status === 'upcoming') ||
+                    (filter === 'ongoing' && status === 'ongoing') ||
+                    (filter === 'past' && status === 'past') ||
+                    (filter === 'joined' && isJoined)) {
                     card.style.display = 'block';
                     visibleCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
-
-            // Show or hide no events message
-            document.getElementById('noEvents').style.display = visibleCount === 0 ? 'block' : 'none';
+            
+            // Gösterilecek etkinlik yoksa 'noEvents' mesajını göster
+            const noEvents = document.getElementById('noEvents');
+            if (visibleCount === 0) {
+                noEvents.style.display = 'block';
+            } else {
+                noEvents.style.display = 'none';
+            }
         }
 
-        // Event search function
+        // Etkinlik arama fonksiyonu
         function searchEvents() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('.event-card');
+            const eventCards = document.querySelectorAll('.event-card');
             let visibleCount = 0;
-
-            cards.forEach(card => {
+            
+            eventCards.forEach(card => {
                 const title = card.querySelector('.event-title').textContent.toLowerCase();
                 const description = card.querySelector('.event-description p').textContent.toLowerCase();
                 const location = card.querySelector('.event-location span').textContent.toLowerCase();
-
+                
                 if (title.includes(searchTerm) || description.includes(searchTerm) || location.includes(searchTerm)) {
                     card.style.display = 'block';
                     visibleCount++;
@@ -304,46 +311,119 @@
                     card.style.display = 'none';
                 }
             });
-
-            // Show or hide no events message
-            document.getElementById('noEvents').style.display = visibleCount === 0 ? 'block' : 'none';
+            
+            // Gösterilecek etkinlik yoksa 'noEvents' mesajını göster
+            const noEvents = document.getElementById('noEvents');
+            if (visibleCount === 0) {
+                noEvents.style.display = 'block';
+            } else {
+                noEvents.style.display = 'none';
+            }
         }
 
-        // Join event function
+        // Etkinlik formunu aç/kapat
+        function toggleEventForm() {
+            const formWrapper = document.getElementById('eventFormWrapper');
+            formWrapper.classList.toggle('active');
+        }
+
+        // Etkinliğe katılma işlevi
         function joinEvent(eventId) {
-            // Here you would normally send a request to the server
-            console.log(`Joining event with ID: ${eventId}`);
-            alert('Etkinliğe katılım talebiniz alındı!');
+            const joinButton = event.currentTarget;
+            joinButton.innerHTML = '<i class="fas fa-check"></i><span>Katıldınız</span>';
+            joinButton.classList.add('joined');
+            joinButton.disabled = true;
+            
+            // Katılımcı sayısını güncelle
+            const participantsElement = joinButton.closest('.event-actions').querySelector('.participants-count span');
+            const currentText = participantsElement.textContent;
+            const parts = currentText.split('/');
+            const current = parseInt(parts[0], 10);
+            const total = parseInt(parts[1].split(' ')[0], 10);
+            
+            participantsElement.textContent = `${current + 1}/${total} Katılımcı`;
+            
+            // Etkinlik kartına 'joined' sınıfını ekle (filtreleme için)
+            joinButton.closest('.event-card').classList.add('joined');
+            
+            // Burada gerçek bir uygulamada API çağrısı yapılabilir
+            console.log(`Joined event ${eventId}`);
         }
 
-        // Share event function
+        // Etkinlik paylaşma işlevi
         function shareEvent(eventId) {
-            // Here you would normally open a share dialog
-            console.log(`Sharing event with ID: ${eventId}`);
-            alert('Etkinlik paylaşım bağlantısı kopyalandı!');
-        }
-
-        // Logout function
-        function handleLogout() {
-            // Here you would normally send a logout request to the server
-            console.log('Logging out');
-            window.location.href = '../login/login_screen.html';
-            return false;
-        }
-
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set up filter buttons
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    filterEvents(this.dataset.filter);
+            // Paylaşım URL'si oluştur
+            const shareUrl = `${window.location.origin}/etkinlik/${eventId}`;
+            
+            // Paylaşım API'si varsa kullan, yoksa URL'yi kopyala
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Etkinlik Paylaşımı',
+                    text: 'Bu etkinliğe katılmak ister misin?',
+                    url: shareUrl
+                }).then(() => {
+                    console.log('Successful share');
+                }).catch((error) => {
+                    console.log('Error sharing:', error);
+                    copyToClipboard(shareUrl);
                 });
-            });
+            } else {
+                // Kopyalama işlevi
+                copyToClipboard(shareUrl);
+            }
+        }
 
-            // Initialize with "all" filter
-            filterEvents('all');
-        });
+        // Panoya kopyalama işlevi
+        function copyToClipboard(text) {
+            // Geçici bir textarea oluştur
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'Bağlantı kopyalandı!' : 'Kopyalama başarısız';
+                alert(msg);
+            } catch (err) {
+                console.error('Kopyalama hatası:', err);
+                alert('Bağlantı kopyalanamadı');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        // Yeni etkinlik oluştur
+        function createEvent() {
+            // Form verilerini al
+            const eventName = document.getElementById('eventName').value;
+            const eventDate = document.getElementById('eventDate').value;
+            const eventLocation = document.getElementById('eventLocation').value;
+            const eventDescription = document.getElementById('eventDescription').value;
+            const maxParticipants = document.getElementById('maxParticipants').value;
+            
+            // Form doğrulaması
+            if (!eventName || !eventDate || !eventLocation || !eventDescription || !maxParticipants) {
+                alert('Lütfen tüm alanları doldurun');
+                return;
+            }
+            
+            // Burada gerçek bir uygulamada API çağrısı yapılabilir
+            console.log('Yeni etkinlik oluşturuldu:', {
+                name: eventName,
+                date: eventDate,
+                location: eventLocation,
+                description: eventDescription,
+                maxParticipants: maxParticipants
+            });
+            
+            // Formu kapat ve sıfırla
+            document.getElementById('eventForm').reset();
+            toggleEventForm();
+            
+            // Başarı mesajı göster
+            alert('Etkinlik başarıyla oluşturuldu!');
+        }
     </script>
 </body>
 </html> 

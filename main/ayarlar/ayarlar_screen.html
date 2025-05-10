@@ -6,7 +6,9 @@
     <title>beGAK.com - Ayarlar</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../shared/theme.css">
     <link rel="stylesheet" href="ayarlar_style.css">
+    <script src="../shared/theme.js"></script>
 </head>
 <body>
     <!-- Navbar -->
@@ -110,6 +112,25 @@
                     </form>
                 </div>
 
+                <div class="settings-card">
+                    <h3 class="card-title">Tema Ayarları</h3>
+                    <div class="theme-settings">
+                        <div class="theme-option">
+                            <span>Karanlık Tema</span>
+                            <label class="switch">
+                                <input type="checkbox" id="darkModeToggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <p class="theme-description">
+                            Karanlık tema kullanarak göz yorgunluğunu azaltabilir ve gece kullanımında daha rahat edebilirsiniz.
+                        </p>
+                        <div class="form-actions">
+                            <button type="button" class="save-button" onclick="applyThemeChange()">Temayı Uygula</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="settings-card danger-zone">
                     <h3 class="card-title">Hesap İşlemleri</h3>
                     <div class="danger-actions">
@@ -140,7 +161,55 @@
             
             // Kullanıcı bilgilerini yükle
             loadUserSettings();
+            
+            // Tema ayarı kontrolü ve toggle butonunu ayarla
+            setupThemeToggle();
         });
+
+        // Tema ayarlarını kontrol et ve toggle butonunu ayarla
+        function setupThemeToggle() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const currentTheme = localStorage.getItem('theme');
+            
+            if (currentTheme === 'dark') {
+                darkModeToggle.checked = true;
+            } else {
+                darkModeToggle.checked = false;
+            }
+        }
+
+        // Tema değişikliğini uygula (Uygula butonuna tıklandığında)
+        function applyThemeChange() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const desiredTheme = darkModeToggle.checked ? 'dark' : 'light';
+            const currentTheme = localStorage.getItem('theme');
+            
+            // Eğer mevcut tema ile istenen tema farklıysa değişiklik yap
+            if (currentTheme !== desiredTheme) {
+                // shared/theme.js'deki changeAndSaveTheme fonksiyonunu kullan
+                changeAndSaveTheme(desiredTheme, function(theme) {
+                    // Tema başarıyla değiştirildiğinde bu geri çağırma çalışır
+                    if (theme === 'dark') {
+                        showNotification('Karanlık tema etkinleştirildi ve tüm sayfalara uygulandı', 'success');
+                    } else {
+                        showNotification('Aydınlık tema etkinleştirildi ve tüm sayfalara uygulandı', 'success');
+                    }
+                    
+                    // Diğer sayfaları da güncelle
+                    if (window.frames && window.frames.length > 0) {
+                        for (let i = 0; i < window.frames.length; i++) {
+                            try {
+                                window.frames[i].document.documentElement.setAttribute('data-theme', theme);
+                            } catch (e) {
+                                console.warn('Farklı kaynaktaki iframe güncellenemedi:', e);
+                            }
+                        }
+                    }
+                });
+            } else {
+                showNotification('Tema zaten uygulanmış durumda', 'success');
+            }
+        }
 
         // Oturum kontrolü
         function checkSession() {
@@ -332,6 +401,8 @@
             if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('user');
+                localStorage.removeItem('userData');
+                localStorage.removeItem('userEmail');
                 window.location.href = '../login/login_screen.html';
             }
         }
@@ -368,6 +439,8 @@
                             // Oturum bilgilerini temizle
                             localStorage.removeItem('authToken');
                             localStorage.removeItem('user');
+                            localStorage.removeItem('userData');
+                            localStorage.removeItem('userEmail');
                             
                             // Kullanıcıyı login sayfasına yönlendir
                             setTimeout(() => {

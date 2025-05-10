@@ -1,0 +1,192 @@
+/**
+ * Tema değişkenleri
+ * Bu dosya, site genelinde kullanılacak renk değişkenlerini tanımlar
+ */
+
+:root {
+    /* Temel renkler */
+    --primary-color: #4361ee;
+    --primary-dark: #3a0ca3;
+    --secondary-color: #4cc9f0;
+    --accent-color: #f72585;
+    --success-color: #4bb543;
+    --error-color: #ff3333;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+    
+    /* Genel değişkenler */
+    --border-radius: 12px;
+    --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    /* Aydınlık tema renkleri */
+    --background-color: #f5f7fa;
+    --card-background: #ffffff;
+    --text-color: #212529;
+    --input-background: #ffffff;
+    --input-border: #e2e8f0;
+    --input-text: #212529;
+    --border-color: #e2e8f0;
+    --navbar-bg: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    --navbar-text: #ffffff;
+    --card-shadow: var(--box-shadow);
+    --secondary-text: #6c757d;
+    --divider-color: #e2e8f0;
+    --hover-bg: #f8f9fa;
+    --post-background: #ffffff;
+    --sidebar-background: #ffffff;
+    --feed-background: #f5f7fa;
+    --event-card-bg: #ffffff;
+    --club-card-bg: #ffffff;
+    --message-received-bg: #f0f0f0;
+    --message-sent-bg: var(--primary-color);
+    --post-header-bg: transparent;
+    --post-footer-bg: transparent;
+    --comment-bg: #f8f9fa;
+    --tooltip-bg: rgba(0, 0, 0, 0.8);
+    --tooltip-text: #ffffff;
+}
+
+/* Karanlık tema renkleri */
+[data-theme="dark"] {
+    --background-color: #121212;
+    --card-background: #1e1e1e;
+    --text-color: #e0e0e0;
+    --input-background: #2d2d2d;
+    --input-border: #3d3d3d;
+    --input-text: #e0e0e0;
+    --border-color: #3d3d3d;
+    --navbar-bg: #1a1a1a;
+    --navbar-text: #e0e0e0;
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    --secondary-text: #9e9e9e;
+    --divider-color: #3d3d3d;
+    --hover-bg: #2a2a2a;
+    --post-background: #1e1e1e;
+    --sidebar-background: #1e1e1e;
+    --feed-background: #121212;
+    --event-card-bg: #1e1e1e;
+    --club-card-bg: #1e1e1e;
+    --message-received-bg: #2d2d2d;
+    --message-sent-bg: #3a0ca3;
+    --post-header-bg: #252525;
+    --post-footer-bg: #252525;
+    --comment-bg: #252525;
+    --tooltip-bg: rgba(255, 255, 255, 0.9);
+    --tooltip-text: #121212;
+}
+
+/* Genel stillemeler */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Navbar stillemeleri */
+.navbar {
+    background: var(--navbar-bg);
+    color: var(--navbar-text);
+}
+
+.nav-links a {
+    color: var(--navbar-text);
+}
+
+.nav-links a.active {
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+/* Post, sidebar ve kart stillemeleri */
+.post, .post-card {
+    background-color: var(--post-background);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+.post-header {
+    background-color: var(--post-header-bg);
+}
+
+.post-actions {
+    background-color: var(--post-footer-bg);
+}
+
+.comment {
+    color: var(--text-color);
+    background-color: var(--comment-bg);
+}
+
+.sidebar, .sidebar-card, .live-events {
+    background-color: var(--sidebar-background);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+.event-card, .club-card {
+    background-color: var(--event-card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+/* Form elemanları için */
+input, select, textarea, button {
+    background-color: var(--input-background);
+    color: var(--input-text);
+    border-color: var(--input-border);
+}
+
+/* Chat mesajları için */
+.message-received {
+    background-color: var(--message-received-bg);
+    color: var(--text-color);
+}
+
+.message-sent {
+    background-color: var(--message-sent-bg);
+    color: white;
+}
+
+/* Feed ve içerik alanları */
+.feed-section, .profile-feed, .main-content {
+    background-color: var(--feed-background);
+}
+
+/* Tooltip ve bildirimler */
+.tooltip {
+    background-color: var(--tooltip-bg);
+    color: var(--tooltip-text);
+}
+
+.notification {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    box-shadow: var(--card-shadow);
+}
+
+/* Karanlık tema değişikliği için geçiş efektlerini ekle */
+.navbar,
+.card,
+.sidebar,
+.post,
+.post-card,
+.event-card,
+.club-card,
+.content-section,
+.sidebar-card,
+.live-events,
+.message-received,
+.message-sent,
+.feed-section,
+.profile-feed,
+.main-content,
+input, 
+select, 
+textarea,
+button {
+    transition: background-color 0.3s ease, 
+                color 0.3s ease, 
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+} 

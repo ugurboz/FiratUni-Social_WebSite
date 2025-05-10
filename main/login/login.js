@@ -65,6 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('authToken', result.authToken);
                 localStorage.setItem('userEmail', result.user.email); // userEmail'i kaydet
                 
+                // Tema desteği için userData'yı ekle 
+                localStorage.setItem('userData', JSON.stringify({
+                    email: result.user.email,
+                    displayName: `${result.user.firstName || ''} ${result.user.lastName || ''}`.trim(),
+                    theme: result.user.theme || 'light' // Varsayılan tema light
+                }));
+                
+                // Kullanıcının tercih ettiği temayı hemen uygula
+                const userTheme = result.user.theme || 'light';
+                document.documentElement.setAttribute('data-theme', userTheme);
+                localStorage.setItem('theme', userTheme);
+                
                 // Show success message
                 successMessage.textContent = 'Giriş başarılı! Yönlendiriliyorsunuz...';
                 successMessage.style.display = 'block';

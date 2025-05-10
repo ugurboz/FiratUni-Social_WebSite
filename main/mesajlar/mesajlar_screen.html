@@ -6,7 +6,16 @@
     <title>beGAK.com - Mesajlar</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../shared/theme.css">
     <link rel="stylesheet" href="mesajlar.css">
+    <script src="../shared/theme.js"></script>
+    <script>
+        // Sayfa yüklenmeden önce tema ayarını al
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 </head>
 <body>
     <!-- Navbar -->
@@ -35,91 +44,40 @@
         <div class="users-list">
             <input type="text" class="search-box" placeholder="Kişi Ara..." id="searchUser">
             
-            <div class="user-item active" data-user-id="1" onclick="selectUser(1)">
-                <div class="user-avatar">İ</div>
-                <div class="user-info">
-                    <div class="user-name">İbrahim Taşkıran</div>
-                    <div class="last-message">Merhaba, nasılsın? Son toplantıda konuştuğumuz proje hakkında...</div>
+            <!-- Kullanıcılar dinamik olarak yüklenecek -->
+            <div id="user-list-container">
+                <div class="empty-state" id="empty-users-state">
+                    <i class="fas fa-users"></i>
+                    <p>Henüz mesajlaşma yok</p>
                 </div>
-                <div class="message-time">14:30</div>
-            </div>
-            
-            <div class="user-item" data-user-id="2" onclick="selectUser(2)">
-                <div class="user-avatar">H</div>
-                <div class="user-info">
-                    <div class="user-name">Hüseyin Adıgüzel</div>
-                    <div class="last-message">Evet, yarın 15:00'da uygun.</div>
-                </div>
-                <div class="message-time">Dün</div>
-            </div>
-            
-            <div class="user-item" data-user-id="3" onclick="selectUser(3)">
-                <div class="user-avatar">E</div>
-                <div class="user-info">
-                    <div class="user-name">Elif Zehra Ünal</div>
-                    <div class="last-message">Frontend tasarımı için yeni bir framework denedim, sonuçları göstereyim.</div>
-                </div>
-                <div class="message-time">Dün</div>
-            </div>
-            
-            <div class="user-item" data-user-id="4" onclick="selectUser(4)">
-                <div class="user-avatar">B</div>
-                <div class="user-info">
-                    <div class="user-name">Baran Arda Kandemir</div>
-                    <div class="last-message">API entegrasyonunu tamamladım, test edebilirsin.</div>
-                </div>
-                <div class="message-time">30.11</div>
-            </div>
-            
-            <div class="user-item" data-user-id="5" onclick="selectUser(5)">
-                <div class="user-avatar">U</div>
-                <div class="user-info">
-                    <div class="user-name">Uğur Boz</div>
-                    <div class="last-message">Projenin güncel halini sunucuya yükledim.</div>
-                </div>
-                <div class="message-time">28.11</div>
-            </div>
-            
-            <div class="user-item" data-user-id="6" onclick="selectUser(6)">
-                <div class="user-avatar">YM</div>
-                <div class="user-info">
-                    <div class="user-name">Yazılım Müh. Kulübü</div>
-                    <div class="last-message">[Admin]: Yarınki etkinlik için son hazırlıkları tamamlayalım.</div>
-                </div>
-                <div class="message-time">24.11</div>
-            </div>
-            
-            <div class="user-item" data-user-id="7" onclick="selectUser(7)">
-                <div class="user-avatar">M</div>
-                <div class="user-info">
-                    <div class="user-name">Mehmet Yılmaz</div>
-                    <div class="last-message">Teşekkürler! Görüşmek üzere.</div>
-                </div>
-                <div class="message-time">20.11</div>
             </div>
         </div>
 
         <!-- Chat Section -->
         <div class="chat-section">
             <!-- Chat Header -->
-                <div class="chat-header">
+            <div class="chat-header">
                 <div class="chat-user">
-                    <div class="user-avatar">İ</div>
+                    <div class="user-avatar" id="selected-user-avatar">?</div>
                     <div class="user-info">
-                        <div class="user-name">İbrahim Taşkıran</div>
-                        <div class="user-status"><span class="status-dot"></span> Çevrimiçi</div>
-                        </div>
+                        <div class="user-name" id="selected-user-name">Kullanıcı Seçilmedi</div>
+                        <div class="user-status"><span class="status-dot"></span> <span id="selected-user-status">Çevrimdışı</span></div>
                     </div>
-                    <div class="chat-actions">
-                        <button class="chat-action-btn"><i class="fas fa-video"></i></button>
-                        <button class="chat-action-btn"><i class="fas fa-phone"></i></button>
+                </div>
+                <div class="chat-actions">
+                    <button class="chat-action-btn"><i class="fas fa-video"></i></button>
+                    <button class="chat-action-btn"><i class="fas fa-phone"></i></button>
                     <button class="chat-action-btn"><i class="fas fa-info-circle"></i></button>
                 </div>
             </div>
 
             <!-- Chat Messages -->
             <div class="chat-messages" id="messages-container">
-                <!-- Messages content will be loaded dynamically -->
+                <div class="empty-state" id="empty-chat-state">
+                    <i class="fas fa-comments"></i>
+                    <p>Bir kullanıcı seçerek mesajlaşmaya başlayın</p>
+                </div>
+                <!-- Mesajlar dinamik olarak yüklenecek -->
             </div>
 
             <!-- Chat Input -->
@@ -133,10 +91,25 @@
     </div>
 
     <!-- Scripts -->
-    <script src="../login/login_backend.js"></script>
     <script src="mesajlar_backend.js"></script>
     <script>
-        // ... mevcut kodlar ...
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tema ayarlarını kontrol et ve uygula
+            if (typeof loadUserTheme === 'function') {
+                loadUserTheme();
+                setTimeout(() => applyThemeToAllElements(), 100);
+            }
+            
+            // Tema değişikliklerini dinle
+            document.addEventListener('themeChange', function(e) {
+                console.log('Tema değişikliği algılandı:', e.detail.theme);
+                // Özellikle mesaj kutuları için tema değişikliğini uygula
+                const chatElements = document.querySelectorAll('.message-received, .message-sent, .chat-section, .users-list');
+                chatElements.forEach(el => {
+                    el.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+                });
+            });
+        });
     </script>
 </body>
 </html>

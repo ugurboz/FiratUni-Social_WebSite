@@ -282,6 +282,60 @@ app.put('/api/user/settings', async (req, res) => {
     }
 });
 
+// Kullanıcı tema tercihi güncelleme endpoint'i
+app.put('/api/user/theme', async (req, res) => {
+    try {
+        const { email, theme } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'E-posta adresi gereklidir.' 
+            });
+        }
+
+        if (!theme || (theme !== 'light' && theme !== 'dark')) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Geçerli bir tema tercihi gereklidir (light veya dark).' 
+            });
+        }
+
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        // Kullanıcıyı bul
+        const user = await usersCollection.findOne({ email });
+        
+        if (!user) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Kullanıcı bulunamadı.' 
+            });
+        }
+        
+        // Tema tercihini güncelle
+        await usersCollection.updateOne(
+            { email },
+            { $set: { theme: theme } }
+        );
+        
+        console.log(`Kullanıcı tema tercihi güncellendi: ${email}, tema: ${theme}`);
+        
+        res.json({ 
+            success: true, 
+            message: 'Tema tercihiniz başarıyla güncellendi.',
+            theme: theme
+        });
+    } catch (error) {
+        console.error('Tema tercihi güncelleme hatası:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Tema tercihi güncellenirken bir hata oluştu.' 
+        });
+    }
+});
+
 // Route handlers for pages - Her zaman tam dosya yolunu kullan
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'main', 'anasayfa', 'anasayfa_screen.html'));
@@ -351,4 +405,5 @@ app.listen(PORT, async () => {
     console.log('- POST /api/user/change-password');
     console.log('- DELETE /api/user/delete-account');
     console.log('- PUT  /api/user/settings');
+    console.log('- PUT  /api/user/theme');
 }); 

@@ -52,7 +52,8 @@ async function loginUser(email, password) {
                 email: user.email,
                 studentNumber: user.studentNumber,
                 department: user.department,
-                year: user.year
+                year: user.year,
+                theme: user.theme || 'light' // Varsayılan tema light
             }
         };
 
