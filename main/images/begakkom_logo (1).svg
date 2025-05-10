@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Dairesel Web İkonu - Geliştirilmiş versiyon -->
+  <circle cx="100" cy="100" r="98" fill="#3a0ca3" />
+  <circle cx="100" cy="100" r="90" fill="#4361ee" />
+  
+  <!-- Stilize edilmiş nehir kıvrımları - ana katman -->
+  <path d="M40,110 C60,80 80,120 100,90 C120,60 140,100 160,70" 
+        stroke="#4cc9f0" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- İkinci katman - aksan rengi -->
+  <path d="M45,115 C65,85 85,125 105,95 C125,65 145,105 165,75" 
+        stroke="#f72585" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- beGAKKOM Yazısı -->
+  <g transform="translate(100, 135) scale(0.9)">
+    <!-- Oval arka plan -->
+    <ellipse cx="0" cy="0" rx="55" ry="22" fill="#ffffff" fill-opacity="0.9" />
+    
+    <!-- beGAKKOM yazısı -->
+    <text x="0" y="7" font-family="'Arial', sans-serif" font-size="22" font-weight="700" text-anchor="middle" fill="#3a0ca3">
+      <tspan>be</tspan><tspan fill="#f72585">GAKKOM</tspan>
+    </text>
+  </g>
+  
+  <!-- Stilize edilmiş "b" harfi -->
+  <path d="M55,100 L55,70 C55,62 62,55 70,55 C82,55 90,65 85,80 C95,75 100,95 90,105 C80,115 55,110 55,100 Z" 
+        fill="#ffffff" />
+</svg>
