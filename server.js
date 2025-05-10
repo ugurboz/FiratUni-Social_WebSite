@@ -127,6 +127,161 @@ app.post('/leave-club', async (req, res) => {
     res.json(result);
 });
 
+// Kullanıcı şifresini değiştirme endpoint'i
+app.post('/api/user/change-password', async (req, res) => {
+    try {
+        const { email, currentPassword, newPassword } = req.body;
+
+        if (!email || !currentPassword || !newPassword) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'E-posta, mevcut şifre ve yeni şifre gereklidir.' 
+            });
+        }
+
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        // Kullanıcıyı bul
+        const user = await usersCollection.findOne({ email });
+        
+        if (!user) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Kullanıcı bulunamadı.' 
+            });
+        }
+        
+        // Mevcut şifreyi kontrol et - doğrudan karşılaştırma yapılıyor
+        if (user.password !== currentPassword) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Mevcut şifre yanlış.' 
+            });
+        }
+        
+        // Şifreyi güncelle
+        await usersCollection.updateOne(
+            { email },
+            { $set: { password: newPassword } }
+        );
+        
+        console.log(`Kullanıcı şifresi güncellendi: ${email}`);
+        
+        res.json({ 
+            success: true, 
+            message: 'Şifreniz başarıyla değiştirildi.' 
+        });
+    } catch (error) {
+        console.error('Şifre değiştirme hatası:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Şifre değiştirilirken bir hata oluştu.' 
+        });
+    }
+});
+
+// Kullanıcı hesabını silme endpoint'i
+app.delete('/api/user/delete-account', async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'E-posta adresi gereklidir.' 
+            });
+        }
+
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        // Kullanıcıyı bul
+        const user = await usersCollection.findOne({ email });
+        
+        if (!user) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Kullanıcı bulunamadı.' 
+            });
+        }
+        
+        // Kullanıcıyı sil
+        await usersCollection.deleteOne({ email });
+        
+        console.log(`Kullanıcı hesabı silindi: ${email}`);
+        
+        res.json({ 
+            success: true, 
+            message: 'Hesabınız başarıyla silindi.' 
+        });
+    } catch (error) {
+        console.error('Hesap silme hatası:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Hesap silinirken bir hata oluştu.' 
+        });
+    }
+});
+
+// Kullanıcı bilgilerini güncelleme endpoint'i
+app.put('/api/user/settings', async (req, res) => {
+    try {
+        const { email, firstName, lastName, department, yearOfStudy } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'E-posta adresi gereklidir.' 
+            });
+        }
+
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        // Kullanıcıyı bul
+        const user = await usersCollection.findOne({ email });
+        
+        if (!user) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Kullanıcı bulunamadı.' 
+            });
+        }
+        
+        // Güncellenecek alanları içeren obje
+        const updateFields = {};
+        
+        if (firstName !== undefined) updateFields.firstName = firstName;
+        if (lastName !== undefined) updateFields.lastName = lastName;
+        if (department !== undefined) updateFields.department = department;
+        if (yearOfStudy !== undefined) updateFields.yearOfStudy = yearOfStudy;
+        
+        // Alanları güncelle
+        await usersCollection.updateOne(
+            { email },
+            { $set: updateFields }
+        );
+        
+        console.log(`Kullanıcı bilgileri güncellendi: ${email}`);
+        
+        // Güncellenmiş kullanıcı bilgilerini getir
+        const updatedUser = await usersCollection.findOne({ email });
+        
+        res.json({ 
+            success: true, 
+            message: 'Bilgileriniz başarıyla güncellendi.',
+            user: updatedUser
+        });
+    } catch (error) {
+        console.error('Kullanıcı bilgileri güncelleme hatası:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Bilgileriniz güncellenirken bir hata oluştu.' 
+        });
+    }
+});
+
 // Route handlers for pages - Her zaman tam dosya yolunu kullan
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'main', 'anasayfa', 'anasayfa_screen.html'));
@@ -193,4 +348,7 @@ app.listen(PORT, async () => {
     console.log('- GET  /api/clubs/:clubId');
     console.log('- POST /join-club');
     console.log('- POST /leave-club');
+    console.log('- POST /api/user/change-password');
+    console.log('- DELETE /api/user/delete-account');
+    console.log('- PUT  /api/user/settings');
 }); 

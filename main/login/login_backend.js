@@ -25,29 +25,10 @@ async function loginUser(email, password) {
             return { success: false, message: "Kullanıcı bulunamadı" };
         }
 
-        // Demo hesabı için geçici şifre kontrolü
-        if (email === "123456789@firat.edu.tr" && password === "123456789") {
-            console.log('Demo account - password valid'); // Debug log
-            const authToken = crypto.randomBytes(32).toString('hex');
-            return {
-                success: true,
-                message: "Giriş başarılı",
-                authToken: authToken, 
-                user: {
-                    id: user._id,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    email: user.email,
-                    studentNumber: user.studentNumber,
-                    department: user.department,
-                    year: user.year
-                }
-            };
-        }
-
         // Normal şifre kontrolü
         console.log('Checking password...'); // Debug log
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        // Veritabanındaki şifre ile girilen şifreyi doğrudan karşılaştır
+        const isPasswordValid = password === user.password;
         console.log('Password valid:', isPasswordValid); // Debug log
         
         if (!isPasswordValid) {
