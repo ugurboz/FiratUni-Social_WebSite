@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+Allow: /main/
+Allow: /main/anasayfa/
+Allow: /main/etkinlikler/
+Allow: /main/kulüpler/
+Allow: /main/mesajlar/
+Allow: /main/ayarlar/
+Allow: /main/login/
+Allow: /main/register/
+
+Disallow: /api/
+Disallow: /config/
+Disallow: /node_modules/
+Disallow: /uploads/
+
+Sitemap: https://begakkom.onrender.com/sitemap.xml 

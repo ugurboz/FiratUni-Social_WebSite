@@ -44,17 +44,17 @@ const sendEmail = async (to, subject, text, html) => {
  * @returns {Promise} - İşlem sonucu
  */
 const sendPasswordResetEmail = async (to, resetLink) => {
-  const subject = 'beGAK.com - Şifre Sıfırlama İsteği';
+  const subject = 'beGAKKOM - Şifre Sıfırlama İsteği';
   const html = `
     <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 10px;">
       <h2 style="color: #4361ee; text-align: center;">Şifre Sıfırlama İsteği</h2>
       <p>Merhaba,</p>
-      <p>Fırat Üniversitesi beGAK.com platformunda şifrenizi sıfırlamak için bir istek aldık. Şifrenizi sıfırlamak için aşağıdaki bağlantıya tıklayabilirsiniz:</p>
+      <p>Fırat Üniversitesi beGAKKOM platformunda şifrenizi sıfırlamak için bir istek aldık. Şifrenizi sıfırlamak için aşağıdaki bağlantıya tıklayabilirsiniz:</p>
       <div style="text-align: center; margin: 30px 0;">
         <a href="${resetLink}" style="background-color: #4361ee; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Şifremi Sıfırla</a>
       </div>
       <p>Eğer bu isteği siz yapmadıysanız, bu e-postayı görmezden gelebilirsiniz.</p>
-      <p>İyi günler,<br>beGAK.com Ekibi</p>
+      <p>İyi günler,<br>beGAKKOM Ekibi</p>
     </div>
   `;
 
@@ -68,21 +68,21 @@ const sendPasswordResetEmail = async (to, resetLink) => {
  * @returns {Promise} - İşlem sonucu
  */
 const sendWelcomeEmail = async (to, firstName) => {
-  const subject = 'beGAK.com - Hoş Geldiniz!';
+  const subject = 'beGAKKOM - Hoş Geldiniz!';
   const html = `
     <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 10px;">
       <h2 style="color: #4361ee; text-align: center;">Fırat Üniversitesi Sosyal Platformuna Hoş Geldiniz!</h2>
       <p>Merhaba ${firstName},</p>
-      <p>beGAK.com'a üye olduğunuz için teşekkür ederiz. Artık platform üzerinde etkinliklere katılabilir, kulüplere üye olabilir ve diğer öğrencilerle iletişim kurabilirsiniz.</p>
+      <p>beGAKKOM'a üye olduğunuz için teşekkür ederiz. Artık platform üzerinde etkinliklere katılabilir, kulüplere üye olabilir ve diğer öğrencilerle iletişim kurabilirsiniz.</p>
       <div style="text-align: center; margin: 30px 0;">
-        <a href="https://begak.com/anasayfa/anasayfa_screen.html" style="background-color: #4361ee; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Hemen Başla</a>
+        <a href="https://begakkom.onrender.com/anasayfa/anasayfa_screen.html" style="background-color: #4361ee; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Hemen Başla</a>
       </div>
       <p>Herhangi bir sorunuz olursa, bizimle iletişime geçmekten çekinmeyin.</p>
-      <p>İyi günler,<br>beGAK.com Ekibi</p>
+      <p>İyi günler,<br>beGAKKOM Ekibi</p>
     </div>
   `;
 
-  return sendEmail(to, subject, `Merhaba ${firstName}, beGAK.com'a hoş geldiniz!`, html);
+  return sendEmail(to, subject, `Merhaba ${firstName}, beGAKKOM'a hoş geldiniz!`, html);
 };
 
 /**
@@ -94,7 +94,7 @@ const sendWelcomeEmail = async (to, firstName) => {
  * @returns {Promise} - İşlem sonucu
  */
 const sendEventReminderEmail = async (to, eventName, eventDate, eventLocation) => {
-  const subject = `beGAK.com - ${eventName} Etkinlik Hatırlatması`;
+  const subject = `beGAKKOM - ${eventName} Etkinlik Hatırlatması`;
   const html = `
     <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 10px;">
       <h2 style="color: #4361ee; text-align: center;">Etkinlik Hatırlatması</h2>
@@ -105,7 +105,7 @@ const sendEventReminderEmail = async (to, eventName, eventDate, eventLocation) =
         <p><strong>Yer:</strong> ${eventLocation}</p>
       </div>
       <p>Etkinliğe katılımınız için teşekkür ederiz.</p>
-      <p>İyi günler,<br>beGAK.com Ekibi</p>
+      <p>İyi günler,<br>beGAKKOM Ekibi</p>
     </div>
   `;
 
