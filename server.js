@@ -6,6 +6,7 @@ const { handleRegister } = require('./main/register/register_backend');
 const { getUserProfile } = require('./main/profil/profil_backend');
 const { getClubs, joinClub, leaveClub, getClubDetails, initializeClubs } = require('./main/kulupler/kulupler_backend');
 const { testConnection, getDb } = require('./db/config');
+const uploadRoute = require('./server/routes/upload');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +18,9 @@ app.use(express.json());
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/main', express.static(path.join(__dirname, 'main')));
 app.use(express.static(path.join(__dirname)));
+
+// Upload rotasını kullan
+app.use('/api', uploadRoute);
 
 // API Routes
 app.post('/api/login', async (req, res) => {
