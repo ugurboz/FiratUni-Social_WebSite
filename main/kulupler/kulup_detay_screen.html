@@ -33,12 +33,8 @@
             <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
         </div>
         <div class="nav-links">
-            <a href="../anasayfa/anasayfa_screen.html">
-                <i class="fas fa-home"></i> Ana Sayfa
-            </a>
-            <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html">
-                <i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler
-            </a>
+            <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
             <a href="../profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
             <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
             <a href="../kulupler/kulupler_screen.html" class="active"><i class="fas fa-users"></i> Kulüpler</a>
@@ -404,19 +400,53 @@
         });
         
         // Kulüp detaylarını yükle
-        function loadClubDetails(clubId) {
-            // API isteği yerine demo veri kullanıyoruz
-            // Gerçek uygulamada burada API'dan veri çekilecek
-            console.log('Kulüp ID:', clubId);
-            
-            // Kullanıcının kulüp üyeliğini kontrol et
-            checkMembership();
+        async function loadClubDetails(clubId) {
+            try {
+                // API isteğini gönder
+                const response = await fetch(`/api/clubs/${clubId}`);
+                const data = await response.json();
+                
+                if (data.success && data.club) {
+                    const club = data.club;
+                    
+                    // Kulüp bilgilerini sayfaya yerleştir
+                    document.getElementById('club-name').textContent = club.name;
+                    document.getElementById('club-description').textContent = club.description || 'Açıklama bulunmamaktadır.';
+                    
+                    // İkon varsa güncelle
+                    const clubIcon = document.querySelector('.club-icon i');
+                    if (clubIcon && club.icon) {
+                        clubIcon.className = `fas ${club.icon}`;
+                    }
+                    
+                    // Üye sayısını güncelle
+                    if (club.members) {
+                        document.getElementById('member-count').textContent = club.members.length;
+                    }
+                    
+                    // Kullanıcının kulüp üyeliğini kontrol et
+                    checkMembership(club);
+                } else {
+                    showToast('Kulüp bilgileri yüklenirken bir hata oluştu', 'error');
+                }
+            } catch (error) {
+                console.error('Kulüp detayları yüklenirken hata:', error);
+                showToast('Kulüp bilgileri yüklenirken bir hata oluştu: ' + error.message, 'error');
+            }
         }
         
         // Üyelik durumunu kontrol et
-        function checkMembership() {
-            // Demo için kullanıcının üye olmadığını varsayalım
-            const isMember = false;
+        function checkMembership(club) {
+            const userEmail = localStorage.getItem('userEmail');
+            
+            if (!userEmail) {
+                showToast('Oturum bilgileriniz bulunamadı, lütfen tekrar giriş yapın', 'error');
+                window.location.href = '/main/login/login_screen.html';
+                return;
+            }
+            
+            // Kullanıcının kulüp üyesi olup olmadığını kontrol et
+            const isMember = club.members && club.members.includes(userEmail);
             
             const joinButton = document.getElementById('joinButton');
             if (isMember) {
@@ -426,34 +456,111 @@
                 joinButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Kulübe Katıl';
                 joinButton.classList.remove('leave-button');
             }
+            
+            // Kulüp adını button'a data özelliği olarak ekle
+            joinButton.setAttribute('data-club-name', club.name);
         }
         
         // Kulübe katıl
-        function joinClub() {
-            // Demo için katılma işlemini simüle ediyoruz
-            showToast('Kulübe başarıyla katıldınız!', 'success');
-            
+        async function joinClub() {
+            const userEmail = localStorage.getItem('userEmail');
             const joinButton = document.getElementById('joinButton');
-            joinButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Kulüpten Ayrıl';
-            joinButton.classList.add('leave-button');
+            const clubName = joinButton.getAttribute('data-club-name');
             
-            // Üye sayısını güncelle
-            const memberCount = document.getElementById('member-count');
-            memberCount.textContent = parseInt(memberCount.textContent) + 1;
+            if (!userEmail) {
+                showToast('Oturum bilgileriniz bulunamadı, lütfen tekrar giriş yapın', 'error');
+                window.location.href = '/main/login/login_screen.html';
+                return;
+            }
+            
+            if (!clubName) {
+                showToast('Kulüp bilgisi bulunamadı', 'error');
+                return;
+            }
+            
+            try {
+                // API isteği gönder
+                const response = await fetch('/join-club', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        clubName: clubName,
+                        email: userEmail
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast(data.message || 'Kulübe başarıyla katıldınız!', 'success');
+                    
+                    // Buton görünümünü güncelle
+                    joinButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Kulüpten Ayrıl';
+                    joinButton.classList.add('leave-button');
+                    
+                    // Üye sayısını güncelle
+                    const memberCount = document.getElementById('member-count');
+                    memberCount.textContent = parseInt(memberCount.textContent) + 1;
+                } else {
+                    showToast(data.message || 'Kulübe katılırken bir hata oluştu', 'error');
+                }
+            } catch (error) {
+                console.error('Kulübe katılırken hata:', error);
+                showToast('Kulübe katılırken bir hata oluştu: ' + error.message, 'error');
+            }
         }
         
         // Kulüpten ayrıl
-        function leaveClub() {
-            // Demo için ayrılma işlemini simüle ediyoruz
-            showToast('Kulüpten ayrıldınız', 'error');
-            
+        async function leaveClub() {
+            const userEmail = localStorage.getItem('userEmail');
             const joinButton = document.getElementById('joinButton');
-            joinButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Kulübe Katıl';
-            joinButton.classList.remove('leave-button');
+            const clubName = joinButton.getAttribute('data-club-name');
             
-            // Üye sayısını güncelle
-            const memberCount = document.getElementById('member-count');
-            memberCount.textContent = parseInt(memberCount.textContent) - 1;
+            if (!userEmail) {
+                showToast('Oturum bilgileriniz bulunamadı, lütfen tekrar giriş yapın', 'error');
+                window.location.href = '/main/login/login_screen.html';
+                return;
+            }
+            
+            if (!clubName) {
+                showToast('Kulüp bilgisi bulunamadı', 'error');
+                return;
+            }
+            
+            try {
+                // API isteği gönder
+                const response = await fetch('/leave-club', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        clubName: clubName,
+                        email: userEmail
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast(data.message || 'Kulüpten ayrıldınız', 'success');
+                    
+                    // Buton görünümünü güncelle
+                    joinButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Kulübe Katıl';
+                    joinButton.classList.remove('leave-button');
+                    
+                    // Üye sayısını güncelle
+                    const memberCount = document.getElementById('member-count');
+                    memberCount.textContent = Math.max(0, parseInt(memberCount.textContent) - 1);
+                } else {
+                    showToast(data.message || 'Kulüpten ayrılırken bir hata oluştu', 'error');
+                }
+            } catch (error) {
+                console.error('Kulüpten ayrılırken hata:', error);
+                showToast('Kulüpten ayrılırken bir hata oluştu: ' + error.message, 'error');
+            }
         }
         
         // Sekme geçişi

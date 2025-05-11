@@ -4,6 +4,7 @@ require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 const bcrypt = require('bcryptjs'); // Şifreleri güvenli bir şekilde saklamak için
 const crypto = require('crypto'); // authToken oluşturmak için
 const { getDb } = require('../../db/config'); // DB bağlantısı için
+const { sendPasswordResetEmail } = require('../shared/emailService'); // E-posta servisi
 
 // Kullanıcı girişi fonksiyonu
 async function loginUser(email, password) {
@@ -77,19 +78,83 @@ async function resetPassword(email) {
             return { success: false, message: "Bu e-posta adresi kayıtlı değil" };
         }
 
-        // Gerçek uygulamada burada:
-        // 1. Geçici bir token oluştur
-        // 2. Token'ı veritabanına kaydet
-        // 3. Kullanıcıya e-posta gönder
-        // Şimdilik basit bir yanıt döndürelim
-        return {
-            success: true,
-            message: "Şifre sıfırlama bağlantısı e-posta adresinize gönderildi"
-        };
+        // Şifre sıfırlama token'ı oluştur
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const resetTokenExpiry = Date.now() + 3600000; // 1 saat geçerli
+
+        // Token'ı veritabanına kaydet
+        await usersCollection.updateOne(
+            { email: email },
+            { 
+                $set: { 
+                    resetToken: resetToken,
+                    resetTokenExpiry: resetTokenExpiry 
+                } 
+            }
+        );
+
+        // Şifre sıfırlama bağlantısı oluştur
+        const resetLink = `http://localhost:3000/main/reset_password/reset_password_screen.html?token=${resetToken}`;
+
+        // E-posta gönder
+        const emailResult = await sendPasswordResetEmail(email, resetLink);
+
+        if (emailResult.success) {
+            return {
+                success: true,
+                message: "Şifre sıfırlama bağlantısı e-posta adresinize gönderildi"
+            };
+        } else {
+            console.error("E-posta gönderme hatası:", emailResult.error);
+            return { 
+                success: false, 
+                message: "Şifre sıfırlama e-postası gönderilemedi. Lütfen daha sonra tekrar deneyin." 
+            };
+        }
 
     } catch (error) {
         console.error("Şifre sıfırlama hatası:", error);
         return { success: false, message: "Bir hata oluştu" };
+    }
+}
+
+// Token ile şifre sıfırlama işlemi
+async function resetPasswordWithToken(token, newPassword) {
+    try {
+        // Veritabanına bağlan
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        // Token ile kullanıcıyı bul
+        const user = await usersCollection.findOne({ 
+            resetToken: token,
+            resetTokenExpiry: { $gt: Date.now() } // Token'ın süresi dolmamış olmalı
+        });
+
+        if (!user) {
+            return { 
+                success: false, 
+                message: "Geçersiz veya süresi dolmuş token. Lütfen şifre sıfırlama işlemini tekrar başlatın." 
+            };
+        }
+
+        // Şifreyi güncelle ve token bilgilerini temizle
+        await usersCollection.updateOne(
+            { email: user.email },
+            { 
+                $set: { password: newPassword },
+                $unset: { resetToken: "", resetTokenExpiry: "" }
+            }
+        );
+
+        return {
+            success: true,
+            message: "Şifreniz başarıyla güncellendi. Şimdi giriş yapabilirsiniz."
+        };
+
+    } catch (error) {
+        console.error("Şifre sıfırlama hatası:", error);
+        return { success: false, message: "Şifre güncellenirken bir hata oluştu." };
     }
 }
 
@@ -125,6 +190,7 @@ async function testDatabaseConnection() {
 module.exports = {
     loginUser,
     resetPassword,
+    resetPasswordWithToken,
     checkSession,
     testDatabaseConnection
 };

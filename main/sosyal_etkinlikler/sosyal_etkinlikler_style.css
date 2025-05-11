@@ -36,12 +36,12 @@ body {
 
 /* Navbar Styles */
 .navbar {
-    background: var(--navbar-bg);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: var(--card-shadow);
+    box-shadow: var(--box-shadow);
     position: fixed;
     width: 100%;
     top: 0;
@@ -59,14 +59,21 @@ body {
 .brand-logo {
     width: 50px;
     height: 50px;
-    background: var(--card-background);
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary-color);
-    font-weight: bold;
-    font-family: 'Righteous', cursive;
+    transition: var(--transition);
+}
+
+.brand-logo:hover {
+    transform: scale(1.1);
+}
+
+.logo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .brand-name {
@@ -116,10 +123,7 @@ body {
 
 .nav-links a.active {
     color: var(--secondary-color);
-}
-
-.nav-links a.active::after {
-    width: 100%;
+    font-weight: 600;
 }
 
 /* Main Content Styles */
@@ -128,7 +132,7 @@ body {
     grid-template-columns: 1fr 320px;
     gap: 25px;
     padding: 30px 0;
-    margin-top: 20px;
+    margin-top: 80px;
 }
 
 /* Events Section Styles */

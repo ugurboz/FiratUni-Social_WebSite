@@ -3,6 +3,7 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 const { getDb } = require('../../db/config'); // DB bağlantısı için
 const bcrypt = require('bcryptjs'); // Şifre hashlemek için
+const { sendWelcomeEmail } = require('../shared/emailService'); // E-posta servisi
 
 // Kayıt işlemi
 async function handleRegister(userData) {
@@ -30,12 +31,15 @@ async function handleRegister(userData) {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(userData.password, salt);
         
+        // Kullanıcı e-postasını oluştur
+        const userEmail = userData.studentNumber + '@firat.edu.tr';
+        
         // Kullanıcı verilerini hazırla
         const newUser = {
             firstName: userData.firstName,
             lastName: userData.lastName,
             studentNumber: userData.studentNumber,
-            email: userData.studentNumber + '@firat.edu.tr', // Öğrenci numarasından e-posta oluştur
+            email: userEmail,
             password: hashedPassword,
             department: userData.department,
             year: userData.year,
@@ -46,6 +50,15 @@ async function handleRegister(userData) {
         console.log('Inserting new user to database'); // Debug log
         const result = await usersCollection.insertOne(newUser);
         console.log('Insert result:', result); // Debug log
+        
+        // Hoş geldiniz e-postası gönder
+        try {
+            await sendWelcomeEmail(userEmail, userData.firstName);
+            console.log('Welcome email sent to:', userEmail);
+        } catch (emailError) {
+            console.error('Error sending welcome email:', emailError);
+            // E-posta gönderilemese bile kayıt işlemi başarılı sayılır
+        }
         
         console.log('User registered successfully'); // Debug log
         return {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>beGAKkom - Kulüpler</title>
+    <title>beGAK.com - Kulüpler</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../shared/theme.css">
@@ -33,12 +33,8 @@
             <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
         </div>
         <div class="nav-links">
-            <a href="../anasayfa/anasayfa_screen.html">
-                <i class="fas fa-home"></i> Ana Sayfa
-            </a>
-            <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html">
-                <i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler
-            </a>
+            <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
             <a href="../profil/profil_screen.html"><i class="fas fa-user"></i> Profil</a>
             <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
             <a href="../kulupler/kulupler_screen.html" class="active"><i class="fas fa-users"></i> Kulüpler</a>
@@ -110,64 +106,6 @@
     </script>
 
     <script>
-        // Örnek kulüp verileri
-        const mockClubs = [
-            {
-                id: 1,
-                name: "Yazılım Kulübü",
-                description: "Web geliştirme, mobil uygulama ve yapay zeka projeleri geliştiren öğrenci kulübü. Düzenli workshoplar ve hackathonlar düzenliyoruz.",
-                icon: "fa-code",
-                category: "technology",
-                memberCount: 76,
-                members: ["user1", "user2", "user3"]
-            },
-            {
-                id: 2,
-                name: "Müzik Kulübü",
-                description: "Çeşitli enstrümanlar çalma imkanı sunan ve düzenli konserler düzenleyen, müzik teorisi eğitimi veren kulüp.",
-                icon: "fa-music",
-                category: "art",
-                memberCount: 42,
-                members: ["user4", "user5"]
-            },
-            {
-                id: 3,
-                name: "Spor Kulübü",
-                description: "Futbol, basketbol, voleybol ve diğer birçok spor dalında aktif olarak çalışan ve turnuvalar düzenleyen spor kulübü.",
-                icon: "fa-futbol",
-                category: "sports",
-                memberCount: 89,
-                members: []
-            },
-            {
-                id: 4,
-                name: "Robotik Kulübü",
-                description: "Robotik projeler geliştiren, yarışmalara katılan ve dronlar üzerinde çalışan teknoloji odaklı kulüp.",
-                icon: "fa-robot",
-                category: "technology",
-                memberCount: 38,
-                members: ["user2"]
-            },
-            {
-                id: 5,
-                name: "Girişimcilik Kulübü",
-                description: "Startup fikirlerini geliştirmek, iş planı oluşturmak ve yatırımcı bulmak konusunda mentorluk ve eğitim sunan kulüp.",
-                icon: "fa-lightbulb",
-                category: "social",
-                memberCount: 51,
-                members: ["user3"]
-            },
-            {
-                id: 6,
-                name: "Fotoğrafçılık Kulübü",
-                description: "Fotoğrafçılık teknikleri öğreten, ekipman paylaşımı yapan ve fotoğraf gezileri düzenleyen sanat kulübü.",
-                icon: "fa-camera",
-                category: "art",
-                memberCount: 35,
-                members: []
-            }
-        ];
-
         // Değişkenler
         let allClubs = [];
         let filteredClubs = [];
@@ -178,11 +116,11 @@
         function checkLogin() {
             const userEmail = localStorage.getItem('userEmail');
             const authToken = localStorage.getItem('authToken');
-            const user = localStorage.getItem('user');
-
-            if (!userEmail && !authToken && !user) {
-                // Demo için oturum kontrolünü devre dışı bırakıyoruz
-                return true;
+            
+            if (!userEmail || !authToken) {
+                showToast('Lütfen giriş yapın', 'error');
+                window.location.href = '/main/login/login_screen.html';
+                return false;
             }
             return true;
         }
@@ -208,16 +146,50 @@
             if (!checkLogin()) return;
 
             try {
-                // Gerçek API isteği yerine mock verileri kullanıyoruz
-                setTimeout(() => {
-                    allClubs = mockClubs;
+                // Loading durumunu göster
+                document.getElementById('loading-indicator').style.display = 'flex';
+                
+                // API isteği gönder
+                const response = await fetch('/api/clubs');
+                const result = await response.json();
+                
+                if (result.success && Array.isArray(result.clubs)) {
+                    // Kulüpleri işle ve id ekleyerek saklayın
+                    allClubs = result.clubs.map((club, index) => ({
+                        ...club,
+                        id: index, // Benzersiz bir id ekle
+                        memberCount: club.members ? club.members.length : 0,
+                        // Olmayan alanlar için varsayılan değerler
+                        icon: club.icon || 'fa-users',
+                        category: club.category || 'other'
+                    }));
+                    
                     filteredClubs = [...allClubs];
                     displayClubs(filteredClubs);
-                    document.getElementById('loading-indicator').style.display = 'none';
-                }, 1000);
+                } else {
+                    showToast('Kulüpler yüklenirken bir hata oluştu', 'error');
+                    // Hata durumunda kulüpleri gösterme kısmını gizle
+                    document.getElementById('clubs-container').innerHTML = '';
+                    document.getElementById('empty-state').style.display = 'block';
+                    document.getElementById('empty-state').innerHTML = `
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Kulüpler yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.</p>
+                    `;
+                }
+                
+                // Loading durumunu gizle
+                document.getElementById('loading-indicator').style.display = 'none';
             } catch (error) {
                 console.error('Kulüpler yüklenirken hata:', error);
-                showToast('Kulüpler yüklenirken bir hata oluştu', 'error');
+                showToast('Kulüpler yüklenirken bir hata oluştu: ' + error.message, 'error');
+                // Hata durumunda kulüpleri gösterme kısmını gizle
+                document.getElementById('loading-indicator').style.display = 'none';
+                document.getElementById('clubs-container').innerHTML = '';
+                document.getElementById('empty-state').style.display = 'block';
+                document.getElementById('empty-state').innerHTML = `
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Kulüpler yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.</p>
+                `;
             }
         }
 
@@ -331,25 +303,50 @@
         async function joinClub(clubId) {
             if (!checkLogin()) return;
 
-            const userEmail = localStorage.getItem('userEmail') || 'demo@example.com';
+            const userEmail = localStorage.getItem('userEmail');
+            if (!userEmail) {
+                showToast('Oturum bilgileriniz bulunamadı, lütfen tekrar giriş yapın', 'error');
+                return;
+            }
 
             try {
-                // Gerçek API isteği yerine mock işlem
+                // Kulüp adını bul
                 const club = allClubs.find(c => c.id === clubId);
-                if (club) {
+                if (!club) {
+                    showToast('Kulüp bulunamadı', 'error');
+                    return;
+                }
+
+                // API isteği gönder
+                const response = await fetch('/join-club', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        clubName: club.name,
+                        email: userEmail
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    // UI'ı güncelle
                     if (!club.members) club.members = [];
                     if (!club.members.includes(userEmail)) {
                         club.members.push(userEmail);
-                        club.memberCount++;
+                        club.memberCount = (club.memberCount || 0) + 1;
                     }
-                    
-                    showToast(`${club.name} kulübüne başarıyla katıldınız`);
+                    showToast(result.message || `${club.name} kulübüne başarıyla katıldınız`);
                     // Kulüpleri yeniden göster
                     filterClubs();
+                } else {
+                    showToast(result.message || 'Kulübe katılırken bir hata oluştu', 'error');
                 }
             } catch (error) {
                 console.error('Kulübe katılırken hata:', error);
-                showToast('Kulübe katılırken bir hata oluştu', 'error');
+                showToast('Kulübe katılırken bir hata oluştu: ' + error.message, 'error');
             }
         }
 
@@ -357,25 +354,52 @@
         async function leaveClub(clubId) {
             if (!checkLogin()) return;
 
-            const userEmail = localStorage.getItem('userEmail') || 'demo@example.com';
+            const userEmail = localStorage.getItem('userEmail');
+            if (!userEmail) {
+                showToast('Oturum bilgileriniz bulunamadı, lütfen tekrar giriş yapın', 'error');
+                return;
+            }
 
             try {
-                // Gerçek API isteği yerine mock işlem
+                // Kulüp adını bul
                 const club = allClubs.find(c => c.id === clubId);
-                if (club && club.members) {
-                    const index = club.members.indexOf(userEmail);
-                    if (index > -1) {
-                        club.members.splice(index, 1);
-                        club.memberCount--;
+                if (!club) {
+                    showToast('Kulüp bulunamadı', 'error');
+                    return;
+                }
+
+                // API isteği gönder
+                const response = await fetch('/leave-club', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        clubName: club.name,
+                        email: userEmail
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    // UI'ı güncelle
+                    if (club.members) {
+                        const index = club.members.indexOf(userEmail);
+                        if (index > -1) {
+                            club.members.splice(index, 1);
+                            club.memberCount = Math.max(0, (club.memberCount || 1) - 1);
+                        }
                     }
-                    
-                    showToast(`${club.name} kulübünden ayrıldınız`);
+                    showToast(result.message || `${club.name} kulübünden ayrıldınız`);
                     // Kulüpleri yeniden göster
                     filterClubs();
+                } else {
+                    showToast(result.message || 'Kulüpten ayrılırken bir hata oluştu', 'error');
                 }
             } catch (error) {
                 console.error('Kulüpten ayrılırken hata:', error);
-                showToast('Kulüpten ayrılırken bir hata oluştu', 'error');
+                showToast('Kulüpten ayrılırken bir hata oluştu: ' + error.message, 'error');
             }
         }
 

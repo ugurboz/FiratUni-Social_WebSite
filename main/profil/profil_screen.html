@@ -216,30 +216,137 @@
             loadProfileData();
         });
         
-        // Profil bilgilerini yükleme işlevi (backend.js dosyasında tanımlanmış olabilir)
-        function loadProfileData() {
-            // Eğer profil verilerini yükleyen fonksiyon yoksa örnek verileri kullan
-            if (typeof getUserProfile !== 'function') {
-                // Profil verilerini güncelle
-                document.getElementById('profileName').textContent = 'İbrahim Gökyar';
-                document.getElementById('profileRole').textContent = 'Öğrenci';
-                document.getElementById('profileEmail').textContent = 'ibrahim@example.com';
-                document.getElementById('profileStudentNumber').textContent = '123456789';
-                document.getElementById('profileDepartment').textContent = 'Yazılım Mühendisliği';
-                document.getElementById('profileYear').textContent = '3. Sınıf';
+        // Profil bilgilerini yükleme işlevi
+        async function loadProfileData() {
+            try {
+                // Kullanıcı e-postasını localStorage'dan al
+                const userEmail = localStorage.getItem('userEmail');
                 
-                // Profil fotoğrafı yoksa varsayılan simge göster
-                const profilePhoto = document.getElementById('profilePhotoPreview');
-                if (profilePhoto) {
-                    // Profil fotoğrafını ayarla (varsa)
-                    // profilePhoto.innerHTML = '<img src="path/to/profile.jpg" alt="Profil Fotoğrafı">';
+                if (!userEmail) {
+                    console.error('Kullanıcı e-postası bulunamadı');
+                    window.location.href = '../login/login_screen.html';
+                    return;
                 }
                 
-                // Postlardaki kullanıcı bilgilerini güncelle
-                const profileName2 = document.getElementById('profileName2');
-                const profileName3 = document.getElementById('profileName3');
-                if (profileName2) profileName2.textContent = 'İbrahim Gökyar';
-                if (profileName3) profileName3.textContent = 'İbrahim Gökyar';
+                // API'den profil verilerini al
+                const response = await fetch(`/api/profile?email=${userEmail}`);
+                const data = await response.json();
+                
+                if (data.success && data.user) {
+                    const user = data.user;
+                    
+                    // Profil verilerini güncelle
+                    document.getElementById('profileName').textContent = `${user.firstName} ${user.lastName}`;
+                    document.getElementById('profileRole').textContent = 'Öğrenci';
+                    document.getElementById('profileEmail').textContent = user.email;
+                    document.getElementById('profileStudentNumber').textContent = user.studentNumber || 'Belirtilmemiş';
+                    document.getElementById('profileDepartment').textContent = user.department || 'Belirtilmemiş';
+                    document.getElementById('profileYear').textContent = user.year ? `${user.year}. Sınıf` : 'Belirtilmemiş';
+                    
+                    // Biyografi ve ilgi alanları varsa güncelle
+                    if (user.bio) {
+                        document.getElementById('profileBio').textContent = user.bio;
+                    }
+                    
+                    if (user.interests) {
+                        document.getElementById('profileInterests').textContent = user.interests;
+                    }
+                    
+                    // Kulüpleri görüntüle
+                    if (user.clubs && user.clubs.length > 0) {
+                        const clubsList = document.querySelector('.clubs-list');
+                        clubsList.innerHTML = '';
+                        
+                        // Kulüpleri listele
+                        if (user.clubDetails && user.clubDetails.length > 0) {
+                            user.clubDetails.forEach(club => {
+                                const clubItem = document.createElement('div');
+                                clubItem.className = 'club-item';
+                                clubItem.innerHTML = `
+                                    <div class="club-info">
+                                        <h4>${club.name}</h4>
+                                        <p>${club.description || 'Açıklama yok'}</p>
+                                    </div>
+                                    <button class="leave-club-btn" onclick="leaveClub('${club.name}')">
+                                        <i class="fas fa-sign-out-alt"></i> Ayrıl
+                                    </button>
+                                `;
+                                clubsList.appendChild(clubItem);
+                            });
+                        } else {
+                            // Kulüp isimleri varsa ama detayları yoksa
+                            user.clubs.forEach(clubName => {
+                                const clubItem = document.createElement('div');
+                                clubItem.className = 'club-item';
+                                clubItem.innerHTML = `
+                                    <div class="club-info">
+                                        <h4>${clubName}</h4>
+                                    </div>
+                                    <button class="leave-club-btn" onclick="leaveClub('${clubName}')">
+                                        <i class="fas fa-sign-out-alt"></i> Ayrıl
+                                    </button>
+                                `;
+                                clubsList.appendChild(clubItem);
+                            });
+                        }
+                        
+                        document.getElementById('noClubsMessage').style.display = 'none';
+                    } else {
+                        document.getElementById('noClubsMessage').style.display = 'block';
+                    }
+                } else {
+                    console.error('Profil verileri alınamadı:', data.message);
+                    // Hata durumunda görsel geri bildirim sağla
+                    const profileElements = document.querySelectorAll('.info-value');
+                    profileElements.forEach(el => {
+                        el.textContent = 'Yüklenemedi';
+                        el.style.color = 'var(--error-color)';
+                    });
+                }
+            } catch (error) {
+                console.error('Profil yükleme hatası:', error);
+                // Hata durumunda görsel geri bildirim sağla
+                const profileElements = document.querySelectorAll('.info-value');
+                profileElements.forEach(el => {
+                    el.textContent = 'Yüklenemedi';
+                    el.style.color = 'var(--error-color)';
+                });
+            }
+        }
+        
+        // Kulüpten ayrılma işlevi
+        async function leaveClub(clubName) {
+            try {
+                const userEmail = localStorage.getItem('userEmail');
+                
+                if (!userEmail) {
+                    console.error('Kullanıcı e-postası bulunamadı');
+                    return;
+                }
+                
+                const response = await fetch('/leave-club', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: userEmail,
+                        clubName: clubName
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Sayfayı yenile
+                    loadProfileData();
+                    alert(data.message);
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Kulüpten ayrılma hatası:', error);
+                alert('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
             }
         }
     </script>

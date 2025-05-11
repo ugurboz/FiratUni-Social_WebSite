@@ -114,8 +114,7 @@ body {
 }
 
 .nav-links a.active::after {
-    width: 100%;
-    background: var(--secondary-color);
+    width: 0;
 }
 
 /* Main Content */

@@ -57,18 +57,18 @@ body {
 
 /* Navbar */
 .navbar {
-    background: var(--navbar-bg);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: var(--card-shadow);
+    box-shadow: var(--box-shadow);
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
     height: 80px;
-    transition: background 0.3s ease;
+    color: var(--navbar-text);
 }
 
 .brand {
@@ -105,6 +105,10 @@ body {
     transition: var(--transition);
 }
 
+.brand-name:hover {
+    transform: translateY(-2px);
+}
+
 .nav-links {
     display: flex;
     gap: 2rem;
@@ -116,9 +120,22 @@ body {
     text-decoration: none;
     font-size: 1rem;
     transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    position: relative;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--navbar-text);
+    transition: var(--transition);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
 }
 
 .nav-links a:hover {
@@ -133,8 +150,9 @@ body {
 /* Main Content */
 .main-content {
     max-width: 1200px;
-    margin: 2rem auto;
+    margin: 0 auto;
     padding: 0 2rem;
+    margin-top: 80px;
 }
 
 /* Settings Styles */

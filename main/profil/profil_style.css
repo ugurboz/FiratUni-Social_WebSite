@@ -37,17 +37,18 @@ body {
 
 /* Navbar Styles */
 .navbar {
-    background: var(--navbar-bg);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: var(--card-shadow);
+    box-shadow: var(--box-shadow);
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
     height: 80px;
+    color: var(--navbar-text);
 }
 
 .brand {
@@ -123,10 +124,11 @@ body {
 
 .nav-links a.active {
     color: var(--secondary-color);
+    font-weight: 600;
 }
 
 .nav-links a.active::after {
-    width: 100%;
+    width: 0;
 }
 
 /* Main Content Layout */

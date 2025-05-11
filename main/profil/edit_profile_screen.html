@@ -6,6 +6,16 @@
     <title>beGAK.com - Profil Düzenle</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../shared/theme.css">
+    <link rel="stylesheet" href="profil.css">
+    <script src="../shared/theme.js"></script>
+    <script>
+        // Sayfa yüklenmeden önce tema ayarını al
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     <style>
         :root {
             --primary-color: #4361ee;
@@ -110,6 +120,15 @@
 
         .nav-links a:hover {
             color: var(--secondary-color);
+        }
+
+        .nav-links a.active {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .nav-links a.active::after {
+            width: 0;
         }
 
         .main-content {
@@ -393,11 +412,18 @@
 <body>
     <nav class="navbar">
         <div class="brand">
-            <div class="brand-logo">bG</div>
-            <a href="profil_screen.html" class="brand-name">beGAK.com</a>
+            <div class="brand-logo">
+                <img src="/main/images/begakkom_logo (1).svg" alt="beGAKKOM Logo" class="logo-image">
+            </div>
+            <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
         </div>
         <div class="nav-links">
-            <a href="profil_screen.html"><i class="fas fa-arrow-left"></i> Geri Dön</a>
+            <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
+            <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
+            <a href="../profil/profil_screen.html" class="active"><i class="fas fa-user"></i> Profil</a>
+            <a href="../mesajlar/mesajlar_screen.html"><i class="fas fa-envelope"></i> Mesajlar</a>
+            <a href="../kulupler/kulupler_screen.html"><i class="fas fa-users"></i> Kulüpler</a>
+            <a href="../ayarlar/ayarlar_screen.html"><i class="fas fa-cog"></i> Ayarlar</a>
         </div>
     </nav>
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { loginUser } = require('./main/login/login_backend');
+const { loginUser, resetPassword, resetPasswordWithToken } = require('./main/login/login_backend');
 const { handleRegister } = require('./main/register/register_backend');
 const { getUserProfile } = require('./main/profil/profil_backend');
 const { getClubs, joinClub, leaveClub, getClubDetails, initializeClubs } = require('./main/kulupler/kulupler_backend');
@@ -27,6 +27,39 @@ app.post('/api/login', async (req, res) => {
     } catch (error) {
         console.error('Login API error:', error);
         res.status(500).json({ success: false, message: 'Bir hata oluştu' });
+    }
+});
+
+app.post('/api/reset-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const result = await resetPassword(email);
+        res.json(result);
+    } catch (error) {
+        console.error('Reset password API error:', error);
+        res.status(500).json({ success: false, message: 'Bir hata oluştu' });
+    }
+});
+
+app.post('/api/reset-password-with-token', async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+        
+        if (!token || !newPassword) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Token ve yeni şifre gereklidir' 
+            });
+        }
+
+        const result = await resetPasswordWithToken(token, newPassword);
+        res.json(result);
+    } catch (error) {
+        console.error('Token ile şifre sıfırlama hatası:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Bir hata oluştu' 
+        });
     }
 });
 
@@ -349,6 +382,10 @@ app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'main', 'register', 'register_screen.html'));
 });
 
+app.get('/reset-password', (req, res) => {
+    res.sendFile(path.join(__dirname, 'main', 'login', 'reset_password_screen.html'));
+});
+
 app.get('/anasayfa', (req, res) => {
     res.sendFile(path.join(__dirname, 'main', 'anasayfa', 'anasayfa_screen.html'));
 });
@@ -393,9 +430,11 @@ app.listen(PORT, async () => {
     console.log('- GET  /', path.join(__dirname, 'main', 'anasayfa', 'anasayfa_screen.html'));
     console.log('- GET  /login', path.join(__dirname, 'main', 'login', 'login_screen.html'));
     console.log('- GET  /register', path.join(__dirname, 'main', 'register', 'register_screen.html'));
+    console.log('- GET  /reset-password', path.join(__dirname, 'main', 'login', 'reset_password_screen.html'));
     console.log('- GET  /anasayfa', path.join(__dirname, 'main', 'anasayfa', 'anasayfa_screen.html'));
     console.log('- POST /api/login');
     console.log('- POST /api/register');
+    console.log('- POST /api/reset-password');
     console.log('- GET  /api/profile');
     console.log('- GET  /api/debug/users');
     console.log('- GET  /api/clubs');

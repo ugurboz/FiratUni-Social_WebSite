@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Başarılı kayıt
                 errorMessage.style.display = 'none';
                 alert(result.message);
-                window.location.href = '/login';
+                window.location.href = '/main/login/login_screen.html';
             } else {
                 // Hata durumu
                 showError(result.message);
