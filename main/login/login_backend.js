@@ -26,15 +26,41 @@ async function loginUser(email, password) {
             return { success: false, message: "Kullanıcı bulunamadı" };
         }
 
-        // Normal şifre kontrolü
+        // bcrypt ile şifre kontrolü
         console.log('Checking password...'); // Debug log
-        // Veritabanındaki şifre ile girilen şifreyi doğrudan karşılaştır
-        const isPasswordValid = password === user.password;
-        console.log('Password valid:', isPasswordValid); // Debug log
         
-        if (!isPasswordValid) {
-            console.log('Invalid password'); // Debug log
-            return { success: false, message: "Hatalı şifre" };
+        // Eğer şifre bcrypt ile hashlenmiş ise
+        if (user.password.startsWith('$2a$') || user.password.startsWith('$2b$') || user.password.startsWith('$2y$')) {
+            // bcrypt.compare kullan
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            console.log('Password valid (bcrypt):', isPasswordValid); // Debug log
+            
+            if (!isPasswordValid) {
+                console.log('Invalid password'); // Debug log
+                return { success: false, message: "Hatalı şifre" };
+            }
+        } else {
+            // Düz metin karşılaştırma (geçici olarak, güvenlik için kaldırılmalı)
+            const isPasswordValid = password === user.password;
+            console.log('Password valid (plain):', isPasswordValid); // Debug log
+            
+            if (!isPasswordValid) {
+                console.log('Invalid password'); // Debug log
+                return { success: false, message: "Hatalı şifre" };
+            }
+            
+            // Düz metin şifreyi bcrypt ile hashle ve güncelle (güvenlik iyileştirmesi)
+            try {
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(password, salt);
+                await usersCollection.updateOne(
+                    { email: email },
+                    { $set: { password: hashedPassword } }
+                );
+                console.log('Password upgraded to bcrypt hash for user:', email);
+            } catch (hashError) {
+                console.error('Error upgrading password:', hashError);
+            }
         }
 
         // AuthToken oluştur
@@ -138,11 +164,15 @@ async function resetPasswordWithToken(token, newPassword) {
             };
         }
 
+        // Şifreyi hashle
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
         // Şifreyi güncelle ve token bilgilerini temizle
         await usersCollection.updateOne(
             { email: user.email },
             { 
-                $set: { password: newPassword },
+                $set: { password: hashedPassword },
                 $unset: { resetToken: "", resetTokenExpiry: "" }
             }
         );

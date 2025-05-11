@@ -37,12 +37,12 @@ body {
 
 /* Navbar Styles */
 .navbar {
-    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    background: var(--navbar-bg);
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--card-shadow);
     position: fixed;
     width: 100%;
     top: 0;
@@ -128,7 +128,7 @@ body {
 }
 
 .nav-links a.active::after {
-    width: 0;
+    width: 100%;
 }
 
 /* Main Content Layout */

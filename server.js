@@ -13,6 +13,8 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
+// CORS yapılandırması
+app.use(cors());
 
 // Serve static files - sıralama önemli
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
@@ -21,6 +23,19 @@ app.use(express.static(path.join(__dirname)));
 
 // Upload rotasını kullan
 app.use('/api', uploadRoute);
+
+// Veritabanı bağlantısını test et
+testConnection()
+  .then(success => {
+    if (success) {
+      console.log('Veritabanı bağlantısı başarılı!');
+    } else {
+      console.error('Veritabanı bağlantı testi başarısız!');
+    }
+  })
+  .catch(err => {
+    console.error('Veritabanı bağlantı testi hatası:', err);
+  });
 
 // API Routes
 app.post('/api/login', async (req, res) => {
@@ -189,18 +204,35 @@ app.post('/api/user/change-password', async (req, res) => {
             });
         }
         
-        // Mevcut şifreyi kontrol et - doğrudan karşılaştırma yapılıyor
-        if (user.password !== currentPassword) {
+        // Mevcut şifreyi kontrol et
+        let isPasswordValid = false;
+        
+        // Eğer şifre bcrypt ile hashlenmiş ise
+        if (user.password.startsWith('$2a$') || user.password.startsWith('$2b$') || user.password.startsWith('$2y$')) {
+            // bcrypt.compare kullan
+            const bcrypt = require('bcryptjs');
+            isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        } else {
+            // Düz metin karşılaştırma (geçici olarak)
+            isPasswordValid = currentPassword === user.password;
+        }
+        
+        if (!isPasswordValid) {
             return res.status(401).json({ 
                 success: false, 
                 message: 'Mevcut şifre yanlış.' 
             });
         }
         
+        // Yeni şifreyi hashle
+        const bcrypt = require('bcryptjs');
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        
         // Şifreyi güncelle
         await usersCollection.updateOne(
             { email },
-            { $set: { password: newPassword } }
+            { $set: { password: hashedPassword } }
         );
         
         console.log(`Kullanıcı şifresi güncellendi: ${email}`);
