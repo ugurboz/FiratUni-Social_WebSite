@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-            const response = await fetch('/api/reset-password', {
+            const response = await fetch('https://begakkom.onrender.com/api/reset-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
