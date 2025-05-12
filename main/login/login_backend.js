@@ -120,7 +120,7 @@ async function resetPassword(email) {
         );
 
         // Şifre sıfırlama bağlantısı oluştur
-        const resetLink = `http://localhost:3000/main/reset_password/reset_password_screen.html?token=${resetToken}`;
+        const resetLink = `https://begakkom.onrender.com/main/reset_password/reset_password_screen.html?token=${resetToken}`;
 
         // E-posta gönder
         const emailResult = await sendPasswordResetEmail(email, resetLink);
