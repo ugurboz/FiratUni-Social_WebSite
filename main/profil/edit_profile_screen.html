@@ -105,6 +105,28 @@
             align-items: center;
         }
 
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--navbar-text);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-3px);
+        }
+
+        .back-button i {
+            font-size: 1.2rem;
+        }
+
         .nav-links a {
             color: var(--navbar-text);
             text-decoration: none;
@@ -422,12 +444,16 @@
 <body>
     <nav class="navbar">
         <div class="brand">
-            <div class="brand-logo">
+            <a href="/" class="brand-logo">
                 <img src="/main/images/begakkom_logo (1).svg" alt="beGAKKOM Logo" class="logo-image">
-            </div>
-            <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAKKOM</a>
+            </a>
+            <a href="/" class="brand-name">beGAKKOM</a>
         </div>
         <div class="nav-links">
+            <a href="/main/profil/profil_screen.html" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Geri
+            </a>
             <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
             <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
             <a href="../profil/profil_screen.html" class="active"><i class="fas fa-user"></i> Profil</a>
