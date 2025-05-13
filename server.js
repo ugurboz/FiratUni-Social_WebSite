@@ -1,6 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
+const authenticate = require('./server/middleware/authMiddleware');
 const { loginUser, resetPassword, resetPasswordWithToken } = require('./main/login/login_backend');
 const { handleRegister } = require('./main/register/register_backend');
 const { getUserProfile } = require('./main/profil/profil_backend');
@@ -11,10 +16,77 @@ const uploadRoute = require('./server/routes/upload');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(express.json());
+// Güvenlik Middleware'leri
 // CORS yapılandırması
-app.use(cors());
+const allowedOrigins = [
+    'https://begakkom.onrender.com',
+    'http://localhost:3000',
+    'http://localhost:5000'
+];
+
+app.use(cors({
+    origin: function(origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('CORS politikası tarafından engellendi'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
+
+// Helmet güvenlik başlıkları
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "cdnjs.cloudflare.com"],
+            styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com", "cdnjs.cloudflare.com"],
+            imgSrc: ["'self'", "data:", "https:"],
+            fontSrc: ["'self'", "fonts.gstatic.com", "cdnjs.cloudflare.com"],
+            connectSrc: ["'self'"],
+            frameSrc: ["'none'"],
+            objectSrc: ["'none'"]
+        }
+    }
+}));
+
+// MongoDB sanitization
+app.use(mongoSanitize());
+
+// XSS koruması
+app.use(xss());
+
+// Rate limiting yapılandırması
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 dakika
+    max: 100, // IP başına maksimum istek
+    message: {
+        status: 429,
+        error: 'Çok fazla istek gönderdiniz. Lütfen daha sonra tekrar deneyin.'
+    }
+});
+
+// Auth işlemleri için özel rate limiter
+const authLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 saat
+    max: 5, // IP başına maksimum başarısız giriş denemesi
+    message: {
+        status: 429,
+        error: 'Çok fazla başarısız giriş denemesi. Lütfen 1 saat sonra tekrar deneyin.'
+    }
+});
+
+// Rate limiter'ları uygula
+app.use('/api/', limiter);
+app.use('/api/login', authLimiter);
+app.use('/api/register', authLimiter);
+app.use('/api/reset-password', authLimiter);
+
+// Diğer middleware'ler
+app.use(express.json());
 
 // Serve static files - sıralama önemli
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
@@ -92,22 +164,69 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-// Profil bilgilerini getirme endpoint'i
-app.get('/api/profile', async (req, res) => {
+// Korumalı route'lar
+app.get('/api/profile', authenticate, async (req, res) => {
     try {
-        const userEmail = req.query.email;
-        console.log('Profil isteği alındı, email:', userEmail);
-
-        if (!userEmail) {
-            console.log('E-posta adresi eksik');
-            return res.status(400).json({ success: false, message: 'E-posta adresi gerekli' });
-        }
-
+        const userEmail = req.user.email; // JWT'den gelen email
         const result = await getUserProfile(userEmail);
-        console.log('Profil sonucu:', result);
         res.json(result);
     } catch (error) {
         console.error('Profile API error:', error);
+        res.status(500).json({ success: false, message: 'Bir hata oluştu' });
+    }
+});
+
+app.post('/api/user/change-password', authenticate, async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        const email = req.user.email; // JWT'den gelen email
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Mevcut şifre ve yeni şifre gereklidir.' 
+            });
+        }
+
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        // Kullanıcıyı bul
+        const user = await usersCollection.findOne({ email });
+        
+        if (!user) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Kullanıcı bulunamadı' 
+            });
+        }
+
+        // Mevcut şifreyi kontrol et
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        
+        if (!isPasswordValid) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Mevcut şifre hatalı' 
+            });
+        }
+
+        // Yeni şifreyi hashle
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        // Şifreyi güncelle
+        await usersCollection.updateOne(
+            { email: email },
+            { $set: { password: hashedPassword } }
+        );
+
+        res.json({ 
+            success: true, 
+            message: 'Şifreniz başarıyla güncellendi' 
+        });
+    } catch (error) {
+        console.error('Password change error:', error);
         res.status(500).json({ success: false, message: 'Bir hata oluştu' });
     }
 });
@@ -177,77 +296,6 @@ app.post('/leave-club', async (req, res) => {
 
     const result = await leaveClub(clubName, email);
     res.json(result);
-});
-
-// Kullanıcı şifresini değiştirme endpoint'i
-app.post('/api/user/change-password', async (req, res) => {
-    try {
-        const { email, currentPassword, newPassword } = req.body;
-
-        if (!email || !currentPassword || !newPassword) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'E-posta, mevcut şifre ve yeni şifre gereklidir.' 
-            });
-        }
-
-        const db = await getDb();
-        const usersCollection = db.collection('users');
-        
-        // Kullanıcıyı bul
-        const user = await usersCollection.findOne({ email });
-        
-        if (!user) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'Kullanıcı bulunamadı.' 
-            });
-        }
-        
-        // Mevcut şifreyi kontrol et
-        let isPasswordValid = false;
-        
-        // Eğer şifre bcrypt ile hashlenmiş ise
-        if (user.password.startsWith('$2a$') || user.password.startsWith('$2b$') || user.password.startsWith('$2y$')) {
-            // bcrypt.compare kullan
-            const bcrypt = require('bcryptjs');
-            isPasswordValid = await bcrypt.compare(currentPassword, user.password);
-        } else {
-            // Düz metin karşılaştırma (geçici olarak)
-            isPasswordValid = currentPassword === user.password;
-        }
-        
-        if (!isPasswordValid) {
-            return res.status(401).json({ 
-                success: false, 
-                message: 'Mevcut şifre yanlış.' 
-            });
-        }
-        
-        // Yeni şifreyi hashle
-        const bcrypt = require('bcryptjs');
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-        
-        // Şifreyi güncelle
-        await usersCollection.updateOne(
-            { email },
-            { $set: { password: hashedPassword } }
-        );
-        
-        console.log(`Kullanıcı şifresi güncellendi: ${email}`);
-        
-        res.json({ 
-            success: true, 
-            message: 'Şifreniz başarıyla değiştirildi.' 
-        });
-    } catch (error) {
-        console.error('Şifre değiştirme hatası:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Şifre değiştirilirken bir hata oluştu.' 
-        });
-    }
 });
 
 // Kullanıcı hesabını silme endpoint'i

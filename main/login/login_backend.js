@@ -2,7 +2,7 @@
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 const bcrypt = require('bcryptjs'); // Şifreleri güvenli bir şekilde saklamak için
-const crypto = require('crypto'); // authToken oluşturmak için
+const jwt = require('jsonwebtoken'); // JWT için
 const { getDb } = require('../../db/config'); // DB bağlantısı için
 const { sendPasswordResetEmail } = require('../shared/emailService'); // E-posta servisi
 
@@ -63,15 +63,24 @@ async function loginUser(email, password) {
             }
         }
 
-        // AuthToken oluştur
-        const authToken = crypto.randomBytes(32).toString('hex');
+        // JWT token oluştur
+        const token = jwt.sign(
+            {
+                id: user._id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName
+            },
+            process.env.JWT_SECRET || 'begakkom-secret-key-2024',
+            { expiresIn: '24h' }
+        );
 
         // Giriş başarılı
         console.log('Login successful'); // Debug log
         return {
             success: true,
             message: "Giriş başarılı",
-            authToken: authToken, // AuthToken'ı ekle
+            authToken: token, // JWT token'ı ekle
             user: {
                 id: user._id,
                 firstName: user.firstName,
