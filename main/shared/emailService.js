@@ -112,9 +112,36 @@ const sendEventReminderEmail = async (to, eventName, eventDate, eventLocation) =
   return sendEmail(to, subject, `${eventName} etkinliği hatırlatması: ${eventDate}, ${eventLocation}`, html);
 };
 
+/**
+ * E-posta doğrulama kodu gönderme
+ * @param {string} to - Alıcı e-posta adresi
+ * @param {string} verificationCode - Doğrulama kodu
+ * @returns {Promise} - İşlem sonucu
+ */
+const sendVerificationEmail = async (to, verificationCode) => {
+  const subject = 'beGAKKOM - E-posta Doğrulama';
+  const html = `
+    <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 10px;">
+      <h2 style="color: #4361ee; text-align: center;">E-posta Doğrulama</h2>
+      <p>Merhaba,</p>
+      <p>beGAKKOM hesabınızı doğrulamak için aşağıdaki kodu kullanın:</p>
+      <div style="text-align: center; margin: 30px 0;">
+        <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; font-size: 24px; font-weight: bold; letter-spacing: 5px;">
+          ${verificationCode}
+        </div>
+      </div>
+      <p>Bu kod 10 dakika süreyle geçerlidir.</p>
+      <p>İyi günler,<br>beGAKKOM Ekibi</p>
+    </div>
+  `;
+
+  return sendEmail(to, subject, `Doğrulama kodunuz: ${verificationCode}`, html);
+};
+
 module.exports = {
   sendEmail,
   sendPasswordResetEmail,
   sendWelcomeEmail,
-  sendEventReminderEmail
+  sendEventReminderEmail,
+  sendVerificationEmail
 }; 

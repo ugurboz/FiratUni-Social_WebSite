@@ -11,7 +11,8 @@ const { handleRegister } = require('./main/register/register_backend');
 const { getUserProfile } = require('./main/profil/profil_backend');
 const { getClubs, joinClub, leaveClub, getClubDetails, initializeClubs } = require('./main/kulupler/kulupler_backend');
 const { testConnection, getDb } = require('./db/config');
-const uploadRoute = require('./server/routes/upload'); // Upload rotasını en başta tanımla
+const uploadRoute = require('./server/routes/upload');
+const { verifyEmail } = require('./main/verify/verify_backend');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -92,7 +93,9 @@ app.use(express.json());
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/main', express.static(path.join(__dirname, 'main')));
 app.use(express.static(path.join(__dirname)));
-app.use('/api', uploadRoute); // Upload rotasını middleware'den sonra, API routelarından önce ekle
+
+// Upload rotasını kullan
+app.use('/api', uploadRoute);
 
 // Veritabanı bağlantısını test et
 testConnection()
@@ -451,6 +454,18 @@ app.put('/api/user/theme', async (req, res) => {
     }
 });
 
+// E-posta doğrulama endpoint'i
+app.post('/api/verify-email', async (req, res) => {
+    try {
+        const { email, code } = req.body;
+        const result = await verifyEmail(email, code);
+        res.json(result);
+    } catch (error) {
+        console.error('Email verification API error:', error);
+        res.status(500).json({ success: false, message: 'Bir hata oluştu' });
+    }
+});
+
 // Route handlers for pages - Her zaman tam dosya yolunu kullan
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'main', 'anasayfa', 'anasayfa_screen.html'));
@@ -527,5 +542,5 @@ app.listen(PORT, async () => {
     console.log('- DELETE /api/user/delete-account');
     console.log('- PUT  /api/user/settings');
     console.log('- PUT  /api/user/theme');
-    console.log('- POST /api/upload');
+    console.log('- POST /api/verify-email');
 }); 

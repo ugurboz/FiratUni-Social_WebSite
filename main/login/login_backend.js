@@ -4,66 +4,53 @@ require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 const bcrypt = require('bcryptjs'); // Şifreleri güvenli bir şekilde saklamak için
 const jwt = require('jsonwebtoken'); // JWT için
 const { getDb } = require('../../db/config'); // DB bağlantısı için
-const { sendPasswordResetEmail } = require('../shared/emailService'); // E-posta servisi
+const { sendPasswordResetEmail, sendVerificationEmail } = require('../shared/emailService'); // E-posta servisi
+const crypto = require('crypto');
 
 // Kullanıcı girişi fonksiyonu
 async function loginUser(email, password) {
-    console.log('Login attempt for email:', email); // Debug log
-    
     try {
-        console.log('Searching for user...'); // Debug log
-        
-        // Veritabanına bağlan
         const db = await getDb();
         const usersCollection = db.collection('users');
-        
-        // Kullanıcıyı e-posta ile bul
         const user = await usersCollection.findOne({ email: email });
-        console.log('User found:', user ? 'Yes' : 'No'); // Debug log
         
         if (!user) {
-            console.log('User not found'); // Debug log
             return { success: false, message: "Kullanıcı bulunamadı" };
         }
 
-        // bcrypt ile şifre kontrolü
-        console.log('Checking password...'); // Debug log
-        
-        // Eğer şifre bcrypt ile hashlenmiş ise
-        if (user.password.startsWith('$2a$') || user.password.startsWith('$2b$') || user.password.startsWith('$2y$')) {
-            // bcrypt.compare kullan
-            const isPasswordValid = await bcrypt.compare(password, user.password);
-            console.log('Password valid (bcrypt):', isPasswordValid); // Debug log
-            
-            if (!isPasswordValid) {
-                console.log('Invalid password'); // Debug log
-                return { success: false, message: "Hatalı şifre" };
-            }
-        } else {
-            // Düz metin karşılaştırma (geçici olarak, güvenlik için kaldırılmalı)
-            const isPasswordValid = password === user.password;
-            console.log('Password valid (plain):', isPasswordValid); // Debug log
-            
-            if (!isPasswordValid) {
-                console.log('Invalid password'); // Debug log
-                return { success: false, message: "Hatalı şifre" };
-            }
-            
-            // Düz metin şifreyi bcrypt ile hashle ve güncelle (güvenlik iyileştirmesi)
-            try {
-                const salt = await bcrypt.genSalt(10);
-                const hashedPassword = await bcrypt.hash(password, salt);
-                await usersCollection.updateOne(
-                    { email: email },
-                    { $set: { password: hashedPassword } }
-                );
-                console.log('Password upgraded to bcrypt hash for user:', email);
-            } catch (hashError) {
-                console.error('Error upgrading password:', hashError);
-            }
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return { success: false, message: "Hatalı şifre" };
         }
 
-        // JWT token oluştur
+        // E-posta doğrulaması kontrolü
+        if (!user.emailVerified) {
+            // Yeni doğrulama kodu oluştur
+            const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+            const verificationCodeExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 dakika
+
+            // Kodu veritabanına kaydet
+            await usersCollection.updateOne(
+                { email: email },
+                { 
+                    $set: { 
+                        verificationCode: verificationCode,
+                        verificationCodeExpiry: verificationCodeExpiry
+                    } 
+                }
+            );
+
+            // Doğrulama e-postası gönder
+            await sendVerificationEmail(email, verificationCode);
+
+            return {
+                success: true,
+                needsVerification: true,
+                message: "E-posta adresinize doğrulama kodu gönderildi"
+            };
+        }
+
+        // Normal login işlemi
         const token = jwt.sign(
             {
                 id: user._id,
@@ -75,12 +62,10 @@ async function loginUser(email, password) {
             { expiresIn: '24h' }
         );
 
-        // Giriş başarılı
-        console.log('Login successful'); // Debug log
         return {
             success: true,
             message: "Giriş başarılı",
-            authToken: token, // JWT token'ı ekle
+            authToken: token,
             user: {
                 id: user._id,
                 firstName: user.firstName,
@@ -89,12 +74,43 @@ async function loginUser(email, password) {
                 studentNumber: user.studentNumber,
                 department: user.department,
                 year: user.year,
-                theme: user.theme || 'light' // Varsayılan tema light
+                theme: user.theme || 'light'
             }
         };
-
     } catch (error) {
         console.error("Giriş hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
+    }
+}
+
+// Doğrulama kodu kontrolü
+async function verifyEmail(email, code) {
+    try {
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        const user = await usersCollection.findOne({ 
+            email: email,
+            verificationCode: code,
+            verificationCodeExpiry: { $gt: new Date() }
+        });
+
+        if (!user) {
+            return { success: false, message: "Geçersiz veya süresi dolmuş doğrulama kodu" };
+        }
+
+        // E-posta doğrulandı olarak işaretle
+        await usersCollection.updateOne(
+            { email: email },
+            { 
+                $set: { emailVerified: true },
+                $unset: { verificationCode: "", verificationCodeExpiry: "" }
+            }
+        );
+
+        return { success: true, message: "E-posta adresi başarıyla doğrulandı" };
+    } catch (error) {
+        console.error("Doğrulama hatası:", error);
         return { success: false, message: "Bir hata oluştu" };
     }
 }
@@ -228,6 +244,7 @@ async function testDatabaseConnection() {
 // Fonksiyonları dışa aktar
 module.exports = {
     loginUser,
+    verifyEmail,
     resetPassword,
     resetPasswordWithToken,
     checkSession,

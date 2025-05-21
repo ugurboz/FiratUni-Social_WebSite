@@ -60,39 +60,45 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Login result:', result); // Debug log
             
             if (result.success) {
-                // JWT token'ı localStorage'a kaydet
-                localStorage.setItem('authToken', result.authToken);
-                localStorage.setItem('user', JSON.stringify(result.user));
-                localStorage.setItem('userEmail', result.user.email);
-                
-                // Tema desteği için userData'yı ekle 
-                localStorage.setItem('userData', JSON.stringify({
-                    email: result.user.email,
-                    displayName: `${result.user.firstName || ''} ${result.user.lastName || ''}`.trim(),
-                    theme: result.user.theme || 'light'
-                }));
-                
-                // Kullanıcının tercih ettiği temayı hemen uygula
-                const userTheme = result.user.theme || 'light';
-                document.documentElement.setAttribute('data-theme', userTheme);
-                localStorage.setItem('theme', userTheme);
-                
-                // Show success message
-                successMessage.textContent = 'Giriş başarılı! Yönlendiriliyorsunuz...';
-                successMessage.style.display = 'block';
-                
-                // Ana sayfaya yönlendir
-                setTimeout(() => {
-                    window.location.href = '/main/anasayfa/anasayfa_screen.html';
-                }, 1500);
+                if (result.needsVerification) {
+                    // E-posta doğrulama gerekiyor
+                    localStorage.setItem('userEmail', email);
+                    window.location.href = 'verify_email_screen.html';
+                } else {
+                    // Normal giriş
+                    localStorage.setItem('authToken', result.authToken);
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    localStorage.setItem('userEmail', result.user.email);
+                    
+                    // Tema desteği için userData'yı ekle 
+                    localStorage.setItem('userData', JSON.stringify({
+                        email: result.user.email,
+                        displayName: `${result.user.firstName || ''} ${result.user.lastName || ''}`.trim(),
+                        theme: result.user.theme || 'light'
+                    }));
+                    
+                    // Kullanıcının tercih ettiği temayı hemen uygula
+                    const userTheme = result.user.theme || 'light';
+                    document.documentElement.setAttribute('data-theme', userTheme);
+                    localStorage.setItem('theme', userTheme);
+                    
+                    // Show success message
+                    successMessage.textContent = 'Giriş başarılı! Yönlendiriliyorsunuz...';
+                    successMessage.style.display = 'block';
+                    
+                    // Ana sayfaya yönlendir
+                    setTimeout(() => {
+                        window.location.href = '../anasayfa/anasayfa_screen.html';
+                    }, 2000);
+                }
             } else {
                 // Show error message
                 errorMessage.textContent = result.message;
                 errorMessage.style.display = 'block';
             }
         } catch (error) {
-            console.error('Giriş hatası:', error);
-            errorMessage.textContent = 'Bir hata oluştu. Lütfen tekrar deneyin.';
+            console.error('Login error:', error);
+            errorMessage.textContent = 'Bir hata oluştu';
             errorMessage.style.display = 'block';
         } finally {
             // Remove loading state

@@ -121,6 +121,18 @@ const userSchema = new mongoose.Schema({
             default: true
         }
     },
+    emailVerified: {
+        type: Boolean,
+        default: false
+    },
+    verificationCode: {
+        type: String,
+        default: null
+    },
+    verificationCodeExpiry: {
+        type: Date,
+        default: null
+    },
     createdAt: {
         type: Date,
         default: Date.now
