@@ -13,6 +13,7 @@ const { getClubs, joinClub, leaveClub, getClubDetails, initializeClubs } = requi
 const { testConnection, getDb } = require('./db/config');
 const uploadRoute = require('./server/routes/upload');
 const { verifyEmail } = require('./main/verify/verify_backend');
+const bcrypt = require('bcrypt');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -143,6 +144,15 @@ app.post('/api/reset-password-with-token', async (req, res) => {
                 message: 'Token ve yeni şifre gereklidir' 
             });
         }
+        
+        // Şifre gücü kontrolü
+        const passwordValidation = validatePasswordStrength(newPassword);
+        if (!passwordValidation.valid) {
+            return res.status(400).json({
+                success: false,
+                message: passwordValidation.message
+            });
+        }
 
         const result = await resetPasswordWithToken(token, newPassword);
         res.json(result);
@@ -186,6 +196,15 @@ app.post('/api/user/change-password', authenticate, async (req, res) => {
             return res.status(400).json({ 
                 success: false, 
                 message: 'Mevcut şifre ve yeni şifre gereklidir.' 
+            });
+        }
+        
+        // Şifre gücü kontrolü
+        const passwordValidation = validatePasswordStrength(newPassword);
+        if (!passwordValidation.valid) {
+            return res.status(400).json({
+                success: false,
+                message: passwordValidation.message
             });
         }
 
@@ -514,6 +533,31 @@ app.use((req, res) => {
         }
     });
 });
+
+// Şifre gücünü kontrol eden yardımcı fonksiyon
+function validatePasswordStrength(password) {
+    if (password.length < 8) {
+        return { valid: false, message: 'Şifre en az 8 karakter uzunluğunda olmalıdır.' };
+    }
+    
+    if (!/[A-Z]/.test(password)) {
+        return { valid: false, message: 'Şifre en az bir büyük harf içermelidir.' };
+    }
+    
+    if (!/[a-z]/.test(password)) {
+        return { valid: false, message: 'Şifre en az bir küçük harf içermelidir.' };
+    }
+    
+    if (!/[0-9]/.test(password)) {
+        return { valid: false, message: 'Şifre en az bir rakam içermelidir.' };
+    }
+    
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+        return { valid: false, message: 'Şifre en az bir özel karakter içermelidir (!, @, #, $ vb.).' };
+    }
+    
+    return { valid: true };
+}
 
 // Start the server
 app.listen(PORT, async () => {

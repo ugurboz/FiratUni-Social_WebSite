@@ -19,8 +19,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const confirmPassword = document.getElementById('confirmPassword').value;
 
         // Şifre kontrolü
-        if (newPassword.length < 6) {
-            showError('Şifre en az 6 karakter uzunluğunda olmalıdır.');
+        const passwordValidation = validatePassword(newPassword);
+        if (!passwordValidation.valid) {
+            showError(passwordValidation.message);
             return;
         }
 
@@ -30,10 +31,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-            const response = await fetch('https://begakkom.onrender.com/api/reset-password', {
+            const response = await fetch('/api/reset-password-with-token', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     token: token,
@@ -42,18 +43,22 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             const data = await response.json();
-
             if (data.success) {
-                showSuccess('Şifreniz başarıyla güncellendi. Giriş sayfasına yönlendiriliyorsunuz...');
+                // Başarılı sıfırlama
+                successMessage.textContent = 'Şifreniz başarıyla değiştirildi! Giriş sayfasına yönlendiriliyorsunuz...';
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+
+                // 3 saniye sonra giriş sayfasına yönlendir
                 setTimeout(() => {
-                    window.location.href = '/main/login/login_screen.html';
-                }, 2000);
+                    window.location.href = '../login/login_screen.html';
+                }, 3000);
             } else {
-                showError(data.message || 'Şifre güncellenirken bir hata oluştu.');
+                // Hata durumu
+                showError(data.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
             }
         } catch (error) {
-            console.error('Şifre sıfırlama hatası:', error);
-            showError('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
+            showError('Bağlantı hatası. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin.');
         }
     });
 
@@ -62,10 +67,29 @@ document.addEventListener('DOMContentLoaded', function() {
         errorMessage.style.display = 'block';
         successMessage.style.display = 'none';
     }
-
-    function showSuccess(message) {
-        successMessage.textContent = message;
-        successMessage.style.display = 'block';
-        errorMessage.style.display = 'none';
+    
+    // Şifre validasyon fonksiyonu
+    function validatePassword(password) {
+        if (password.length < 8) {
+            return { valid: false, message: 'Şifre en az 8 karakter uzunluğunda olmalıdır.' };
+        }
+        
+        if (!/[A-Z]/.test(password)) {
+            return { valid: false, message: 'Şifre en az bir büyük harf içermelidir.' };
+        }
+        
+        if (!/[a-z]/.test(password)) {
+            return { valid: false, message: 'Şifre en az bir küçük harf içermelidir.' };
+        }
+        
+        if (!/[0-9]/.test(password)) {
+            return { valid: false, message: 'Şifre en az bir rakam içermelidir.' };
+        }
+        
+        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+            return { valid: false, message: 'Şifre en az bir özel karakter içermelidir (!, @, #, $ vb.).' };
+        }
+        
+        return { valid: true };
     }
 }); 

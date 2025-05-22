@@ -114,6 +114,18 @@
                                 </button>
                             </div>
                         </div>
+                        
+                        <div class="password-requirements">
+                            <p>Şifreniz aşağıdaki gereksinimleri karşılamalıdır:</p>
+                            <ul>
+                                <li>En az 8 karakter uzunluğunda</li>
+                                <li>En az bir büyük harf</li>
+                                <li>En az bir küçük harf</li>
+                                <li>En az bir rakam</li>
+                                <li>En az bir özel karakter (!, @, #, $, vb.)</li>
+                            </ul>
+                        </div>
+                        
                         <div class="form-actions">
                             <button type="button" class="save-button" onclick="changePassword()">Şifreyi Değiştir</button>
                         </div>
@@ -360,8 +372,10 @@
                     return;
                 }
                 
-                if (newPassword.length < 6) {
-                    showNotification('Yeni şifre en az 6 karakter olmalıdır', 'error');
+                // Şifre güvenlik kontrolü
+                const passwordValidation = validatePassword(newPassword);
+                if (!passwordValidation.valid) {
+                    showNotification(passwordValidation.message, 'error');
                     return;
                 }
                 
@@ -375,33 +389,58 @@
                 }
                 
                 // Şifre değiştirme isteği gönder
+                const token = localStorage.getItem('token');
                 const response = await fetch('/api/user/change-password', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({
-                        email: email,
-                        currentPassword: currentPassword,
-                        newPassword: newPassword
+                        currentPassword,
+                        newPassword
                     })
                 });
-                
+
                 const data = await response.json();
                 
                 if (data.success) {
-                    // Şifre değiştirme başarılı
-                    document.getElementById('password-form').reset();
                     showNotification('Şifreniz başarıyla değiştirildi', 'success');
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
                 } else {
-                    // API'den hata mesajı döndüyse onu göster
-                    showNotification(data.message || 'Şifre değiştirilemedi', 'error');
+                    showNotification(data.message || 'Şifre değiştirme işlemi başarısız', 'error');
                 }
             } catch (error) {
-                console.error('Şifre değiştirilirken hata:', error);
-                showNotification('Şifre değiştirilirken bir hata oluştu', 'error');
+                console.error('Şifre değiştirme hatası:', error);
+                showNotification('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.', 'error');
             }
+        }
+        
+        // Şifre validasyon fonksiyonu
+        function validatePassword(password) {
+            if (password.length < 8) {
+                return { valid: false, message: 'Şifre en az 8 karakter uzunluğunda olmalıdır.' };
+            }
+            
+            if (!/[A-Z]/.test(password)) {
+                return { valid: false, message: 'Şifre en az bir büyük harf içermelidir.' };
+            }
+            
+            if (!/[a-z]/.test(password)) {
+                return { valid: false, message: 'Şifre en az bir küçük harf içermelidir.' };
+            }
+            
+            if (!/[0-9]/.test(password)) {
+                return { valid: false, message: 'Şifre en az bir rakam içermelidir.' };
+            }
+            
+            if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+                return { valid: false, message: 'Şifre en az bir özel karakter içermelidir (!, @, #, $ vb.).' };
+            }
+            
+            return { valid: true };
         }
 
         // Çıkış yap
