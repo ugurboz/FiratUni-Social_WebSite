@@ -1,5 +1,5 @@
 const { pool } = require('./config');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 // Sample data for testing
 const seed = async () => {

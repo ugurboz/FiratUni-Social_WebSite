@@ -2,7 +2,7 @@
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 const { getDb } = require('../../db/config'); // DB bağlantısı için
-const bcrypt = require('bcryptjs'); // Şifre hashlemek için
+const bcrypt = require('bcrypt'); // Şifre hashlemek için
 const { sendWelcomeEmail } = require('../shared/emailService'); // E-posta servisi
 
 // Şifre gücünü kontrol eden yardımcı fonksiyon

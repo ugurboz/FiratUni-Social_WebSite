@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const authenticate = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];

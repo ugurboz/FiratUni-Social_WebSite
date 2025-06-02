@@ -1,5 +1,5 @@
 const { getDb } = require('../config');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 class User {
   // Create a new user

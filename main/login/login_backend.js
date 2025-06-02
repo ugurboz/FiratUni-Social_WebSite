@@ -1,7 +1,7 @@
 // Gerekli modülleri içe aktarma
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
-const bcrypt = require('bcryptjs'); // Şifreleri güvenli bir şekilde saklamak için
+const bcrypt = require('bcrypt'); // Şifreleri güvenli bir şekilde saklamak için
 const jwt = require('jsonwebtoken'); // JWT için
 const { getDb } = require('../../db/config'); // DB bağlantısı için
 const { sendPasswordResetEmail, sendVerificationEmail } = require('../shared/emailService'); // E-posta servisi
