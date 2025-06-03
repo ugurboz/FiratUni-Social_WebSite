@@ -931,21 +931,8 @@
             }
 
             // Resim yükleme
-            async function uploadImage(file) {
-                try {
-                    // Gerçek uygulamada burada bir dosya yükleme servisi kullanılacak
-                    // Şimdilik sadece base64 formatında döndürüyoruz
-                    return new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = error => reject(error);
-                        reader.readAsDataURL(file);
-                    });
-                } catch (error) {
-                    console.error('Resim yüklenirken hata:', error);
-                    throw error;
-                }
-            }
+           
+            
 
             // Video yükleme
             async function uploadVideo(file) {
@@ -1108,10 +1095,28 @@
                             // Bildirim göster
                             showNotification('Yorumunuz eklendi!');
                         }
+                        
                     });
                 });
+                
             });
         });
+        
+document.addEventListener('DOMContentLoaded', () => {
+    const buton = document.getElementById('share-post');
+    if (!buton) {
+        console.error('❌ share-post butonu bulunamadı');
+        return;
+    }
+
+    buton.addEventListener('click', () => {
+        console.log('✅ share-post butonuna tıklandı');
+    });
+});
+
+
     </script>
+    <script src="/main/anasayfa/anasayfa_backend.js"></script>
+
 </body>
 </html>

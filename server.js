@@ -5,7 +5,7 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
-const { authenticate } = require('./server/middleware/authMiddleware');
+const {authenticate} = require('./server/middleware/authMiddleware');
 const { loginUser, resetPassword, resetPasswordWithToken } = require('./main/login/login_backend');
 const { handleRegister } = require('./main/register/register_backend');
 const { getUserProfile } = require('./main/profil/profil_backend');
@@ -97,6 +97,9 @@ app.use(express.static(path.join(__dirname)));
 
 // Upload rotasını kullan
 app.use('/api', uploadRoute);
+
+const postRoute = require('./server/routes/post');
+app.use('/api', postRoute);
 
 // Veritabanı bağlantısını test et
 testConnection()
@@ -558,8 +561,6 @@ function validatePasswordStrength(password) {
     
     return { valid: true };
 }
-
-console.log('typeof authenticate:', typeof authenticate);
 
 // Start the server
 app.listen(PORT, async () => {

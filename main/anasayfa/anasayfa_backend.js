@@ -100,30 +100,37 @@ let posts = [
 let notifications = [];
 
 // Gönderi oluşturma
-async function createPost(content, image = null) {
+async function createPost(content, imageUrl = null, videoUrl = null) {
     try {
         const user = JSON.parse(localStorage.getItem('user'));
-        if (!user) {
-            throw new Error('Kullanıcı oturumu bulunamadı');
+        if (!user) throw new Error("Kullanıcı oturumu bulunamadı");
+
+        const response = await fetch('/api/posts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: user.username,
+                content,
+                image: imageUrl,
+                video: videoUrl || null,
+                timestamp: new Date().toISOString()
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Post gönderme başarısız');
         }
 
-        const newPost = {
-            id: posts.length + 1,
-            username: user.username,
-            content: content,
-            image: image,
-            likes: 0,
-            comments: [],
-            timestamp: new Date().toISOString()
-        };
-
-        posts.unshift(newPost);
+        const newPost = await response.json();
         return newPost;
     } catch (error) {
-        console.error('Gönderi oluşturulurken hata:', error);
+        console.error("createPost() hatası:", error);
         throw error;
     }
 }
+
 
 // Gönderileri getir
 async function getPosts() {
@@ -243,20 +250,31 @@ async function markNotificationsAsRead() {
 
 // Resim yükleme
 async function uploadImage(file) {
+    console.log("uploadImage fonksiyonu çağrıldı:", file);
+
     try {
-        // Gerçek uygulamada burada bir dosya yükleme servisi kullanılacak
-        // Şimdilik sadece base64 formatında döndürüyoruz
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-            reader.readAsDataURL(file);
+        const formData = new FormData();
+        formData.append('image', file); // ⬅️ burası 'image' olmalı
+
+        const response = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData
         });
+
+        if (!response.ok) {
+            throw new Error('Dosya yükleme başarısız');
+        }
+
+        const data = await response.json();
+        return data.imageUrl; // S3 linki
     } catch (error) {
         console.error('Resim yüklenirken hata:', error);
         throw error;
     }
 }
+
+
+
 
 // Oturum kontrolü
 async function checkSession() {
@@ -280,3 +298,35 @@ async function handleLogout() {
         throw error;
     }
 } 
+// Paylaş butonuna tıklama işlemi
+document.addEventListener('DOMContentLoaded', function () {
+    const shareButton = document.getElementById('share-post');
+    const postInput = document.querySelector('.post-input');
+    const imageInput = document.getElementById('post-image');
+
+    if (shareButton) {
+        shareButton.addEventListener('click', async () => {
+            const content = postInput.value.trim();
+            const imageFile = imageInput.files[0];
+            let imageUrl = null;
+
+            try {
+                if (imageFile) {
+                    imageUrl = await uploadImage(imageFile); // 🟢 AWS S3'e gönderiyoruz
+                }
+
+                const newPost = await createPost(content, imageUrl);
+                NotificationManager.showNotification('Gönderi paylaşıldı!', 'success');
+
+                // Opsiyonel: inputları temizle
+                postInput.value = '';
+                imageInput.value = '';
+
+                // Gönderiyi sayfaya ekle
+                // renderPost(newPost); // Eğer gönderi anında görünmeli diyorsan bunu tanımlamalısın
+            } catch (error) {
+                NotificationManager.showNotification('Gönderi paylaşılırken hata oluştu', 'error');
+            }
+        });
+    }
+});
