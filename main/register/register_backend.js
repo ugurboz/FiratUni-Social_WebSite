@@ -2,33 +2,8 @@
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 const { getDb } = require('../../db/config'); // DB bağlantısı için
-const bcrypt = require('bcrypt'); // Şifre hashlemek için
+const bcrypt = require('bcryptjs'); // Şifre hashlemek için
 const { sendWelcomeEmail } = require('../shared/emailService'); // E-posta servisi
-
-// Şifre gücünü kontrol eden yardımcı fonksiyon
-function validatePasswordStrength(password) {
-    if (password.length < 8) {
-        return { valid: false, message: 'Şifre en az 8 karakter uzunluğunda olmalıdır.' };
-    }
-    
-    if (!/[A-Z]/.test(password)) {
-        return { valid: false, message: 'Şifre en az bir büyük harf içermelidir.' };
-    }
-    
-    if (!/[a-z]/.test(password)) {
-        return { valid: false, message: 'Şifre en az bir küçük harf içermelidir.' };
-    }
-    
-    if (!/[0-9]/.test(password)) {
-        return { valid: false, message: 'Şifre en az bir rakam içermelidir.' };
-    }
-    
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-        return { valid: false, message: 'Şifre en az bir özel karakter içermelidir (!, @, #, $ vb.).' };
-    }
-    
-    return { valid: true };
-}
 
 // Kayıt işlemi
 async function handleRegister(userData) {
@@ -49,12 +24,6 @@ async function handleRegister(userData) {
         if (existingUser) {
             console.log('User already exists'); // Debug log
             return { success: false, message: "Bu öğrenci numarası zaten kayıtlı" };
-        }
-        
-        // Şifre gücünü kontrol et
-        const passwordValidation = validatePasswordStrength(userData.password);
-        if (!passwordValidation.valid) {
-            return { success: false, message: passwordValidation.message };
         }
 
         // Şifreyi hashle

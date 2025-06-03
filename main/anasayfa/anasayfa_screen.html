@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>beGAKKOM - Ana Sayfa</title>
-    <!-- Favicon bağlantısı - SVG logo doğrudan kullanılıyor -->
-    <link rel="icon" href="/main/images/begakkom_logo (1).svg" type="image/svg+xml">
+    <title>beGAK.com - Ana Sayfa</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../shared/theme.css">
@@ -26,7 +24,7 @@
             <div class="brand-logo">
                 <img src="/main/images/begakkom_logo (1).svg" alt="beGAKKOM Logo" class="logo-image">
             </div>
-            <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAKKOM</a>
+            <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
         </div>
         <div class="nav-links">
             <a href="../anasayfa/anasayfa_screen.html" class="active"><i class="fas fa-home"></i> Ana Sayfa</a>
@@ -931,8 +929,21 @@
             }
 
             // Resim yükleme
-           
-            
+            async function uploadImage(file) {
+                try {
+                    // Gerçek uygulamada burada bir dosya yükleme servisi kullanılacak
+                    // Şimdilik sadece base64 formatında döndürüyoruz
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = error => reject(error);
+                        reader.readAsDataURL(file);
+                    });
+                } catch (error) {
+                    console.error('Resim yüklenirken hata:', error);
+                    throw error;
+                }
+            }
 
             // Video yükleme
             async function uploadVideo(file) {
@@ -1095,28 +1106,10 @@
                             // Bildirim göster
                             showNotification('Yorumunuz eklendi!');
                         }
-                        
                     });
                 });
-                
             });
         });
-        
-document.addEventListener('DOMContentLoaded', () => {
-    const buton = document.getElementById('share-post');
-    if (!buton) {
-        console.error('❌ share-post butonu bulunamadı');
-        return;
-    }
-
-    buton.addEventListener('click', () => {
-        console.log('✅ share-post butonuna tıklandı');
-    });
-});
-
-
     </script>
-    <script src="/main/anasayfa/anasayfa_backend.js"></script>
-
 </body>
 </html>

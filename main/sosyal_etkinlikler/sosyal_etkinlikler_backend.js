@@ -50,7 +50,7 @@ class EventManager {
         this.liveEventsList = document.getElementById('liveEventsList');
         
         // API endpoint
-        this.apiEndpoint = 'https://api.begakkom.com/events';
+        this.apiEndpoint = 'https://api.begak.com/events';
         
         // Event listener'ları bağla
         this.bindEventListeners();
@@ -638,9 +638,9 @@ class EventManager {
         
         // Paylaşım bilgilerini oluştur
         const shareData = {
-            title: `${event.title} - beGAKKOM Etkinlik`,
+            title: `${event.title} - beGAK.com Etkinlik`,
             text: `${event.title} etkinliğine katılmak ister misin? ${event.date} tarihinde ${event.location} konumunda.`,
-            url: `https://begakkom.onrender.com/etkinlik/${eventId}`
+            url: `https://begak.com/etkinlik/${eventId}`
         };
         
         // Web Share API kontrolü
@@ -659,7 +659,7 @@ class EventManager {
     
     // Paylaşım linkini kopyala
     copyShareLink(eventId) {
-        const link = `https://begakkom.onrender.com/etkinlik/${eventId}`;
+        const link = `https://begak.com/etkinlik/${eventId}`;
         
         navigator.clipboard.writeText(link)
             .then(() => this.showNotification('Etkinlik linki panoya kopyalandı!', 'success'))

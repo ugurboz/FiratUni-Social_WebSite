@@ -60,45 +60,39 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Login result:', result); // Debug log
             
             if (result.success) {
-                if (result.needsVerification) {
-                    // E-posta doğrulama gerekiyor
-                    localStorage.setItem('userEmail', email);
-                    window.location.href = 'verify_email_screen.html';
-                } else {
-                    // Normal giriş
-                    localStorage.setItem('authToken', result.authToken);
-                    localStorage.setItem('user', JSON.stringify(result.user));
-                    localStorage.setItem('userEmail', result.user.email);
-                    
-                    // Tema desteği için userData'yı ekle 
-                    localStorage.setItem('userData', JSON.stringify({
-                        email: result.user.email,
-                        displayName: `${result.user.firstName || ''} ${result.user.lastName || ''}`.trim(),
-                        theme: result.user.theme || 'light'
-                    }));
-                    
-                    // Kullanıcının tercih ettiği temayı hemen uygula
-                    const userTheme = result.user.theme || 'light';
-                    document.documentElement.setAttribute('data-theme', userTheme);
-                    localStorage.setItem('theme', userTheme);
-                    
-                    // Show success message
-                    successMessage.textContent = 'Giriş başarılı! Yönlendiriliyorsunuz...';
-                    successMessage.style.display = 'block';
-                    
-                    // Ana sayfaya yönlendir
-                    setTimeout(() => {
-                        window.location.href = '../anasayfa/anasayfa_screen.html';
-                    }, 2000);
-                }
+                // Kullanıcı bilgilerini ve authToken'ı localStorage'a kaydet
+                localStorage.setItem('user', JSON.stringify(result.user));
+                localStorage.setItem('authToken', result.authToken);
+                localStorage.setItem('userEmail', result.user.email); // userEmail'i kaydet
+                
+                // Tema desteği için userData'yı ekle 
+                localStorage.setItem('userData', JSON.stringify({
+                    email: result.user.email,
+                    displayName: `${result.user.firstName || ''} ${result.user.lastName || ''}`.trim(),
+                    theme: result.user.theme || 'light' // Varsayılan tema light
+                }));
+                
+                // Kullanıcının tercih ettiği temayı hemen uygula
+                const userTheme = result.user.theme || 'light';
+                document.documentElement.setAttribute('data-theme', userTheme);
+                localStorage.setItem('theme', userTheme);
+                
+                // Show success message
+                successMessage.textContent = 'Giriş başarılı! Yönlendiriliyorsunuz...';
+                successMessage.style.display = 'block';
+                
+                // Ana sayfaya yönlendir - Tam yolu kullan
+                setTimeout(() => {
+                    window.location.href = '/main/anasayfa/anasayfa_screen.html';
+                }, 1500);
             } else {
                 // Show error message
                 errorMessage.textContent = result.message;
                 errorMessage.style.display = 'block';
             }
         } catch (error) {
-            console.error('Login error:', error);
-            errorMessage.textContent = 'Bir hata oluştu';
+            console.error('Giriş hatası:', error);
+            errorMessage.textContent = 'Bir hata oluştu. Lütfen tekrar deneyin.';
             errorMessage.style.display = 'block';
         } finally {
             // Remove loading state
