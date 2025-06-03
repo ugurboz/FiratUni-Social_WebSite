@@ -77,13 +77,42 @@ const EventManager = {
 // Sayfa yüklendiğinde etkinlikleri yükle
 document.addEventListener('DOMContentLoaded', function() {
     EventManager.loadLiveEvents();
+    loadPosts();
 });
 
-// Gönderi veritabanı simülasyonu
-let posts = [];
+// Gönderi oluşturma ve getirme sadece backend ile olacak
 
-// Bildirim veritabanı simülasyonu
-let notifications = [];
+async function loadPosts() {
+    try {
+        const response = await fetch('/api/posts');
+        const data = await response.json();
+        const posts = data.posts || [];
+        const postsContainer = document.getElementById('posts-container');
+        postsContainer.innerHTML = '';
+        if (posts.length > 0) {
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.className = 'post';
+                postElement.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-avatar">${post.username ? post.username.charAt(0).toUpperCase() : 'A'}</div>
+                        <div class="post-user">
+                            <div class="post-author">${post.username || 'Anonim'}</div>
+                            <div class="post-time">${formatTime(post.timestamp)}</div>
+                        </div>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                    ${post.image ? `<img src="${post.image}" class="post-image" alt="Post image">` : ''}
+                `;
+                postsContainer.appendChild(postElement);
+            });
+        } else {
+            postsContainer.innerHTML = '<div class="no-posts">Henüz gönderi yok.</div>';
+        }
+    } catch (error) {
+        console.error('Gönderiler yüklenirken hata:', error);
+    }
+}
 
 // Gönderi oluşturma
 async function createPost(content, image = null) {
@@ -238,6 +267,7 @@ async function markNotificationsAsRead() {
 // Resim yükleme
 async function uploadImage(file) {
     try {
+        console.log("uploadImage fonksiyonu çağrıldı", file);
         const formData = new FormData();
         formData.append('image', file);
         const response = await fetch('/api/upload', {
@@ -276,4 +306,38 @@ async function handleLogout() {
         console.error('Çıkış yapılırken hata:', error);
         throw error;
     }
+}
+
+document.getElementById('share-post').addEventListener('click', async function() {
+    const postInput = document.querySelector('.post-input');
+    const content = postInput.value.trim();
+    const imageFile = document.getElementById('post-image').files[0];
+    console.log("Paylaş butonuna tıklandı");
+    console.log("imageFile nedir:", imageFile);
+
+    if (!content && !imageFile) {
+        alert('Lütfen bir içerik girin veya resim ekleyin');
+        return;
+    }
+    try {
+        let imageUrl = null;
+        if (imageFile) {
+            console.log("uploadImage fonksiyonu çağrılıyor", imageFile);
+            imageUrl = await uploadImage(imageFile);
+        }
+        // ... diğer kodlar ...
+    } catch (error) {
+        console.error('Gönderi paylaşılırken hata:', error);
+    }
+});
+
+function formatTime(timestamp) {
+    const now = new Date();
+    const postDate = new Date(timestamp);
+    const diff = Math.floor((now - postDate) / 1000);
+    if (diff < 60) return 'Az önce';
+    if (diff < 3600) return `${Math.floor(diff / 60)} dakika önce`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)} saat önce`;
+    if (diff < 604800) return `${Math.floor(diff / 86400)} gün önce`;
+    return postDate.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
 } 

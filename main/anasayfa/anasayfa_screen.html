@@ -155,22 +155,36 @@
 
             // Gönderileri yükle
             async function loadPosts() {
-    try {
-        const dynamicPosts = await getPosts();
-        const postsContainer = document.getElementById('posts-container');
-        postsContainer.innerHTML = '';
-        if (dynamicPosts && dynamicPosts.length > 0) {
-            dynamicPosts.forEach(post => {
-                const postElement = createPostElement(post);
-                postsContainer.appendChild(postElement);
-            });
-        } else {
-            postsContainer.innerHTML = '<div class="no-posts">Henüz gönderi yok.</div>';
-        }
-    } catch (error) {
-        console.error('Gönderiler yüklenirken hata:', error);
-    }
-}
+                try {
+                    const response = await fetch('/api/posts');
+                    const data = await response.json();
+                    const posts = data.posts || [];
+                    const postsContainer = document.getElementById('posts-container');
+                    postsContainer.innerHTML = '';
+                    if (posts.length > 0) {
+                        posts.forEach(post => {
+                            const postElement = document.createElement('div');
+                            postElement.className = 'post';
+                            postElement.innerHTML = `
+                                <div class="post-header">
+                                    <div class="post-avatar">${post.username ? post.username.charAt(0).toUpperCase() : 'A'}</div>
+                                    <div class="post-user">
+                                        <div class="post-author">${post.username || 'Anonim'}</div>
+                                        <div class="post-time">${formatTime(post.timestamp)}</div>
+                                    </div>
+                                </div>
+                                <div class="post-content">${post.content}</div>
+                                ${post.image ? `<img src="${post.image}" class="post-image" alt="Post image">` : ''}
+                            `;
+                            postsContainer.appendChild(postElement);
+                        });
+                    } else {
+                        postsContainer.innerHTML = '<div class="no-posts">Henüz gönderi yok.</div>';
+                    }
+                } catch (error) {
+                    console.error('Gönderiler yüklenirken hata:', error);
+                }
+            }
 
             // Gönderi elementi oluştur
             function createPostElement(post) {
@@ -335,37 +349,24 @@
                 const postInput = document.querySelector('.post-input');
                 const content = postInput.value.trim();
                 const imageFile = document.getElementById('post-image').files[0];
-                const videoFile = document.getElementById('post-video').files[0];
-                
-                if (!content && !imageFile && !videoFile) {
-                    alert('Lütfen bir içerik girin veya resim veya video ekleyin');
+
+                if (!content && !imageFile) {
+                    alert('Lütfen bir içerik girin veya resim ekleyin');
                     return;
                 }
-                
+
                 try {
                     let imageUrl = null;
-                    let videoUrl = null;
                     if (imageFile) {
                         imageUrl = await uploadImage(imageFile);
                     }
-                    if (videoFile) {
-                        videoUrl = await uploadVideo(videoFile);
-                    }
-                    
-                    const newPost = await createPost(content, imageUrl, videoUrl);
-                    loadPosts(); // Gönderileri yeniden yükle
-                    
-                    // Formu temizle
+                    await createPost(content, imageUrl);
+                    await loadPosts(); // Gönderileri yeniden yükle
                     postInput.value = '';
                     document.getElementById('post-image').value = '';
-                    document.getElementById('post-video').value = '';
                     document.getElementById('image-preview').style.display = 'none';
                     document.getElementById('cancel-upload').style.display = 'none';
-                    
-                    // Bildirim oluştur
-                    await createNotification('post', 'Yeni bir gönderi paylaştınız', null);
                 } catch (error) {
-                    console.error('Gönderi paylaşma hatası:', error);
                     alert('Gönderi paylaşılırken bir hata oluştu');
                 }
             });
@@ -412,30 +413,19 @@
             /* Backend Fonksiyonları */
 
             // Gönderi oluşturma
-            async function createPost(content, image = null, video = null) {
-                try {
-                    const user = JSON.parse(localStorage.getItem('user'));
-                    if (!user) {
-                        throw new Error('Kullanıcı oturumu bulunamadı');
-                    }
-
-                    const newPost = {
-                        id: posts.length + 1,
-                        username: user.username || 'Anonim',
+            async function createPost(content, image = null) {
+                const user = JSON.parse(localStorage.getItem('user'));
+                const response = await fetch('/api/posts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: user.email,
                         content: content,
-                        image: image,
-                        video: video,
-                        likes: 0,
-                        comments: [],
-                        timestamp: new Date().toISOString()
-                    };
-
-                    posts.unshift(newPost);
-                    return newPost;
-                } catch (error) {
-                    console.error('Gönderi oluşturulurken hata:', error);
-                    throw error;
-                }
+                        image: image
+                    })
+                });
+                if (!response.ok) throw new Error('Gönderi kaydedilemedi');
+                return await response.json();
             }
 
             // Gönderileri getir
@@ -545,19 +535,15 @@
 
             // Resim yükleme
             async function uploadImage(file) {
-                try {
-                    // Gerçek uygulamada burada bir dosya yükleme servisi kullanılacak
-                    // Şimdilik sadece base64 formatında döndürüyoruz
-                    return new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = () => resolve(reader.result);
-                        reader.onerror = error => reject(error);
-                        reader.readAsDataURL(file);
-                    });
-                } catch (error) {
-                    console.error('Resim yüklenirken hata:', error);
-                    throw error;
-                }
+                const formData = new FormData();
+                formData.append('image', file);
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!response.ok) throw new Error('Resim yüklenemedi');
+                const data = await response.json();
+                return data.imageUrl;
             }
 
             // Video yükleme

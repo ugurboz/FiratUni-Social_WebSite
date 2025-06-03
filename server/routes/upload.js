@@ -4,7 +4,7 @@ const router = express.Router();
 const upload = require("../middleware/upload"); // ✅ DOĞRU YOL
 
 // Tek görsel yükleme (form field adı: 'image')
-router.post("/upload", upload.single("image"), (req, res) => {
+router.post("/", upload.single("image"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "Dosya yüklenemedi" });
   }
