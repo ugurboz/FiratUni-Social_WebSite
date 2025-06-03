@@ -2,44 +2,7 @@
 class EventManager {
     constructor() {
         // Örnek etkinlikler
-        this.events = JSON.parse(localStorage.getItem('events')) || [
-    {
-        id: 1,
-                title: 'Kodlama Workshop',
-                date: '2023-06-15T14:00',
-                location: 'Mühendislik Fakültesi, Lab 3',
-                description: 'Web geliştirme teknolojileri üzerine uygulamalı workshop.',
-                category: 'tech',
-                status: 'upcoming',
-                participants: 15,
-                maxParticipants: 30,
-                progress: 0
-            },
-            {
-                id: 2,
-                title: 'Müzik Festivali',
-                date: '2023-06-20T18:00',
-                location: 'Merkez Kampüs Amfi',
-                description: 'Üniversitemiz müzik topluluğu tarafından düzenlenen festival.',
-                category: 'cultural',
-                status: 'ongoing',
-                participants: 120,
-                maxParticipants: 200,
-                progress: 60
-            },
-            {
-                id: 3,
-                title: 'Futbol Turnuvası',
-                date: '2023-06-10T10:00',
-                location: 'Spor Kompleksi, Saha 2',
-                description: 'Bölümler arası futbol turnuvası final maçları.',
-                category: 'sport',
-                status: 'upcoming',
-                participants: 48,
-                maxParticipants: 50,
-                progress: 0
-            }
-        ];
+        const exampleEvents = [];
         
         localStorage.setItem('events', JSON.stringify(this.events));
         

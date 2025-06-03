@@ -1,9 +1,5 @@
 // Etkinlik veritabanı simülasyonu
-let events = [
-    { id: 1, title: 'Yazılım Geliştirme Atölyesi', time: '14:00', date: '25 Temmuz', location: 'Mühendislik Fakültesi' },
-    { id: 2, title: 'Kariyer Günleri', time: '10:30', date: '27 Temmuz', location: 'Kongre Merkezi' },
-    { id: 3, title: 'Mezuniyet Töreni', time: '16:00', date: '30 Temmuz', location: 'Spor Salonu' }
-];
+let events = [];
 
 // Bildirim Yönetimi
 const NotificationManager = {
@@ -84,17 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Gönderi veritabanı simülasyonu
-let posts = [
-    {
-        id: 1,
-        username: 'admin',
-        content: 'Hoş geldiniz! Bu platformda akademik duyuruları, sosyal etkinlikleri ve ders notlarını paylaşabilirsiniz.',
-        image: null,
-        likes: 0,
-        comments: [],
-        timestamp: new Date().toISOString()
-    }
-];
+let posts = [];
 
 // Bildirim veritabanı simülasyonu
 let notifications = [];

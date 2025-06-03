@@ -118,29 +118,7 @@ async function initializeClubs() {
         const clubsCollection = db.collection('clubs');
 
         // Test verileri
-        const testClubs = [
-            {
-                name: 'Yazılım Kulübü',
-                description: 'Yazılım geliştirme ve teknoloji konularında çalışmalar yapan kulüp.',
-                members: [],
-                events: [],
-                icon: 'fa-code'
-            },
-            {
-                name: 'Robotik Kulübü',
-                description: 'Robotik ve yapay zeka projeleri üzerine çalışan kulüp.',
-                members: [],
-                events: [],
-                icon: 'fa-robot'
-            },
-            {
-                name: 'Müzik Kulübü',
-                description: 'Müzik ve sanat etkinlikleri düzenleyen kulüp.',
-                members: [],
-                events: [],
-                icon: 'fa-music'
-            }
-        ];
+        const testClubs = [];
 
         // Test verilerini ekle
         for (const club of testClubs) {

@@ -2,9 +2,9 @@
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 const bcrypt = require('bcryptjs'); // Şifreleri güvenli bir şekilde saklamak için
-const crypto = require('crypto'); // authToken oluşturmak için
 const { getDb } = require('../../db/config'); // DB bağlantısı için
 const { sendPasswordResetEmail } = require('../shared/emailService'); // E-posta servisi
+const jwt = require('jsonwebtoken');
 
 // Kullanıcı girişi fonksiyonu
 async function loginUser(email, password) {
@@ -26,10 +26,9 @@ async function loginUser(email, password) {
             return { success: false, message: "Kullanıcı bulunamadı" };
         }
 
-        // Normal şifre kontrolü
+        // Şifre kontrolü - bcrypt ile karşılaştırma
         console.log('Checking password...'); // Debug log
-        // Veritabanındaki şifre ile girilen şifreyi doğrudan karşılaştır
-        const isPasswordValid = password === user.password;
+        const isPasswordValid = await bcrypt.compare(password, user.password);
         console.log('Password valid:', isPasswordValid); // Debug log
         
         if (!isPasswordValid) {
@@ -37,15 +36,19 @@ async function loginUser(email, password) {
             return { success: false, message: "Hatalı şifre" };
         }
 
-        // AuthToken oluştur
-        const authToken = crypto.randomBytes(32).toString('hex');
+        // AuthToken oluştur (sadece JWT ile)
+        const authToken = jwt.sign(
+            { email: user.email, isAdmin: user.isAdmin },
+            process.env.JWT_SECRET || 'begakkom-secret-key-2024',
+            { expiresIn: '7d' }
+        );
 
         // Giriş başarılı
         console.log('Login successful'); // Debug log
         return {
             success: true,
             message: "Giriş başarılı",
-            authToken: authToken, // AuthToken'ı ekle
+            authToken: authToken, // JWT olarak dön
             user: {
                 id: user._id,
                 firstName: user.firstName,
@@ -79,8 +82,11 @@ async function resetPassword(email) {
         }
 
         // Şifre sıfırlama token'ı oluştur
-        const resetToken = crypto.randomBytes(32).toString('hex');
-        const resetTokenExpiry = Date.now() + 3600000; // 1 saat geçerli
+        const resetToken = jwt.sign(
+            { email: user.email, isAdmin: user.isAdmin },
+            process.env.JWT_SECRET || 'begakkom-secret-key-2024',
+            { expiresIn: '1h' }
+        );
 
         // Token'ı veritabanına kaydet
         await usersCollection.updateOne(
@@ -88,7 +94,7 @@ async function resetPassword(email) {
             { 
                 $set: { 
                     resetToken: resetToken,
-                    resetTokenExpiry: resetTokenExpiry 
+                    resetTokenExpiry: Date.now() + 3600000 // 1 saat geçerli
                 } 
             }
         );

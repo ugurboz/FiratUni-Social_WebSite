@@ -121,11 +121,27 @@ const userSchema = new mongoose.Schema({
             default: true
         }
     },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
+    active: {
+        type: Boolean,
+        default: true
+    },
+    clubs: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Club'
+    }],
+    events: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Event'
+    }],
     createdAt: {
         type: Date,
         default: Date.now
     }
-});
+}, { timestamps: true });
 
 // Şifre hashleme middleware
 userSchema.pre('save', async function(next) {

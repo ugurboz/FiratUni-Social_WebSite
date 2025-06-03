@@ -7,6 +7,7 @@ const { getUserProfile } = require('./main/profil/profil_backend');
 const { getClubs, joinClub, leaveClub, getClubDetails, initializeClubs } = require('./main/kulupler/kulupler_backend');
 const { testConnection, getDb } = require('./db/config');
 const uploadRoute = require('./server/routes/upload'); // Upload rotasını en başta tanımla
+const adminRoutes = require('./server/routes/admin');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,6 +20,7 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/main', express.static(path.join(__dirname, 'main')));
 app.use(express.static(path.join(__dirname)));
 app.use('/api', uploadRoute); // Upload rotasını middleware'den sonra, API routelarından önce ekle
+app.use('/api/admin', adminRoutes);
 
 // API Routes
 app.post('/api/login', async (req, res) => {
@@ -394,6 +396,9 @@ app.get('/anasayfa', (req, res) => {
 
 // SPA-style route handler - Client-side routing için
 app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api/')) {
+        return next(); // API isteklerinde HTML gönderme
+    }
     if (req.accepts('html')) {
         res.sendFile(path.join(__dirname, 'main', 'anasayfa', 'anasayfa_screen.html'));
     } else {

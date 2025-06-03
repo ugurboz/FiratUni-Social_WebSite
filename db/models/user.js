@@ -21,6 +21,7 @@ class User {
         studentNumber: userData.studentNumber || null,
         department: userData.department || null,
         year: userData.year || null,
+        isAdmin: userData.isAdmin || false,
         createdAt: new Date()
       });
       
@@ -76,6 +77,7 @@ class User {
             bio: userData.bio || null,
             interests: userData.interests || null,
             profileImage: userData.profileImage || null,
+            isAdmin: userData.isAdmin || false,
             updatedAt: new Date()
           }
         }
@@ -116,6 +118,24 @@ class User {
       return result.modifiedCount > 0;
     } catch (error) {
       console.error('Error changing password:', error);
+      throw error;
+    }
+  }
+
+  // Set admin status
+  static async setAdminStatus(id, isAdmin) {
+    try {
+      const db = await getDb();
+      const collection = db.collection('users');
+      
+      const result = await collection.updateOne(
+        { _id: id },
+        { $set: { isAdmin: isAdmin, updatedAt: new Date() } }
+      );
+      
+      return result.modifiedCount > 0;
+    } catch (error) {
+      console.error('Error setting admin status:', error);
       throw error;
     }
   }
