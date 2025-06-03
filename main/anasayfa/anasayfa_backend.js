@@ -106,19 +106,22 @@ async function createPost(content, image = null) {
         if (!user) {
             throw new Error('Kullanıcı oturumu bulunamadı');
         }
-
-        const newPost = {
-            id: posts.length + 1,
-            username: user.username,
-            content: content,
-            image: image,
-            likes: 0,
-            comments: [],
-            timestamp: new Date().toISOString()
-        };
-
-        posts.unshift(newPost);
-        return newPost;
+        const response = await fetch('/api/posts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: user.email,
+                content: content,
+                image: image
+            })
+        });
+        if (!response.ok) {
+            throw new Error('Gönderi kaydedilemedi');
+        }
+        const data = await response.json();
+        return data;
     } catch (error) {
         console.error('Gönderi oluşturulurken hata:', error);
         throw error;
@@ -128,7 +131,12 @@ async function createPost(content, image = null) {
 // Gönderileri getir
 async function getPosts() {
     try {
-        return posts;
+        const response = await fetch('/api/posts');
+        if (!response.ok) {
+            throw new Error('Gönderiler alınamadı');
+        }
+        const data = await response.json();
+        return data.posts || [];
     } catch (error) {
         console.error('Gönderiler getirilirken hata:', error);
         throw error;
@@ -244,14 +252,17 @@ async function markNotificationsAsRead() {
 // Resim yükleme
 async function uploadImage(file) {
     try {
-        // Gerçek uygulamada burada bir dosya yükleme servisi kullanılacak
-        // Şimdilik sadece base64 formatında döndürüyoruz
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-            reader.readAsDataURL(file);
+        const formData = new FormData();
+        formData.append('image', file);
+        const response = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData
         });
+        if (!response.ok) {
+            throw new Error('Resim yüklenemedi');
+        }
+        const data = await response.json();
+        return data.imageUrl; // S3'ten dönen URL
     } catch (error) {
         console.error('Resim yüklenirken hata:', error);
         throw error;

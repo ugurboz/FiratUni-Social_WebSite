@@ -508,25 +508,22 @@
 
             // Gönderileri yükle
             async function loadPosts() {
-                try {
-                    const dynamicPosts = await getPosts();
-                    const postsContainer = document.getElementById('posts-container');
-                    
-                    // Eğer dinamik gönderiler varsa, bunları mevcut gönderilerin üzerine ekle
-                    if (dynamicPosts && dynamicPosts.length > 0) {
-                        const tempContainer = document.createElement('div');
-                        dynamicPosts.forEach(post => {
-                            const postElement = createPostElement(post);
-                            tempContainer.appendChild(postElement);
-                        });
-                        
-                        // Yeni gönderileri mevcut gönderilerin başına ekle
-                        postsContainer.insertBefore(tempContainer, postsContainer.firstChild);
-                    }
-                } catch (error) {
-                    console.error('Gönderiler yüklenirken hata:', error);
-                }
-            }
+    try {
+        const dynamicPosts = await getPosts();
+        const postsContainer = document.getElementById('posts-container');
+        postsContainer.innerHTML = '';
+        if (dynamicPosts && dynamicPosts.length > 0) {
+            dynamicPosts.forEach(post => {
+                const postElement = createPostElement(post);
+                postsContainer.appendChild(postElement);
+            });
+        } else {
+            postsContainer.innerHTML = '<div class="no-posts">Henüz gönderi yok.</div>';
+        }
+    } catch (error) {
+        console.error('Gönderiler yüklenirken hata:', error);
+    }
+}
 
             // Gönderi elementi oluştur
             function createPostElement(post) {
