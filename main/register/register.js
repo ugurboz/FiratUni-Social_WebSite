@@ -23,13 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
             showError('Şifreler eşleşmiyor');
             return;
         }
-        
-        // Şifre gücü kontrolü
-        const passwordValidation = validatePassword(formData.password);
-        if (!passwordValidation.valid) {
-            showError(passwordValidation.message);
-            return;
-        }
 
         try {
             const response = await fetch('/api/register', {
@@ -60,36 +53,5 @@ document.addEventListener('DOMContentLoaded', function() {
     function showError(message) {
         errorMessage.textContent = message;
         errorMessage.style.display = 'block';
-        setTimeout(() => {
-            errorMessage.style.animation = 'shake 0.5s ease';
-        }, 10);
-        setTimeout(() => {
-            errorMessage.style.animation = '';
-        }, 510);
-    }
-    
-    // Şifre validasyon fonksiyonu
-    function validatePassword(password) {
-        if (password.length < 8) {
-            return { valid: false, message: 'Şifre en az 8 karakter uzunluğunda olmalıdır.' };
-        }
-        
-        if (!/[A-Z]/.test(password)) {
-            return { valid: false, message: 'Şifre en az bir büyük harf içermelidir.' };
-        }
-        
-        if (!/[a-z]/.test(password)) {
-            return { valid: false, message: 'Şifre en az bir küçük harf içermelidir.' };
-        }
-        
-        if (!/[0-9]/.test(password)) {
-            return { valid: false, message: 'Şifre en az bir rakam içermelidir.' };
-        }
-        
-        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-            return { valid: false, message: 'Şifre en az bir özel karakter içermelidir (!, @, #, $ vb.).' };
-        }
-        
-        return { valid: true };
     }
 }); 

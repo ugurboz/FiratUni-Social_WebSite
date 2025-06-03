@@ -1,118 +1,24 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
-const mongoSanitize = require("express-mongo-sanitize");
-const xss = require("xss-clean");
-const {authenticate} = require('./server/middleware/authMiddleware');
 const { loginUser, resetPassword, resetPasswordWithToken } = require('./main/login/login_backend');
 const { handleRegister } = require('./main/register/register_backend');
 const { getUserProfile } = require('./main/profil/profil_backend');
 const { getClubs, joinClub, leaveClub, getClubDetails, initializeClubs } = require('./main/kulupler/kulupler_backend');
 const { testConnection, getDb } = require('./db/config');
-const uploadRoute = require('./server/routes/upload');
-const { verifyEmail } = require('./main/verify/verify_backend');
-const bcrypt = require('bcrypt');
+const uploadRoute = require('./server/routes/upload'); // Upload rotasını en başta tanımla
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Güvenlik Middleware'leri
-// CORS yapılandırması
-const allowedOrigins = [
-    'https://begakkom.onrender.com',
-    'http://localhost:3000',
-    'http://localhost:5000'
-];
-
-app.use(cors({
-    origin: function(origin, callback) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('CORS politikası tarafından engellendi'));
-        }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
-
-// Helmet güvenlik başlıkları
-app.use(helmet({
-    contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "cdnjs.cloudflare.com"],
-            styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com", "cdnjs.cloudflare.com"],
-            imgSrc: ["'self'", "data:", "https:"],
-            fontSrc: ["'self'", "fonts.gstatic.com", "cdnjs.cloudflare.com"],
-            connectSrc: ["'self'"],
-            frameSrc: ["'none'"],
-            objectSrc: ["'none'"]
-        }
-    }
-}));
-
-// MongoDB sanitization
-app.use(mongoSanitize());
-
-// XSS koruması
-app.use(xss());
-
-// Rate limiting yapılandırması
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 dakika
-    max: 100, // IP başına maksimum istek
-    message: {
-        status: 429,
-        error: 'Çok fazla istek gönderdiniz. Lütfen daha sonra tekrar deneyin.'
-    }
-});
-
-// Auth işlemleri için özel rate limiter
-const authLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1 saat
-    max: 5, // IP başına maksimum başarısız giriş denemesi
-    message: {
-        status: 429,
-        error: 'Çok fazla başarısız giriş denemesi. Lütfen 1 saat sonra tekrar deneyin.'
-    }
-});
-
-// Rate limiter'ları uygula
-app.use('/api/', limiter);
-app.use('/api/login', authLimiter);
-app.use('/api/register', authLimiter);
-app.use('/api/reset-password', authLimiter);
-
-// Diğer middleware'ler
+// Middleware
 app.use(express.json());
 
 // Serve static files - sıralama önemli
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/main', express.static(path.join(__dirname, 'main')));
 app.use(express.static(path.join(__dirname)));
-
-// Upload rotasını kullan
-app.use('/api', uploadRoute);
-
-const postRoute = require('./server/routes/post');
-app.use('/api', postRoute);
-
-// Veritabanı bağlantısını test et
-testConnection()
-  .then(success => {
-    if (success) {
-      console.log('Veritabanı bağlantısı başarılı!');
-    } else {
-      console.error('Veritabanı bağlantı testi başarısız!');
-    }
-  })
-  .catch(err => {
-    console.error('Veritabanı bağlantı testi hatası:', err);
-  });
+app.use('/api', uploadRoute); // Upload rotasını middleware'den sonra, API routelarından önce ekle
 
 // API Routes
 app.post('/api/login', async (req, res) => {
@@ -147,15 +53,6 @@ app.post('/api/reset-password-with-token', async (req, res) => {
                 message: 'Token ve yeni şifre gereklidir' 
             });
         }
-        
-        // Şifre gücü kontrolü
-        const passwordValidation = validatePasswordStrength(newPassword);
-        if (!passwordValidation.valid) {
-            return res.status(400).json({
-                success: false,
-                message: passwordValidation.message
-            });
-        }
 
         const result = await resetPasswordWithToken(token, newPassword);
         res.json(result);
@@ -178,78 +75,22 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-// Korumalı route'lar
-app.get('/api/profile', authenticate, async (req, res) => {
+// Profil bilgilerini getirme endpoint'i
+app.get('/api/profile', async (req, res) => {
     try {
-        const userEmail = req.user.email; // JWT'den gelen email
+        const userEmail = req.query.email;
+        console.log('Profil isteği alındı, email:', userEmail);
+
+        if (!userEmail) {
+            console.log('E-posta adresi eksik');
+            return res.status(400).json({ success: false, message: 'E-posta adresi gerekli' });
+        }
+
         const result = await getUserProfile(userEmail);
+        console.log('Profil sonucu:', result);
         res.json(result);
     } catch (error) {
         console.error('Profile API error:', error);
-        res.status(500).json({ success: false, message: 'Bir hata oluştu' });
-    }
-});
-
-app.post('/api/user/change-password', authenticate, async (req, res) => {
-    try {
-        const { currentPassword, newPassword } = req.body;
-        const email = req.user.email; // JWT'den gelen email
-
-        if (!currentPassword || !newPassword) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Mevcut şifre ve yeni şifre gereklidir.' 
-            });
-        }
-        
-        // Şifre gücü kontrolü
-        const passwordValidation = validatePasswordStrength(newPassword);
-        if (!passwordValidation.valid) {
-            return res.status(400).json({
-                success: false,
-                message: passwordValidation.message
-            });
-        }
-
-        const db = await getDb();
-        const usersCollection = db.collection('users');
-        
-        // Kullanıcıyı bul
-        const user = await usersCollection.findOne({ email });
-        
-        if (!user) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'Kullanıcı bulunamadı' 
-            });
-        }
-
-        // Mevcut şifreyi kontrol et
-        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
-        
-        if (!isPasswordValid) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Mevcut şifre hatalı' 
-            });
-        }
-
-        // Yeni şifreyi hashle
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-        // Şifreyi güncelle
-        await usersCollection.updateOne(
-            { email: email },
-            { $set: { password: hashedPassword } }
-        );
-
-        res.json({ 
-            success: true, 
-            message: 'Şifreniz başarıyla güncellendi' 
-        });
-    } catch (error) {
-        console.error('Password change error:', error);
         res.status(500).json({ success: false, message: 'Bir hata oluştu' });
     }
 });
@@ -319,6 +160,60 @@ app.post('/leave-club', async (req, res) => {
 
     const result = await leaveClub(clubName, email);
     res.json(result);
+});
+
+// Kullanıcı şifresini değiştirme endpoint'i
+app.post('/api/user/change-password', async (req, res) => {
+    try {
+        const { email, currentPassword, newPassword } = req.body;
+
+        if (!email || !currentPassword || !newPassword) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'E-posta, mevcut şifre ve yeni şifre gereklidir.' 
+            });
+        }
+
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        
+        // Kullanıcıyı bul
+        const user = await usersCollection.findOne({ email });
+        
+        if (!user) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Kullanıcı bulunamadı.' 
+            });
+        }
+        
+        // Mevcut şifreyi kontrol et - doğrudan karşılaştırma yapılıyor
+        if (user.password !== currentPassword) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Mevcut şifre yanlış.' 
+            });
+        }
+        
+        // Şifreyi güncelle
+        await usersCollection.updateOne(
+            { email },
+            { $set: { password: newPassword } }
+        );
+        
+        console.log(`Kullanıcı şifresi güncellendi: ${email}`);
+        
+        res.json({ 
+            success: true, 
+            message: 'Şifreniz başarıyla değiştirildi.' 
+        });
+    } catch (error) {
+        console.error('Şifre değiştirme hatası:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Şifre değiştirilirken bir hata oluştu.' 
+        });
+    }
 });
 
 // Kullanıcı hesabını silme endpoint'i
@@ -476,18 +371,6 @@ app.put('/api/user/theme', async (req, res) => {
     }
 });
 
-// E-posta doğrulama endpoint'i
-app.post('/api/verify-email', async (req, res) => {
-    try {
-        const { email, code } = req.body;
-        const result = await verifyEmail(email, code);
-        res.json(result);
-    } catch (error) {
-        console.error('Email verification API error:', error);
-        res.status(500).json({ success: false, message: 'Bir hata oluştu' });
-    }
-});
-
 // Route handlers for pages - Her zaman tam dosya yolunu kullan
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'main', 'anasayfa', 'anasayfa_screen.html'));
@@ -537,31 +420,6 @@ app.use((req, res) => {
     });
 });
 
-// Şifre gücünü kontrol eden yardımcı fonksiyon
-function validatePasswordStrength(password) {
-    if (password.length < 8) {
-        return { valid: false, message: 'Şifre en az 8 karakter uzunluğunda olmalıdır.' };
-    }
-    
-    if (!/[A-Z]/.test(password)) {
-        return { valid: false, message: 'Şifre en az bir büyük harf içermelidir.' };
-    }
-    
-    if (!/[a-z]/.test(password)) {
-        return { valid: false, message: 'Şifre en az bir küçük harf içermelidir.' };
-    }
-    
-    if (!/[0-9]/.test(password)) {
-        return { valid: false, message: 'Şifre en az bir rakam içermelidir.' };
-    }
-    
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-        return { valid: false, message: 'Şifre en az bir özel karakter içermelidir (!, @, #, $ vb.).' };
-    }
-    
-    return { valid: true };
-}
-
 // Start the server
 app.listen(PORT, async () => {
     console.log(`Server is running on port ${PORT}`);
@@ -589,5 +447,5 @@ app.listen(PORT, async () => {
     console.log('- DELETE /api/user/delete-account');
     console.log('- PUT  /api/user/settings');
     console.log('- PUT  /api/user/theme');
-    console.log('- POST /api/verify-email');
+    console.log('- POST /api/upload');
 }); 

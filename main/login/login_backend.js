@@ -1,71 +1,51 @@
 // Gerekli modülleri içe aktarma
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
-const bcrypt = require('bcrypt'); // Şifreleri güvenli bir şekilde saklamak için
-const jwt = require('jsonwebtoken'); // JWT için
+const bcrypt = require('bcryptjs'); // Şifreleri güvenli bir şekilde saklamak için
+const crypto = require('crypto'); // authToken oluşturmak için
 const { getDb } = require('../../db/config'); // DB bağlantısı için
-const { sendPasswordResetEmail, sendVerificationEmail } = require('../shared/emailService'); // E-posta servisi
-const crypto = require('crypto');
+const { sendPasswordResetEmail } = require('../shared/emailService'); // E-posta servisi
 
 // Kullanıcı girişi fonksiyonu
 async function loginUser(email, password) {
+    console.log('Login attempt for email:', email); // Debug log
+    
     try {
+        console.log('Searching for user...'); // Debug log
+        
+        // Veritabanına bağlan
         const db = await getDb();
         const usersCollection = db.collection('users');
+        
+        // Kullanıcıyı e-posta ile bul
         const user = await usersCollection.findOne({ email: email });
+        console.log('User found:', user ? 'Yes' : 'No'); // Debug log
         
         if (!user) {
+            console.log('User not found'); // Debug log
             return { success: false, message: "Kullanıcı bulunamadı" };
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        // Normal şifre kontrolü
+        console.log('Checking password...'); // Debug log
+        // Veritabanındaki şifre ile girilen şifreyi doğrudan karşılaştır
+        const isPasswordValid = password === user.password;
+        console.log('Password valid:', isPasswordValid); // Debug log
+        
         if (!isPasswordValid) {
+            console.log('Invalid password'); // Debug log
             return { success: false, message: "Hatalı şifre" };
         }
 
-        // E-posta doğrulaması kontrolü
-        if (!user.emailVerified) {
-            // Yeni doğrulama kodu oluştur
-            const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-            const verificationCodeExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 dakika
+        // AuthToken oluştur
+        const authToken = crypto.randomBytes(32).toString('hex');
 
-            // Kodu veritabanına kaydet
-            await usersCollection.updateOne(
-                { email: email },
-                { 
-                    $set: { 
-                        verificationCode: verificationCode,
-                        verificationCodeExpiry: verificationCodeExpiry
-                    } 
-                }
-            );
-
-            // Doğrulama e-postası gönder
-            await sendVerificationEmail(email, verificationCode);
-
-            return {
-                success: true,
-                needsVerification: true,
-                message: "E-posta adresinize doğrulama kodu gönderildi"
-            };
-        }
-
-        // Normal login işlemi
-        const token = jwt.sign(
-            {
-                id: user._id,
-                email: user.email,
-                firstName: user.firstName,
-                lastName: user.lastName
-            },
-            process.env.JWT_SECRET || 'begakkom-secret-key-2024',
-            { expiresIn: '24h' }
-        );
-
+        // Giriş başarılı
+        console.log('Login successful'); // Debug log
         return {
             success: true,
             message: "Giriş başarılı",
-            authToken: token,
+            authToken: authToken, // AuthToken'ı ekle
             user: {
                 id: user._id,
                 firstName: user.firstName,
@@ -74,43 +54,12 @@ async function loginUser(email, password) {
                 studentNumber: user.studentNumber,
                 department: user.department,
                 year: user.year,
-                theme: user.theme || 'light'
+                theme: user.theme || 'light' // Varsayılan tema light
             }
         };
+
     } catch (error) {
         console.error("Giriş hatası:", error);
-        return { success: false, message: "Bir hata oluştu" };
-    }
-}
-
-// Doğrulama kodu kontrolü
-async function verifyEmail(email, code) {
-    try {
-        const db = await getDb();
-        const usersCollection = db.collection('users');
-        
-        const user = await usersCollection.findOne({ 
-            email: email,
-            verificationCode: code,
-            verificationCodeExpiry: { $gt: new Date() }
-        });
-
-        if (!user) {
-            return { success: false, message: "Geçersiz veya süresi dolmuş doğrulama kodu" };
-        }
-
-        // E-posta doğrulandı olarak işaretle
-        await usersCollection.updateOne(
-            { email: email },
-            { 
-                $set: { emailVerified: true },
-                $unset: { verificationCode: "", verificationCodeExpiry: "" }
-            }
-        );
-
-        return { success: true, message: "E-posta adresi başarıyla doğrulandı" };
-    } catch (error) {
-        console.error("Doğrulama hatası:", error);
         return { success: false, message: "Bir hata oluştu" };
     }
 }
@@ -145,7 +94,7 @@ async function resetPassword(email) {
         );
 
         // Şifre sıfırlama bağlantısı oluştur
-        const resetLink = `https://begakkom.onrender.com/main/reset_password/reset_password_screen.html?token=${resetToken}`;
+        const resetLink = `http://localhost:3000/main/reset_password/reset_password_screen.html?token=${resetToken}`;
 
         // E-posta gönder
         const emailResult = await sendPasswordResetEmail(email, resetLink);
@@ -189,15 +138,11 @@ async function resetPasswordWithToken(token, newPassword) {
             };
         }
 
-        // Şifreyi hashle
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-
         // Şifreyi güncelle ve token bilgilerini temizle
         await usersCollection.updateOne(
             { email: user.email },
             { 
-                $set: { password: hashedPassword },
+                $set: { password: newPassword },
                 $unset: { resetToken: "", resetTokenExpiry: "" }
             }
         );
@@ -244,7 +189,6 @@ async function testDatabaseConnection() {
 // Fonksiyonları dışa aktar
 module.exports = {
     loginUser,
-    verifyEmail,
     resetPassword,
     resetPasswordWithToken,
     checkSession,

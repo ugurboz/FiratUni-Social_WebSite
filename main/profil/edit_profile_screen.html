@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>beGAKKOM - Profil Düzenle</title>
-    <link rel="icon" href="/main/images/begakkom_logo (1).svg" type="image/svg+xml">
+    <title>beGAK.com - Profil Düzenle</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../shared/theme.css">
@@ -47,18 +46,16 @@
         }
 
         .navbar {
-            background: var(--navbar-bg);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--box-shadow);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            height: 80px;
-            color: var(--navbar-text);
         }
 
         .brand {
@@ -68,29 +65,22 @@
         }
 
         .brand-logo {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--transition);
-        }
-
-        .brand-logo:hover {
-            transform: scale(1.1);
-        }
-
-        .logo-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            color: var(--primary-color);
+            font-weight: bold;
+            font-family: 'Righteous', cursive;
         }
 
         .brand-name {
             font-family: 'Righteous', cursive;
-            color: var(--navbar-text);
-            font-size: 1.8rem;
+            color: white;
+            font-size: 1.5rem;
             text-decoration: none;
             transition: var(--transition);
         }
@@ -105,30 +95,8 @@
             align-items: center;
         }
 
-        .back-button {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--navbar-text);
-            text-decoration: none;
-            font-size: 1rem;
-            transition: var(--transition);
-            padding: 0.5rem 1rem;
-            border-radius: var(--border-radius);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .back-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateX(-3px);
-        }
-
-        .back-button i {
-            font-size: 1.2rem;
-        }
-
         .nav-links a {
-            color: var(--navbar-text);
+            color: white;
             text-decoration: none;
             font-size: 1rem;
             transition: var(--transition);
@@ -142,7 +110,7 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: var(--navbar-text);
+            background: white;
             transition: var(--transition);
         }
 
@@ -160,7 +128,7 @@
         }
 
         .nav-links a.active::after {
-            width: 100%;
+            width: 0;
         }
 
         .main-content {
@@ -444,16 +412,12 @@
 <body>
     <nav class="navbar">
         <div class="brand">
-            <a href="/" class="brand-logo">
+            <div class="brand-logo">
                 <img src="/main/images/begakkom_logo (1).svg" alt="beGAKKOM Logo" class="logo-image">
-            </a>
-            <a href="/" class="brand-name">beGAKKOM</a>
+            </div>
+            <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
         </div>
         <div class="nav-links">
-            <a href="/main/profil/profil_screen.html" class="back-button">
-                <i class="fas fa-arrow-left"></i>
-                Geri
-            </a>
             <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
             <a href="../sosyal_etkinlikler/sosyal_etkinlikler_screen.html"><i class="fas fa-calendar-alt"></i> Sosyal Etkinlikler</a>
             <a href="../profil/profil_screen.html" class="active"><i class="fas fa-user"></i> Profil</a>

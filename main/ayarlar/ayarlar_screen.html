@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>beGAKKOM - Ayarlar</title>
-    <link rel="icon" href="/main/images/begakkom_logo (1).svg" type="image/svg+xml">
+    <title>beGAK.com - Ayarlar</title>
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../shared/theme.css">
@@ -25,7 +24,7 @@
             <div class="brand-logo">
                 <img src="/main/images/begakkom_logo (1).svg" alt="beGAKKOM Logo" class="logo-image">
             </div>
-            <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAKKOM</a>
+            <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
         </div>
         <div class="nav-links">
             <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
@@ -114,18 +113,6 @@
                                 </button>
                             </div>
                         </div>
-                        
-                        <div class="password-requirements">
-                            <p>Şifreniz aşağıdaki gereksinimleri karşılamalıdır:</p>
-                            <ul>
-                                <li>En az 8 karakter uzunluğunda</li>
-                                <li>En az bir büyük harf</li>
-                                <li>En az bir küçük harf</li>
-                                <li>En az bir rakam</li>
-                                <li>En az bir özel karakter (!, @, #, $, vb.)</li>
-                            </ul>
-                        </div>
-                        
                         <div class="form-actions">
                             <button type="button" class="save-button" onclick="changePassword()">Şifreyi Değiştir</button>
                         </div>
@@ -175,17 +162,6 @@
     </div>
 
     <script>
-        // Global scope'da handleLogout fonksiyonunu tanımla
-        window.handleLogout = function() {
-            if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
-                localStorage.removeItem('authToken');
-                localStorage.removeItem('user');
-                localStorage.removeItem('userData');
-                localStorage.removeItem('userEmail');
-                window.location.href = '../login/login_screen.html';
-            }
-        };
-
         document.addEventListener('DOMContentLoaded', function() {
             // Oturum kontrolü
             checkSession();
@@ -195,12 +171,6 @@
             
             // Tema ayarı kontrolü ve toggle butonunu ayarla
             setupThemeToggle();
-
-            // Çıkış yapma butonuna event listener ekle
-            const logoutButton = document.querySelector('.logout-button');
-            if (logoutButton) {
-                logoutButton.addEventListener('click', handleLogout);
-            }
         });
 
         // Tema ayarlarını kontrol et ve toggle butonunu ayarla
@@ -389,10 +359,8 @@
                     return;
                 }
                 
-                // Şifre güvenlik kontrolü
-                const passwordValidation = validatePassword(newPassword);
-                if (!passwordValidation.valid) {
-                    showNotification(passwordValidation.message, 'error');
+                if (newPassword.length < 6) {
+                    showNotification('Yeni şifre en az 6 karakter olmalıdır', 'error');
                     return;
                 }
                 
@@ -406,58 +374,44 @@
                 }
                 
                 // Şifre değiştirme isteği gönder
-                const token = localStorage.getItem('token');
                 const response = await fetch('/api/user/change-password', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                     },
                     body: JSON.stringify({
-                        currentPassword,
-                        newPassword
+                        email: email,
+                        currentPassword: currentPassword,
+                        newPassword: newPassword
                     })
                 });
-
+                
                 const data = await response.json();
                 
                 if (data.success) {
+                    // Şifre değiştirme başarılı
+                    document.getElementById('password-form').reset();
                     showNotification('Şifreniz başarıyla değiştirildi', 'success');
-                    document.getElementById('currentPassword').value = '';
-                    document.getElementById('newPassword').value = '';
-                    document.getElementById('confirmPassword').value = '';
                 } else {
-                    showNotification(data.message || 'Şifre değiştirme işlemi başarısız', 'error');
+                    // API'den hata mesajı döndüyse onu göster
+                    showNotification(data.message || 'Şifre değiştirilemedi', 'error');
                 }
             } catch (error) {
-                console.error('Şifre değiştirme hatası:', error);
-                showNotification('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.', 'error');
+                console.error('Şifre değiştirilirken hata:', error);
+                showNotification('Şifre değiştirilirken bir hata oluştu', 'error');
             }
         }
-        
-        // Şifre validasyon fonksiyonu
-        function validatePassword(password) {
-            if (password.length < 8) {
-                return { valid: false, message: 'Şifre en az 8 karakter uzunluğunda olmalıdır.' };
+
+        // Çıkış yap
+        function handleLogout() {
+            if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('user');
+                localStorage.removeItem('userData');
+                localStorage.removeItem('userEmail');
+                window.location.href = '../login/login_screen.html';
             }
-            
-            if (!/[A-Z]/.test(password)) {
-                return { valid: false, message: 'Şifre en az bir büyük harf içermelidir.' };
-            }
-            
-            if (!/[a-z]/.test(password)) {
-                return { valid: false, message: 'Şifre en az bir küçük harf içermelidir.' };
-            }
-            
-            if (!/[0-9]/.test(password)) {
-                return { valid: false, message: 'Şifre en az bir rakam içermelidir.' };
-            }
-            
-            if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-                return { valid: false, message: 'Şifre en az bir özel karakter içermelidir (!, @, #, $ vb.).' };
-            }
-            
-            return { valid: true };
         }
 
         // Hesabı sil
