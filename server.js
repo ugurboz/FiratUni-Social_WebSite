@@ -82,7 +82,7 @@ app.post('/api/reset-password-with-token', async (req, res) => {
 // Kayıt endpoint'i
 app.post('/api/register', async (req, res) => {
     try {
-        const result = await handleRegister(req.body);
+        const result = await handleRegister(req.body, req);
         res.json(result);
     } catch (error) {
         console.error('Register API error:', error);
@@ -993,9 +993,9 @@ app.post('/api/reset-password', async (req, res) => {
         res.json(result);
     } catch (error) {
         console.error('Şifre güncelleme hatası:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Şifre güncelleme işlemi sırasında bir hata oluştu.' 
+        res.status(500).json({
+            success: false,
+            message: 'Şifre güncelleme işlemi sırasında bir hata oluştu.'
         });
     }
 });

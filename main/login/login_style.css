@@ -408,6 +408,34 @@ body::before {
     margin-top: 1rem;
 }
 
+.verify-button {
+    margin-top: 1rem;
+    padding: 0.8rem 1.5rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    width: fit-content;
+}
+
+.verify-button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+}
+
+.verify-button i {
+    font-size: 1rem;
+}
+
 @media (max-width: 768px) {
     .login-container {
         padding: 1.5rem;

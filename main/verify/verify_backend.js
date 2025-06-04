@@ -62,24 +62,19 @@ async function verifyEmail(req, res) {
             });
         }
 
-        // Şifreyi hashle
-        const hashedPassword = await bcrypt.hash(tempUserData.password, 10);
-
-        // Yeni kullanıcı oluştur
-        const newUser = new User({
+        // Kullanıcıyı kaydet
+        const userId = await User.create({
             firstName: tempUserData.firstName,
             lastName: tempUserData.lastName,
             studentNumber: tempUserData.studentNumber,
             email: tempUserData.email,
-            password: hashedPassword,
+            password: tempUserData.password, // create method handles hashing
             department: tempUserData.department,
             year: tempUserData.year,
             isVerified: true
         });
 
-        // Kullanıcıyı kaydet
-        await newUser.save();
-        console.log('Kullanıcı başarıyla oluşturuldu:', newUser.email);
+        console.log('Kullanıcı başarıyla oluşturuldu. ID:', userId);
 
         // Geçici verileri temizle
         delete req.session.tempUserData;

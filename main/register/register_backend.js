@@ -32,46 +32,26 @@ async function handleRegister(userData, req) {
 
         // Kullanıcı e-postasını oluştur
         const userEmail = userData.studentNumber + '@firat.edu.tr';
-        
-        // Generate verification code
-        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-        const verificationCodeExpires = new Date(Date.now() + 60000); // 1 minute from now
-        
-        // Kullanıcı verilerini geçici olarak sakla
-        const tempUserData = {
+
+        // Kullanıcıyı doğrudan oluştur ve doğrulanmış olarak işaretle
+        const userId = await User.create({
             firstName: userData.firstName,
             lastName: userData.lastName,
             studentNumber: userData.studentNumber,
             email: userEmail,
-            password: userData.password,
+            password: userData.password, // User.create handles hashing
             department: userData.department,
             year: userData.year,
-            verificationCode,
-            verificationCodeExpires,
-            isVerified: false
+            isVerified: true // Doğrudan doğrulanmış yap
+        });
+
+        console.log('Kullanıcı başarıyla kaydedildi. ID:', userId);
+
+        // Başarılı kayıt mesajı döndür
+        return {
+            success: true,
+            message: "Kullanıcı başarıyla kaydedildi. Giriş yapabilirsiniz."
         };
-
-        // Send verification email
-        try {
-            await sendVerificationEmail({
-                email: userEmail,
-                firstName: userData.firstName,
-                verificationCode: verificationCode
-            });
-            console.log('Verification email sent to:', userEmail);
-
-            // Geçici kullanıcı verilerini session'a kaydet
-            req.session.tempUserData = tempUserData;
-            
-            console.log('User data stored in session'); // Debug log
-            return {
-                success: true,
-                message: "Doğrulama kodu e-posta adresinize gönderildi. Lütfen e-postanızı kontrol edin."
-            };
-        } catch (emailError) {
-            console.error('Error sending verification email:', emailError);
-            return { success: false, message: "Doğrulama e-postası gönderilemedi. Lütfen tekrar deneyin." };
-        }
 
     } catch (error) {
         console.error("Kayıt hatası:", error);
@@ -140,43 +120,27 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ message: 'Bu öğrenci numarası zaten kullanılıyor' });
         }
 
-        // Doğrulama kodu oluştur
-        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-        const verificationCodeExpires = new Date(Date.now() + 60000); // 1 dakika
+        // Kullanıcı e-postasını oluştur
+        const userEmail = studentNumber + '@firat.edu.tr';
 
-        // Kullanıcı verilerini geçici olarak sakla
-        const tempUserData = {
+        // Kullanıcıyı doğrudan oluştur ve doğrulanmış olarak işaretle
+        const userId = await User.create({
             firstName,
             lastName,
             studentNumber,
-            email,
+            email: userEmail,
             password,
             department,
             year,
-            verificationCode,
-            verificationCodeExpires,
-            isVerified: false
-        };
+            isVerified: true
+        });
 
-        // E-posta gönder
-        try {
-            await sendVerificationEmail({
-                email,
-                firstName,
-                verificationCode
-            });
+        console.log('Kullanıcı başarıyla kaydedildi. ID:', userId);
 
-            // Geçici kullanıcı verilerini session'a kaydet
-            req.session.tempUserData = tempUserData;
-
-            res.status(200).json({
-                success: true,
-                message: 'Doğrulama kodu e-posta adresinize gönderildi. Lütfen e-postanızı kontrol edin.'
-            });
-        } catch (error) {
-            console.error('E-posta gönderme hatası:', error);
-            res.status(500).json({ message: 'E-posta gönderilirken bir hata oluştu' });
-        }
+        res.status(200).json({
+            success: true,
+            message: 'Kullanıcı başarıyla kaydedildi. Giriş yapabilirsiniz.'
+        });
     } catch (error) {
         console.error('Kayıt hatası:', error);
         res.status(500).json({ message: 'Kayıt işlemi sırasında bir hata oluştu' });

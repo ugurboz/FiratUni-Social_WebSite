@@ -26,10 +26,6 @@ async function loginUser(email, password) {
             return { success: false, message: "Kullanıcı bulunamadı" };
         }
 
-        if (!user.isVerified) {
-            return { success: false, message: "Lütfen önce e-posta adresinizi doğrulayın" };
-        }
-
         // Şifre kontrolü - bcrypt ile karşılaştırma
         console.log('Checking password...'); // Debug log
         const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -216,10 +212,6 @@ async function handleLogin(email, password) {
         const user = await usersCollection.findOne({ email });
         if (!user) {
             return { success: false, message: "Kullanıcı bulunamadı" };
-        }
-
-        if (!user.isVerified) {
-            return { success: false, message: "Lütfen önce e-posta adresinizi doğrulayın" };
         }
 
         const isMatch = await bcrypt.compare(password, user.password);

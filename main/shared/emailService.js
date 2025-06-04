@@ -28,8 +28,14 @@ const sendEmail = async (to, subject, text, html) => {
       html: html || text
     };
 
+    console.log('E-posta gönderiliyor:', {
+      to: mailOptions.to,
+      subject: mailOptions.subject,
+      from: mailOptions.from
+    });
+
     const info = await transporter.sendMail(mailOptions);
-    console.log('E-posta gönderildi:', info.messageId);
+    console.log('E-posta başarıyla gönderildi:', info.messageId);
     return { success: true, messageId: info.messageId };
   } catch (error) {
     console.error('E-posta gönderilirken hata oluştu:', error);

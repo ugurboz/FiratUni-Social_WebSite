@@ -63,13 +63,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Kullanıcı bilgilerini ve authToken'ı localStorage'a kaydet
                 localStorage.setItem('user', JSON.stringify(result.user));
                 localStorage.setItem('authToken', result.authToken);
-                localStorage.setItem('userEmail', result.user.email); // userEmail'i kaydet
+                localStorage.setItem('userEmail', result.user.email);
                 
                 // Tema desteği için userData'yı ekle 
                 localStorage.setItem('userData', JSON.stringify({
                     email: result.user.email,
                     displayName: `${result.user.firstName || ''} ${result.user.lastName || ''}`.trim(),
-                    theme: result.user.theme || 'light' // Varsayılan tema light
+                    theme: result.user.theme || 'light'
                 }));
                 
                 // Kullanıcının tercih ettiği temayı hemen uygula
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 successMessage.textContent = 'Giriş başarılı! Yönlendiriliyorsunuz...';
                 successMessage.style.display = 'block';
                 
-                // Ana sayfaya yönlendir - Tam yolu kullan
+                // Ana sayfaya yönlendir
                 setTimeout(() => {
                     window.location.href = '/main/anasayfa/anasayfa_screen.html';
                 }, 1500);
@@ -89,6 +89,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Show error message
                 errorMessage.textContent = result.message;
                 errorMessage.style.display = 'block';
+                
+                // Eğer e-posta doğrulaması gerekiyorsa, doğrulama sayfasına yönlendirme butonu göster
+                if (result.needsVerification) {
+                    const verifyButton = document.createElement('button');
+                    verifyButton.className = 'verify-button';
+                    verifyButton.innerHTML = '<i class="fas fa-envelope"></i> Doğrulama Sayfasına Git';
+                    verifyButton.onclick = () => {
+                        window.location.href = '/main/verify/verify_email_screen.html';
+                    };
+                    errorMessage.appendChild(document.createElement('br'));
+                    errorMessage.appendChild(verifyButton);
+                }
             }
         } catch (error) {
             console.error('Giriş hatası:', error);
