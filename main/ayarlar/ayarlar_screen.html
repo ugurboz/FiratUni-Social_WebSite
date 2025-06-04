@@ -24,7 +24,7 @@
             <div class="brand-logo">
                 <img src="/main/images/begakkom_logo (1).svg" alt="beGAKKOM Logo" class="logo-image">
             </div>
-            <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAK.com</a>
+            <a href="../anasayfa/anasayfa_screen.html" class="brand-name">beGAKKOM</a>
         </div>
         <div class="nav-links">
             <a href="../anasayfa/anasayfa_screen.html"><i class="fas fa-home"></i> Ana Sayfa</a>
@@ -39,9 +39,14 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="settings-container">
-            <h2 class="settings-title">
-                <i class="fas fa-cog"></i> Hesap Ayarları
-            </h2>
+            <div class="settings-header">
+                <h2 class="settings-title">
+                    <i class="fas fa-cog"></i> Hesap Ayarları
+                </h2>
+                <button class="admin-panel-button" id="adminPanelButton" style="display: none;" onclick="goToAdminPanel()">
+                    <i class="fas fa-user-shield"></i> Admin Paneline Git
+                </button>
+            </div>
 
             <div class="settings-section">
                 <div class="settings-card">
@@ -119,6 +124,19 @@
                     </form>
                 </div>
 
+                <div class="settings-card danger-zone">
+                    <h3 class="card-title">Hesap İşlemleri</h3>
+                    <div class="danger-actions">
+                        <button class="logout-button" onclick="handleLogout()">
+                            <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+                        </button>
+                        <button class="delete-account-button" onclick="deleteAccount()">
+                            <i class="fas fa-user-slash"></i> Hesabı Sil
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tema Ayarları Kartı -->
                 <div class="settings-card">
                     <h3 class="card-title">Tema Ayarları</h3>
                     <div class="theme-settings">
@@ -135,28 +153,6 @@
                         <div class="form-actions">
                             <button type="button" class="save-button" onclick="applyThemeChange()">Temayı Uygula</button>
                         </div>
-                    </div>
-                </div>
-
-                <div class="settings-card danger-zone">
-                    <h3 class="card-title">Hesap İşlemleri</h3>
-                    <div class="danger-actions">
-                        <button class="logout-button" onclick="handleLogout()">
-                            <i class="fas fa-sign-out-alt"></i> Çıkış Yap
-                        </button>
-                        <button class="delete-account-button" onclick="deleteAccount()">
-                            <i class="fas fa-user-slash"></i> Hesabı Sil
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Admin Panel Butonu -->
-                <div class="settings-card admin-panel" id="adminPanelSection" style="display: none;">
-                    <h3 class="card-title">Yönetici İşlemleri</h3>
-                    <div class="admin-actions">
-                        <button class="admin-panel-button" onclick="goToAdminPanel()">
-                            <i class="fas fa-user-shield"></i> Admin Paneline Git
-                        </button>
                     </div>
                 </div>
             </div>
@@ -551,27 +547,41 @@
             }
         }
 
-        // Admin durumunu kontrol et
+        // Admin durumunu kontrol et ve admin panel butonunu göster/gizle
         async function checkAdminStatus() {
             try {
                 const user = JSON.parse(localStorage.getItem('user') || '{}');
                 const email = user.email;
-                
-                if (!email) return;
+                const adminPanelButton = document.getElementById('adminPanelButton');
 
-                const response = await fetch(`http://localhost:3000/api/profile?email=${encodeURIComponent(email)}`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                if (!email) {
+                    // E-posta yoksa butonu gizle ve çık
+                    if (adminPanelButton) {
+                         adminPanelButton.style.display = 'none';
                     }
-                });
-                
-                const data = await response.json();
-                
-                if (data.success && data.user && data.user.isAdmin) {
-                    document.getElementById('adminPanelSection').style.display = 'block';
+                    return;
                 }
+
+                const response = await fetch(`/api/admin/check?email=${email}`);
+                const data = await response.json();
+
+                if (adminPanelButton) {
+                    if (data.success && data.isAdmin) {
+                        // Kullanıcı admin ise butonu göster
+                        adminPanelButton.style.display = 'inline-flex'; // Buton olduğu için inline-flex kullanıyoruz
+                    } else {
+                        // Kullanıcı admin değilse veya kontrolde hata olursa butonu gizle
+                        adminPanelButton.style.display = 'none';
+                    }
+                }
+
             } catch (error) {
                 console.error('Admin durumu kontrol edilirken hata:', error);
+                // Hata durumunda da butonu gizle
+                const adminPanelButton = document.getElementById('adminPanelButton');
+                 if (adminPanelButton) {
+                    adminPanelButton.style.display = 'none';
+                 }
             }
         }
     </script>

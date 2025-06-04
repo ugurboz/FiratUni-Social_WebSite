@@ -1,60 +1,64 @@
-const mongoose = require('mongoose');
+const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
-// MongoDB bağlantı URI'si
-const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/firatuni_social';
-console.log('MongoDB URI:', uri); // URI'yi göster (hassas bilgileri gizleyin)
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://mongo7db:veritabani07@cluster0.5ktgw25.mongodb.net/firatuni_social?retryWrites=true&w=majority&appName=Cluster0';
+let dbConnection = null;
+let connectionPromise = null;
 
-// MongoDB bağlantısı için promise
-let dbConnection;
+async function connectToDatabase() {
+    if (dbConnection) {
+        return dbConnection;
+    }
 
-// MongoDB bağlantısı
-mongoose.connect(uri)
-  .then(() => {
-    console.log('MongoDB Atlas\'a başarıyla bağlandı.');
-    dbConnection = mongoose.connection.db;
-  })
-  .catch(err => {
-    console.error('MongoDB bağlantı hatası (detaylı):', err);
-  });
+    if (connectionPromise) {
+        return connectionPromise;
+    }
 
-// getDb fonksiyonu - var olan kodlar bu fonksiyonu kullanıyor
-async function getDb() {
-  if (!dbConnection) {
-    console.log('dbConnection henüz oluşturulmamış, bağlantı bekleniyor...');
-    await new Promise(resolve => {
-      const checkConnection = () => {
-        console.log('Bağlantı durumu kontrol ediliyor:', mongoose.connection.readyState);
-        if (mongoose.connection.readyState === 1) {
-          console.log('Bağlantı başarılı, dbConnection oluşturuluyor');
-          dbConnection = mongoose.connection.db;
-          resolve();
-        } else {
-          console.log('Bağlantı henüz hazır değil, 100ms sonra tekrar denenecek');
-          setTimeout(checkConnection, 100);
-        }
-      };
-      checkConnection();
+    connectionPromise = new Promise((resolve, reject) => {
+        const client = new MongoClient(MONGODB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            serverSelectionTimeoutMS: 5000,
+            connectTimeoutMS: 10000
+        });
+
+        client.connect()
+            .then(() => {
+                console.log('MongoDB Atlas\'a başarıyla bağlandı.');
+                dbConnection = client.db();
+                resolve(dbConnection);
+            })
+            .catch(err => {
+                console.error('MongoDB bağlantı hatası:', err);
+                connectionPromise = null;
+                reject(err);
+            });
     });
-  }
-  return dbConnection;
+
+    return connectionPromise;
 }
 
-// Test fonksiyonu
+async function getDb() {
+    if (!dbConnection) {
+        await connectToDatabase();
+    }
+    return dbConnection;
+}
+
 async function testConnection() {
-  try {
-    const db = await getDb();
-    console.log('Veritabanı bağlantısı test ediliyor...');
-    const collections = await db.listCollections().toArray();
-    console.log('Mevcut koleksiyonlar:', collections.map(c => c.name));
-    return true;
-  } catch (error) {
-    console.error('Veritabanı test hatası:', error);
-    return false;
-  }
+    try {
+        const db = await getDb();
+        await db.command({ ping: 1 });
+        console.log('MongoDB bağlantısı başarılı');
+        return true;
+    } catch (error) {
+        console.error('MongoDB bağlantı testi başarısız:', error);
+        return false;
+    }
 }
 
 module.exports = {
-  getDb,
-  testConnection
+    getDb,
+    testConnection,
+    connectToDatabase
 }; 

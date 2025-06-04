@@ -1,107 +1,38 @@
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../../db/models/User');
+const { getDb } = require('../../db/config');
 require('dotenv').config();
 
-async function verifyEmail(req, res) {
+// Şifre sıfırlama kodu gönderme
+async function sendResetCode(email) {
     try {
-        const { email, code } = req.body;
-        console.log('Gelen doğrulama isteği:', { email, code });
-        
-        const tempUserData = req.session.tempUserData;
-        console.log('Session verisi:', tempUserData);
+        console.log('Şifre sıfırlama kodu gönderme başladı:', email);
+        const db = await getDb();
+        const usersCollection = db.collection('users');
 
-        // Geçici kullanıcı verilerini kontrol et
-        if (!tempUserData) {
-            console.log('Session verisi bulunamadı');
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Geçersiz doğrulama işlemi - Session verisi yok' 
-            });
+        // Kullanıcıyı kontrol et
+        const user = await usersCollection.findOne({ email });
+        if (!user) {
+            console.log('Kullanıcı bulunamadı:', email);
+            return { success: false, message: 'Bu e-posta adresi ile kayıtlı bir kullanıcı bulunamadı.' };
         }
 
-        if (tempUserData.email !== email) {
-            console.log('E-posta eşleşmiyor:', { 
-                sessionEmail: tempUserData.email, 
-                requestEmail: email 
-            });
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Geçersiz doğrulama işlemi - E-posta eşleşmiyor' 
-            });
-        }
+        // 6 haneli doğrulama kodu oluştur
+        const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+        const resetCodeExpires = new Date(Date.now() + 60000); // 1 dakika
 
-        // Doğrulama kodunu kontrol et
-        console.log('Kod karşılaştırması:', {
-            sessionCode: tempUserData.verificationCode,
-            requestCode: code
-        });
-        
-        if (tempUserData.verificationCode !== code) {
-            console.log('Geçersiz doğrulama kodu');
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Geçersiz doğrulama kodu' 
-            });
-        }
+        // Kodu veritabanına kaydet
+        await usersCollection.updateOne(
+            { email },
+            { 
+                $set: { 
+                    resetCode,
+                    resetCodeExpires
+                }
+            }
+        );
 
-        // Kodun süresini kontrol et
-        const now = new Date();
-        const codeExpires = new Date(tempUserData.verificationCodeExpires);
-        console.log('Kod süresi kontrolü:', {
-            now: now.toISOString(),
-            expires: codeExpires.toISOString()
-        });
-
-        if (now > codeExpires) {
-            console.log('Kod süresi dolmuş');
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Doğrulama kodunun süresi dolmuş' 
-            });
-        }
-
-        // Şifreyi hashle
-        const hashedPassword = await bcrypt.hash(tempUserData.password, 10);
-
-        // Yeni kullanıcı oluştur
-        const newUser = new User({
-            firstName: tempUserData.firstName,
-            lastName: tempUserData.lastName,
-            studentNumber: tempUserData.studentNumber,
-            email: tempUserData.email,
-            password: hashedPassword,
-            department: tempUserData.department,
-            year: tempUserData.year,
-            isVerified: true
-        });
-
-        // Kullanıcıyı kaydet
-        await newUser.save();
-        console.log('Kullanıcı başarıyla oluşturuldu:', newUser.email);
-
-        // Geçici verileri temizle
-        delete req.session.tempUserData;
-        console.log('Session verisi temizlendi');
-
-        return res.status(200).json({ 
-            success: true, 
-            message: 'E-posta başarıyla doğrulandı ve hesabınız oluşturuldu' 
-        });
-    } catch (error) {
-        console.error('Doğrulama hatası:', error);
-        return res.status(500).json({ 
-            success: false, 
-            message: 'Doğrulama sırasında bir hata oluştu: ' + error.message 
-        });
-    }
-}
-
-// E-posta gönderme fonksiyonu
-async function sendVerificationEmail({ email, firstName, verificationCode }) {
-    try {
-        // E-posta gönderici ayarları
+        // E-posta gönder
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -110,21 +41,20 @@ async function sendVerificationEmail({ email, firstName, verificationCode }) {
             }
         });
 
-        // E-posta içeriği
         const mailOptions = {
             from: {
                 name: 'beGAKKOM',
                 address: process.env.EMAIL_USER
             },
             to: email,
-            subject: 'beGAKKOM - E-posta Doğrulama',
+            subject: 'beGAKKOM - Şifre Sıfırlama Kodu',
             html: `
                 <!DOCTYPE html>
                 <html lang="tr">
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>E-posta Doğrulama</title>
+                    <title>Şifre Sıfırlama</title>
                     <style>
                         body {
                             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -185,7 +115,7 @@ async function sendVerificationEmail({ email, firstName, verificationCode }) {
                             font-weight: 600;
                             margin: 0 0 20px;
                         }
-                        .verification-code {
+                        .reset-code {
                             background: #f8f9fa;
                             border: 2px solid #e0e0e0;
                             border-radius: 8px;
@@ -214,19 +144,6 @@ async function sendVerificationEmail({ email, firstName, verificationCode }) {
                             color: #666;
                             border-top: 1px solid #e0e0e0;
                         }
-                        .button {
-                            display: inline-block;
-                            background: #4361ee;
-                            color: #ffffff;
-                            text-decoration: none;
-                            padding: 12px 30px;
-                            border-radius: 6px;
-                            font-weight: 600;
-                            margin: 20px 0;
-                        }
-                        .button:hover {
-                            background: #3a56d4;
-                        }
                         @media only screen and (max-width: 600px) {
                             .container {
                                 padding: 10px;
@@ -234,7 +151,7 @@ async function sendVerificationEmail({ email, firstName, verificationCode }) {
                             .content {
                                 padding: 20px;
                             }
-                            .verification-code {
+                            .reset-code {
                                 font-size: 20px;
                             }
                         }
@@ -251,16 +168,15 @@ async function sendVerificationEmail({ email, firstName, verificationCode }) {
                                 <p class="brand-tagline">Fırat Üniversitesi Sosyal Platformu</p>
                             </div>
                             <div class="content">
-                                <h2 class="title">E-posta Adresinizi Doğrulayın</h2>
+                                <h2 class="title">Şifre Sıfırlama Kodu</h2>
                                 <p class="message">
-                                    Merhaba ${firstName},<br>
-                                    beGAKKOM'a hoş geldiniz! Hesabınızı aktifleştirmek için aşağıdaki doğrulama kodunu kullanın.
+                                    Şifrenizi sıfırlamak için aşağıdaki kodu kullanın. Bu kod 1 dakika içinde geçerliliğini yitirecektir.
                                 </p>
-                                <div class="verification-code">
-                                    ${verificationCode}
+                                <div class="reset-code">
+                                    ${resetCode}
                                 </div>
                                 <p class="message">
-                                    Bu kod 1 dakika içinde geçerliliğini yitirecektir. Eğer bu işlemi siz yapmadıysanız, lütfen bu e-postayı dikkate almayın.
+                                    Eğer bu işlemi siz yapmadıysanız, lütfen bu e-postayı dikkate almayın ve hesabınızın güvenliği için şifrenizi değiştirin.
                                 </p>
                                 <p class="warning">
                                     ⚠️ Güvenliğiniz için bu kodu kimseyle paylaşmayın.
@@ -277,17 +193,86 @@ async function sendVerificationEmail({ email, firstName, verificationCode }) {
             `
         };
 
-        // E-postayı gönder
         await transporter.sendMail(mailOptions);
-        console.log('Doğrulama kodu gönderildi:', { email, code: verificationCode });
-        return true;
+        console.log('Şifre sıfırlama kodu gönderildi:', email);
+
+        return { 
+            success: true, 
+            message: 'Şifre sıfırlama kodu e-posta adresinize gönderildi.' 
+        };
     } catch (error) {
-        console.error('E-posta gönderme hatası:', error);
-        throw error;
+        console.error('Şifre sıfırlama kodu gönderme hatası:', error);
+        return { 
+            success: false, 
+            message: 'Şifre sıfırlama kodu gönderilirken bir hata oluştu.' 
+        };
+    }
+}
+
+// Şifre sıfırlama kodunu doğrula
+async function verifyResetCode(email, code) {
+    try {
+        console.log('Kod doğrulama başladı:', { email, code });
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+
+        const user = await usersCollection.findOne({ email });
+        if (!user) {
+            console.log('Kullanıcı bulunamadı:', email);
+            return { success: false, message: 'Kullanıcı bulunamadı.' };
+        }
+
+        if (!user.resetCode || !user.resetCodeExpires) {
+            console.log('Geçersiz sıfırlama kodu:', email);
+            return { success: false, message: 'Geçersiz sıfırlama kodu.' };
+        }
+
+        const now = new Date();
+        if (now > user.resetCodeExpires) {
+            console.log('Kod süresi dolmuş:', email);
+            return { success: false, message: 'Sıfırlama kodunun süresi dolmuş.' };
+        }
+
+        if (user.resetCode !== code) {
+            console.log('Kod eşleşmiyor:', email);
+            return { success: false, message: 'Geçersiz sıfırlama kodu.' };
+        }
+
+        console.log('Kod doğrulandı:', email);
+        return { success: true, message: 'Kod doğrulandı.' };
+    } catch (error) {
+        console.error('Kod doğrulama hatası:', error);
+        return { success: false, message: 'Kod doğrulanırken bir hata oluştu.' };
+    }
+}
+
+// Şifreyi güncelle
+async function updatePassword(email, newPassword) {
+    try {
+        console.log('Şifre güncelleme başladı:', email);
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await usersCollection.updateOne(
+            { email },
+            { 
+                $set: { password: hashedPassword },
+                $unset: { resetCode: "", resetCodeExpires: "" }
+            }
+        );
+
+        console.log('Şifre güncellendi:', email);
+        return { success: true, message: 'Şifreniz başarıyla güncellendi.' };
+    } catch (error) {
+        console.error('Şifre güncelleme hatası:', error);
+        return { success: false, message: 'Şifre güncellenirken bir hata oluştu.' };
     }
 }
 
 module.exports = {
-    verifyEmail,
-    sendVerificationEmail
-};
+    sendResetCode,
+    verifyResetCode,
+    updatePassword
+}; 

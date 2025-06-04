@@ -5,6 +5,19 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
 });
 
+// Ana sayfaya dönüş fonksiyonu
+function returnToHome() {
+    const email = localStorage.getItem('userEmail');
+    if (email) {
+        // Kullanıcı oturum açmışsa anasayfaya yönlendir
+        window.location.href = '../anasayfa/anasayfa_screen.html';
+    } else {
+        // Oturum açmamışsa login sayfasına yönlendir
+        window.location.href = '../login/login_screen.html';
+    }
+    return false; // Link tıklamasını engelle
+}
+
 // Admin durumunu kontrol et
 async function checkAdminStatus() {
     try {
@@ -18,6 +31,7 @@ async function checkAdminStatus() {
         const data = await response.json();
 
         if (!data.isAdmin) {
+            // Admin değilse anasayfaya yönlendir
             window.location.href = '../anasayfa/anasayfa_screen.html';
             return;
         }
@@ -30,6 +44,7 @@ async function checkAdminStatus() {
         }
     } catch (error) {
         console.error('Admin durumu kontrol edilirken hata:', error);
+        // Hata durumunda login sayfasına yönlendir
         window.location.href = '../login/login_screen.html';
     }
 }
@@ -136,8 +151,8 @@ async function loadUsers() {
                 <td>${user.studentNumber || '-'}</td>
                 <td>${user.department || '-'}</td>
                 <td>
-                    <span class="status-badge ${user.isActive ? 'active' : 'inactive'}">
-                        ${user.isActive ? 'Aktif' : 'Pasif'}
+                    <span class="status-badge ${user.isAdmin || user.role === 'admin' ? 'active' : 'inactive'}">
+                        ${user.isAdmin || user.role === 'admin' ? 'Admin' : 'Normal Kullanıcı'}
                     </span>
                 </td>
                 <td>
@@ -172,11 +187,6 @@ async function loadClubs() {
                 <td>${club.name}</td>
                 <td>${club.president ? `${club.president.firstName} ${club.president.lastName}` : '-'}</td>
                 <td>${club.members ? club.members.length : 0}</td>
-                <td>
-                    <span class="status-badge ${club.isActive ? 'active' : 'inactive'}">
-                        ${club.isActive ? 'Aktif' : 'Pasif'}
-                    </span>
-                </td>
                 <td>
                     <button class="btn-icon" onclick="editClub('${club._id}')">
                         <i class="fas fa-edit"></i>
@@ -297,6 +307,10 @@ function showAddUserModal() {
     document.getElementById('addUserModal').style.display = 'flex';
 }
 
+function showAddClubModal() {
+    document.getElementById('addClubModal').style.display = 'flex';
+}
+
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
@@ -332,6 +346,41 @@ document.getElementById('addUserForm').addEventListener('submit', async (e) => {
     } catch (error) {
         console.error('Kullanıcı eklenirken hata:', error);
         showNotification('Kullanıcı eklenirken bir hata oluştu', 'error');
+    }
+});
+
+// Yeni Kulüp Form işlemleri
+document.getElementById('addClubForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const clubData = {
+        name: document.getElementById('newClubName').value,
+        description: document.getElementById('newClubDescription').value
+        // Diğer alanlar buraya eklenebilir
+    };
+
+    try {
+        const response = await fetch('/api/admin/clubs', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(clubData)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            showNotification('Kulüp başarıyla eklendi', 'success');
+            closeModal('addClubModal');
+            loadClubs(); // Kulüp listesini yenile
+        } else {
+            showNotification(data.message, 'error');
+        }
+    } catch (error) {
+        console.error('Kulüp eklenirken hata:', error);
+        showNotification('Kulüp eklenirken bir hata oluştu', 'error');
     }
 });
 
@@ -371,4 +420,196 @@ function setupEventListeners() {
             });
         }
     });
+}
+
+// Kullanıcı düzenleme fonksiyonu
+async function editUser(userId) {
+    try {
+        const response = await fetch(`/api/admin/users/${userId}`);
+        const data = await response.json();
+
+        if (!data.success) {
+            showNotification(data.message, 'error');
+            return;
+        }
+
+        const user = data.user;
+
+        // Form alanlarını doldur
+        document.getElementById('editFirstName').value = user.firstName || '';
+        document.getElementById('editLastName').value = user.lastName || '';
+        document.getElementById('editEmail').value = user.email || '';
+        document.getElementById('editDepartment').value = user.department || '';
+        document.getElementById('editStudentNumber').value = user.studentNumber || '';
+        document.getElementById('editIsAdmin').value = (user.isAdmin || user.role === 'admin') ? 'true' : 'false';
+
+        // Modalı göster
+        const modal = document.getElementById('editUserModal');
+        modal.style.display = 'flex';
+
+        // Form submit olayını dinle
+        const form = document.getElementById('editUserForm');
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+
+            const updatedUser = {
+                firstName: document.getElementById('editFirstName').value,
+                lastName: document.getElementById('editLastName').value,
+                email: document.getElementById('editEmail').value,
+                department: document.getElementById('editDepartment').value,
+                studentNumber: document.getElementById('editStudentNumber').value,
+                isAdmin: document.getElementById('editIsAdmin').value === 'true',
+                role: document.getElementById('editIsAdmin').value === 'true' ? 'admin' : 'user'
+            };
+
+            try {
+                const updateResponse = await fetch(`/api/admin/users/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(updatedUser)
+                });
+
+                const updateData = await updateResponse.json();
+
+                if (updateData.success) {
+                    showNotification('Kullanıcı başarıyla güncellendi', 'success');
+                    modal.style.display = 'none';
+                    loadUsers(); // Kullanıcı listesini yenile
+                } else {
+                    showNotification(updateData.message, 'error');
+                }
+            } catch (error) {
+                console.error('Kullanıcı güncellenirken hata:', error);
+                showNotification('Kullanıcı güncellenirken bir hata oluştu', 'error');
+            }
+        };
+    } catch (error) {
+        console.error('Kullanıcı bilgileri alınırken hata:', error);
+        showNotification('Kullanıcı bilgileri alınırken bir hata oluştu', 'error');
+    }
+}
+
+// Kullanıcı silme fonksiyonu
+async function deleteUser(userId) {
+    if (!confirm('Bu kullanıcıyı silmek istediğinizden emin misiniz?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/admin/users/${userId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        if (response.ok) {
+            showNotification('Kullanıcı başarıyla silindi', 'success');
+            loadUsers(); // Kullanıcı listesini yenile
+        } else {
+            const error = await response.json();
+            showNotification(error.message, 'error');
+        }
+    } catch (error) {
+        console.error('Kullanıcı silinirken hata:', error);
+        showNotification('Kullanıcı silinirken bir hata oluştu', 'error');
+    }
+}
+
+// Kulüp düzenleme fonksiyonu
+async function editClub(clubId) {
+    try {
+        // Kulüp bilgilerini al
+        const response = await fetch(`/api/admin/clubs/${clubId}`);
+        const data = await response.json();
+
+        if (!data.success) {
+            showNotification(data.message, 'error');
+            return;
+        }
+
+        const club = data.club;
+
+        // Form alanlarını doldur
+        document.getElementById('editClubName').value = club.name || '';
+        document.getElementById('editClubPresident').value = club.president ? `${club.president.firstName} ${club.president.lastName}` : ''; // Başkanın adını soyadını göster
+        document.getElementById('editClubIsActive').value = club.isActive ? 'true' : 'false';
+        // Diğer alanlar (açıklama, üyeler vb.) buraya eklenebilir
+
+        // Modalı göster
+        const modal = document.getElementById('editClubModal');
+        modal.style.display = 'flex';
+
+        // Form submit olayını dinle
+        const form = document.getElementById('editClubForm');
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+
+            // Güncellenmiş kulüp bilgileri
+            const updatedClub = {
+                name: document.getElementById('editClubName').value,
+                // Başkan bilgisi burada doğrudan güncellenmeyebilir, duruma göre API değişebilir
+                isActive: document.getElementById('editClubIsActive').value === 'true'
+                // Diğer alanlar buraya eklenebilir
+            };
+
+            try {
+                const updateResponse = await fetch(`/api/admin/clubs/${clubId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(updatedClub)
+                });
+
+                const updateData = await updateResponse.json();
+
+                if (updateData.success) {
+                    showNotification('Kulüp başarıyla güncellendi', 'success');
+                    modal.style.display = 'none';
+                    loadClubs(); // Kulüp listesini yenile
+                } else {
+                    showNotification(updateData.message, 'error');
+                }
+            } catch (error) {
+                console.error('Kulüp güncellenirken hata:', error);
+                showNotification('Kulüp güncellenirken bir hata oluştu', 'error');
+            }
+        };
+    } catch (error) {
+        console.error('Kulüp bilgileri alınırken hata:', error);
+        showNotification('Kulüp bilgileri alınırken bir hata oluştu', 'error');
+    }
+}
+
+// Kulüp silme fonksiyonu
+async function deleteClub(clubId) {
+    if (!confirm('Bu kulübü silmek istediğinizden emin misiniz?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/admin/clubs/${clubId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            showNotification('Kulüp başarıyla silindi', 'success');
+            loadClubs(); // Kulüp listesini yenile
+        } else {
+            showNotification(data.message, 'error');
+        }
+    } catch (error) {
+        console.error('Kulüp silinirken hata:', error);
+        showNotification('Kulüp silinirken bir hata oluştu', 'error');
+    }
 } 

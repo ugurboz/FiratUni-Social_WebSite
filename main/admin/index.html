@@ -45,6 +45,12 @@
                         <span>Ayarlar</span>
                     </a>
                 </li>
+                <li class="back-button">
+                    <a href="#" onclick="returnToHome()">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Ana Sayfaya Dön</span>
+                    </a>
+                </li>
             </ul>
         </nav>
 
@@ -130,7 +136,7 @@
                                 <th>E-posta</th>
                                 <th>Öğrenci No</th>
                                 <th>Bölüm</th>
-                                <th>Durum</th>
+                                <th>Admin Yetkisi</th>
                                 <th>İşlemler</th>
                             </tr>
                         </thead>
@@ -156,7 +162,6 @@
                                 <th>Kulüp Adı</th>
                                 <th>Başkan</th>
                                 <th>Üye Sayısı</th>
-                                <th>Durum</th>
                                 <th>İşlemler</th>
                             </tr>
                         </thead>
@@ -247,6 +252,93 @@
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" onclick="closeModal('addUserModal')">İptal</button>
+                    <button type="submit" class="btn-primary">Ekle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Kullanıcı Düzenleme Modalı -->
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Kullanıcı Düzenle</h2>
+            <form id="editUserForm">
+                <div class="form-group">
+                    <label for="editFirstName">Ad:</label>
+                    <input type="text" id="editFirstName" name="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editLastName">Soyad:</label>
+                    <input type="text" id="editLastName" name="lastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">E-posta:</label>
+                    <input type="email" id="editEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="editDepartment">Bölüm:</label>
+                    <input type="text" id="editDepartment" name="department" required>
+                </div>
+                <div class="form-group">
+                    <label for="editStudentNumber">Öğrenci Numarası:</label>
+                    <input type="text" id="editStudentNumber" name="studentNumber" required>
+                </div>
+                <div class="form-group">
+                    <label for="editIsAdmin">Admin Yetkisi:</label>
+                    <select id="editIsAdmin" name="isAdmin">
+                        <option value="true">Admin</option>
+                        <option value="false">Normal Kullanıcı</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Kulüp Düzenleme Modalı -->
+    <div id="editClubModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Kulüp Düzenle</h2>
+            <form id="editClubForm">
+                <div class="form-group">
+                    <label for="editClubName">Kulüp Adı:</label>
+                    <input type="text" id="editClubName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="editClubPresident">Başkan:</label>
+                    <input type="text" id="editClubPresident" name="president" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="editClubIsActive">Durum:</label>
+                    <select id="editClubIsActive" name="isActive">
+                        <option value="true">Aktif</option>
+                        <option value="false">Pasif</option>
+                    </select>
+                </div>
+                <!-- Diğer kulüp bilgileri buraya eklenebilir (açıklama, üyeler vb.) -->
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Yeni Kulüp Ekleme Modalı -->
+    <div class="modal" id="addClubModal">
+        <div class="modal-content">
+            <h2>Yeni Kulüp Ekle</h2>
+            <form id="addClubForm">
+                <div class="form-group">
+                    <label for="newClubName">Kulüp Adı</label>
+                    <input type="text" id="newClubName" required>
+                </div>
+                <div class="form-group">
+                    <label for="newClubDescription">Açıklama</label>
+                    <textarea id="newClubDescription" rows="3"></textarea>
+                </div>
+                <!-- Diğer kulüp bilgileri buraya eklenebilir (başkan, üyeler vb.) -->
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('addClubModal')">İptal</button>
                     <button type="submit" class="btn-primary">Ekle</button>
                 </div>
             </form>

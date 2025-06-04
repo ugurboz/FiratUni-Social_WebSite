@@ -36,10 +36,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
 
             if (result.success) {
-                // Başarılı kayıt
-                errorMessage.style.display = 'none';
-                alert(result.message);
-                window.location.href = '/main/login/login_screen.html';
+                // Store email for verification
+                const userEmail = formData.studentNumber + '@firat.edu.tr';
+                localStorage.setItem('userEmail', userEmail);
+                console.log('Stored email:', userEmail); // Debug log
+                // Redirect to verification page
+                window.location.href = '/main/verify/verify_email_screen.html';
             } else {
                 // Hata durumu
                 showError(result.message);

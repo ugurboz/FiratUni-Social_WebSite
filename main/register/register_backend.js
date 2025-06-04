@@ -4,9 +4,13 @@ require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 const { getDb } = require('../../db/config'); // DB bağlantısı için
 const bcrypt = require('bcryptjs'); // Şifre hashlemek için
 const { sendWelcomeEmail } = require('../shared/emailService'); // E-posta servisi
+const { sendVerificationEmail } = require('../verify/verify_backend');
+const express = require('express');
+const router = express.Router();
+const User = require('../../db/models/User');
 
 // Kayıt işlemi
-async function handleRegister(userData) {
+async function handleRegister(userData, req) {
     console.log('Register attempt with data:', JSON.stringify(userData)); // Debug log
     try {
         // Veritabanına bağlan
@@ -26,47 +30,48 @@ async function handleRegister(userData) {
             return { success: false, message: "Bu öğrenci numarası zaten kayıtlı" };
         }
 
-        // Şifreyi hashle
-        console.log('Hashing password'); // Debug log
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(userData.password, salt);
-        
         // Kullanıcı e-postasını oluştur
         const userEmail = userData.studentNumber + '@firat.edu.tr';
         
-        // Kullanıcı verilerini hazırla
-        const newUser = {
+        // Generate verification code
+        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+        const verificationCodeExpires = new Date(Date.now() + 60000); // 1 minute from now
+        
+        // Kullanıcı verilerini geçici olarak sakla
+        const tempUserData = {
             firstName: userData.firstName,
             lastName: userData.lastName,
             studentNumber: userData.studentNumber,
-            username: userData.studentNumber,
             email: userEmail,
-            password: hashedPassword,
+            password: userData.password,
             department: userData.department,
             year: userData.year,
-            createdAt: new Date()
+            verificationCode,
+            verificationCodeExpires,
+            isVerified: false
         };
-        
-        // Kullanıcıyı oluştur
-        console.log('Inserting new user to database'); // Debug log
-        const result = await usersCollection.insertOne(newUser);
-        console.log('Insert result:', result); // Debug log
-        
-        // Hoş geldiniz e-postası gönder
+
+        // Send verification email
         try {
-            await sendWelcomeEmail(userEmail, userData.firstName);
-            console.log('Welcome email sent to:', userEmail);
+            await sendVerificationEmail({
+                email: userEmail,
+                firstName: userData.firstName,
+                verificationCode: verificationCode
+            });
+            console.log('Verification email sent to:', userEmail);
+
+            // Geçici kullanıcı verilerini session'a kaydet
+            req.session.tempUserData = tempUserData;
+            
+            console.log('User data stored in session'); // Debug log
+            return {
+                success: true,
+                message: "Doğrulama kodu e-posta adresinize gönderildi. Lütfen e-postanızı kontrol edin."
+            };
         } catch (emailError) {
-            console.error('Error sending welcome email:', emailError);
-            // E-posta gönderilemese bile kayıt işlemi başarılı sayılır
+            console.error('Error sending verification email:', emailError);
+            return { success: false, message: "Doğrulama e-postası gönderilemedi. Lütfen tekrar deneyin." };
         }
-        
-        console.log('User registered successfully'); // Debug log
-        return {
-            success: true,
-            message: "Kullanıcı başarıyla kaydedildi",
-            userId: result.insertedId
-        };
 
     } catch (error) {
         console.error("Kayıt hatası:", error);
@@ -119,9 +124,69 @@ async function checkUsername(studentNumber) {
     }
 }
 
+router.post('/register', async (req, res) => {
+    try {
+        const { firstName, lastName, studentNumber, email, password, department, year } = req.body;
+
+        // E-posta kontrolü
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Bu e-posta adresi zaten kullanılıyor' });
+        }
+
+        // Öğrenci numarası kontrolü
+        const existingStudent = await User.findOne({ studentNumber });
+        if (existingStudent) {
+            return res.status(400).json({ message: 'Bu öğrenci numarası zaten kullanılıyor' });
+        }
+
+        // Doğrulama kodu oluştur
+        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+        const verificationCodeExpires = new Date(Date.now() + 60000); // 1 dakika
+
+        // Kullanıcı verilerini geçici olarak sakla
+        const tempUserData = {
+            firstName,
+            lastName,
+            studentNumber,
+            email,
+            password,
+            department,
+            year,
+            verificationCode,
+            verificationCodeExpires,
+            isVerified: false
+        };
+
+        // E-posta gönder
+        try {
+            await sendVerificationEmail({
+                email,
+                firstName,
+                verificationCode
+            });
+
+            // Geçici kullanıcı verilerini session'a kaydet
+            req.session.tempUserData = tempUserData;
+
+            res.status(200).json({
+                success: true,
+                message: 'Doğrulama kodu e-posta adresinize gönderildi. Lütfen e-postanızı kontrol edin.'
+            });
+        } catch (error) {
+            console.error('E-posta gönderme hatası:', error);
+            res.status(500).json({ message: 'E-posta gönderilirken bir hata oluştu' });
+        }
+    } catch (error) {
+        console.error('Kayıt hatası:', error);
+        res.status(500).json({ message: 'Kayıt işlemi sırasında bir hata oluştu' });
+    }
+});
+
 module.exports = {
     handleRegister,
     getUser,
     checkEmail,
-    checkUsername
+    checkUsername,
+    router
 };

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-posta Doğrulama - beGAKKOM</title>
+    <link rel="stylesheet" href="../shared/styles.css">
+    <link rel="icon" href="../images/begakkom_logo (1).svg" type="image/svg+xml">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-color-dark: #3a56d4;
+            --secondary-color: #7209b7;
+            --accent-color: #f72585;
+            --background-color: #f8f9fa;
+            --text-color: #333;
+            --text-color-light: #666;
+            --border-color: #e0e0e0;
+            --error-color: #dc2626;
+            --success-color: #16a34a;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .verification-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 500px;
+            padding: 2.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand {
+            margin-bottom: 2rem;
+        }
+
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .brand-logo i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .brand-name {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand-tagline {
+            color: var(--text-color-light);
+            font-size: 1rem;
+        }
+
+        .verification-title {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .verification-subtitle {
+            color: var(--text-color-light);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .verification-code {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .verification-code input {
+            width: 3.5rem;
+            height: 4rem;
+            font-size: 1.75rem;
+            font-weight: bold;
+            text-align: center;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            background: var(--background-color);
+            color: var(--primary-color);
+        }
+
+        .verification-code input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            background: white;
+            outline: none;
+        }
+
+        .timer {
+            font-size: 1rem;
+            color: var(--text-color-light);
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .timer i {
+            color: var(--primary-color);
+        }
+
+        .verification-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .verification-button:hover {
+            background: var(--primary-color-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+
+        .verification-button:active {
+            transform: translateY(0);
+        }
+
+        .resend-button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: underline;
+            margin-top: 1.5rem;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .resend-button:disabled {
+            color: var(--text-color-light);
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+
+        .resend-button:not(:disabled):hover {
+            color: var(--primary-color-dark);
+        }
+
+        .error-message, .success-message {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin: 1rem 0;
+            font-size: 1rem;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: var(--error-color);
+            border: 1px solid #fecaca;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            color: var(--success-color);
+            border: 1px solid #bbf7d0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .verification-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .verification-code input {
+                width: 3rem;
+                height: 3.5rem;
+                font-size: 1.5rem;
+            }
+
+            .brand-logo {
+                width: 60px;
+                height: 60px;
+            }
+
+            .brand-logo i {
+                font-size: 2rem;
+            }
+
+            .brand-name {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="verification-container">
+        <div class="brand">
+            <div class="brand-logo">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="brand-name">beGAKKOM</div>
+            <div class="brand-tagline">Fırat Üniversitesi Sosyal Platformu</div>
+        </div>
+
+        <h2 class="verification-title">E-posta Doğrulama</h2>
+        <p class="verification-subtitle">E-posta adresinize gönderilen 6 haneli doğrulama kodunu giriniz. Kod 1 dakika içinde geçerliliğini yitirecektir.</p>
+        
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <form id="verificationForm">
+            <div class="verification-code">
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+                <input type="text" maxlength="1" pattern="[0-9]" inputmode="numeric" required>
+            </div>
+
+            <div class="timer">
+                <i class="fas fa-clock"></i>
+                Kalan süre: <span id="countdown">1:00</span>
+            </div>
+
+            <button type="submit" class="verification-button">
+                <i class="fas fa-check"></i> Doğrula
+            </button>
+            <button type="button" id="resendButton" class="resend-button" disabled>
+                <i class="fas fa-redo"></i> Kodu Tekrar Gönder
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.verification-code input');
+            const form = document.getElementById('verificationForm');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const resendButton = document.getElementById('resendButton');
+            const countdownElement = document.getElementById('countdown');
+
+            // Auto-focus next input
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', function() {
+                    if (this.value.length === 1) {
+                        if (index < inputs.length - 1) {
+                            inputs[index + 1].focus();
+                        }
+                    }
+                });
+
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && !this.value && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+
+                // Sadece rakam girişine izin ver
+                input.addEventListener('keypress', function(e) {
+                    if (!/[0-9]/.test(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+            });
+
+            // Start countdown
+            let timeLeft = 60;
+            const countdown = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                countdownElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    resendButton.disabled = false;
+                    countdownElement.style.color = '#dc2626';
+                }
+            }, 1000);
+
+            // Handle form submission
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const code = Array.from(inputs).map(input => input.value).join('');
+                const email = localStorage.getItem('userEmail');
+                console.log('Retrieved email from localStorage:', email);
+
+                if (!email) {
+                    errorMessage.textContent = 'E-posta adresi bulunamadı. Lütfen kayıt sayfasına geri dönün.';
+                    errorMessage.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = '/main/register/register_screen.html';
+                    }, 2000);
+                    return;
+                }
+
+                if (code.length !== 6) {
+                    errorMessage.textContent = 'Lütfen 6 haneli doğrulama kodunu giriniz.';
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+
+                try {
+                    console.log('Sending verification request:', { email, code });
+                    const response = await fetch('/api/verify-email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email, code })
+                    });
+
+                    const result = await response.json();
+                    console.log('Verification response:', result);
+
+                    if (result.success) {
+                        successMessage.textContent = result.message;
+                        successMessage.style.display = 'block';
+                        errorMessage.style.display = 'none';
+                        localStorage.removeItem('userEmail');
+                        setTimeout(() => {
+                            window.location.href = '/main/login/login_screen.html';
+                        }, 2000);
+                    } else {
+                        errorMessage.textContent = result.message;
+                        errorMessage.style.display = 'block';
+                        successMessage.style.display = 'none';
+                    }
+                } catch (error) {
+                    console.error('Doğrulama hatası:', error);
+                    errorMessage.textContent = 'Bir hata oluştu. Lütfen tekrar deneyin.';
+                    errorMessage.style.display = 'block';
+                }
+            });
+
+            // Handle resend code
+            resendButton.addEventListener('click', async function() {
+                const email = localStorage.getItem('userEmail');
+                try {
+                    const response = await fetch('/api/resend-verification', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        successMessage.textContent = 'Yeni doğrulama kodu gönderildi!';
+                        successMessage.style.display = 'block';
+                        errorMessage.style.display = 'none';
+                        
+                        // Reset countdown
+                        timeLeft = 60;
+                        resendButton.disabled = true;
+                        countdownElement.textContent = '1:00';
+                        countdownElement.style.color = '#666';
+                        
+                        // Clear inputs
+                        inputs.forEach(input => input.value = '');
+                        inputs[0].focus();
+                    } else {
+                        errorMessage.textContent = result.message;
+                        errorMessage.style.display = 'block';
+                        successMessage.style.display = 'none';
+                    }
+                } catch (error) {
+                    console.error('Kod gönderme hatası:', error);
+                    errorMessage.textContent = 'Bir hata oluştu. Lütfen tekrar deneyin.';
+                    errorMessage.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -35,6 +35,16 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    verificationCode: {
+        type: String
+    },
+    verificationCodeExpires: {
+        type: Date
+    },
     department: {
         type: String,
         required: true,

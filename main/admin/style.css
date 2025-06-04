@@ -1,10 +1,83 @@
-/* Genel Stiller */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+:root {
+    --primary-color: #4361ee;
+    --primary-dark: #3a0ca3;
+    --secondary-color: #4cc9f0;
+    --accent-color: #f72585;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --success-color: #4bb543;
+    --error-color: #ff3333;
+    --border-radius: 12px;
+    --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --transition-speed: 0.3s;
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+
+    /* Admin specific colors - can be derived from general theme */
+    --admin-sidebar-bg: var(--primary-dark); /* Darker background for sidebar */
+    --admin-sidebar-text: var(--light-color);
+    --admin-sidebar-active-bg: var(--primary-color);
+    --admin-topbar-bg: var(--card-background); /* White or light background */
+    --admin-topbar-text: var(--text-color);
+    --admin-background: var(--background-color); /* Light background for main content */
+    --admin-card-background: var(--card-background);
+    --admin-text-color: var(--text-color);
+    --admin-secondary-text: var(--secondary-text);
+    --admin-border-color: var(--border-color);
+    --admin-input-border: var(--input-border);
+    --admin-input-background: var(--input-background);
+    --admin-input-text: var(--input-text);
+    --admin-button-primary-bg: var(--primary-color);
+    --admin-button-primary-text: white;
+    --admin-button-secondary-bg: #6c757d; /* Gray */
+    --admin-button-secondary-text: white;
+    --admin-table-header-bg: var(--primary-color);
+    --admin-table-header-text: white;
+    --admin-table-row-hover: #f1f1f1;
+    --admin-icon-color: var(--secondary-color); /* Consistent icon color */
+    --admin-link-color: var(--primary-color);
+    --admin-link-hover-color: var(--primary-dark);
+}
+
+/* Dark theme adjustments for admin panel */
+[data-theme="dark"] {
+    --admin-sidebar-bg: #1a1a1a;
+    --admin-sidebar-text: #e0e0e0;
+    --admin-sidebar-active-bg: #333;
+    --admin-topbar-bg: #1e1e1e;
+    --admin-topbar-text: #e0e0e0;
+    --admin-background: #121212;
+    --admin-card-background: #1e1e1e;
+    --admin-text-color: #e0e0e0;
+    --admin-secondary-text: #9e9e9e;
+    --admin-border-color: #3d3d3d;
+    --admin-input-border: #3d3d3d;
+    --admin-input-background: #2d2d2d;
+    --admin-input-text: #e0e0e0;
+    --admin-button-secondary-bg: #5a6268;
+    --admin-table-row-hover: #2d2d2d;
+    --admin-icon-color: var(--secondary-color);
+    --admin-link-color: var(--secondary-color);
+    --admin-link-hover-color: var(--secondary-color);
+}
+
+* {
     margin: 0;
-    background-color: #f4f7f6;
-    color: #333;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--admin-background);
+    min-height: 100vh;
+    color: var(--admin-text-color);
     line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .admin-container {
@@ -12,92 +85,103 @@ body {
     min-height: 100vh;
 }
 
-/* Sidebar Stilleri */
+/* Sidebar Styles */
 .sidebar {
     width: 250px;
-    background-color: #2c3e50;
-    color: #ecf0f1;
+    background-color: var(--admin-sidebar-bg);
+    color: var(--admin-sidebar-text);
     display: flex;
     flex-direction: column;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    padding: var(--spacing-lg);
+    box-shadow: var(--box-shadow);
     position: fixed;
-    height: 100%;
-    overflow-y: auto; /* Sidebar içeriği fazla olursa kaydırma çubuğu çıkar */
+    height: 100vh;
+    overflow-y: auto;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .sidebar .logo {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: var(--spacing-xl);
 }
 
 .sidebar .logo h2 {
     margin: 0;
     font-size: 1.8em;
-    color: #ecf0f1;
+    color: var(--admin-sidebar-text);
+    font-family: 'Righteous', cursive;
 }
 
 .sidebar .nav-links {
     list-style: none;
     padding: 0;
     margin: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar .nav-links li {
-    margin-bottom: 10px;
+    margin-bottom: var(--spacing-sm);
 }
 
 .sidebar .nav-links li a {
-    color: #ecf0f1;
+    color: var(--admin-sidebar-text);
     text-decoration: none;
     display: flex;
     align-items: center;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    font-size: 1.1em;
 }
 
 .sidebar .nav-links li a i {
-    margin-right: 10px;
-    font-size: 1.1em;
+    margin-right: var(--spacing-md);
+    font-size: 1.2em;
 }
 
 .sidebar .nav-links li a:hover,
 .sidebar .nav-links li.active a {
-    background-color: #34495e;
+    background-color: var(--admin-sidebar-active-bg);
+    color: var(--light-color); /* Ensure readability on active background */
 }
 
-/* Main Content Stilleri */
+/* Main Content Styles */
 .main-content {
-    margin-left: 250px; /* Sidebar genişliği kadar boşluk */
+    margin-left: 250px;
     flex-grow: 1;
-    padding: 20px;
+    padding: var(--spacing-lg);
+    background-color: var(--admin-background); /* Arka plan rengini belirle */
+    transition: background-color 0.3s ease; /* Tema değişimi için geçiş */
 }
 
-/* Top Bar Stilleri */
+/* Top Bar Styles */
 .top-bar {
-    background-color: #fff;
-    padding: 15px 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background-color: var(--admin-topbar-bg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: background-color 0.3s ease;
 }
 
 .top-bar .search-box {
     display: flex;
     align-items: center;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 8px 10px;
-    background-color: #f9f9f9;
+    border: 1px solid var(--admin-input-border);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background-color: var(--admin-input-background);
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .top-bar .search-box i {
-    color: #777;
-    margin-right: 10px;
+    color: var(--admin-secondary-text);
+    margin-right: var(--spacing-sm);
 }
 
 .top-bar .search-box input {
@@ -105,6 +189,7 @@ body {
     outline: none;
     background: none;
     font-size: 1em;
+    color: var(--admin-input-text);
 }
 
 .top-bar .user-info {
@@ -113,8 +198,9 @@ body {
 }
 
 .top-bar .user-info .user-name {
-    margin-right: 10px;
+    margin-right: var(--spacing-sm);
     font-weight: bold;
+    color: var(--admin-topbar-text);
 }
 
 .top-bar .user-info .user-avatar {
@@ -122,82 +208,91 @@ body {
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #3498db;
+    border: 2px solid var(--primary-color);
 }
 
-/* Section Stilleri */
+/* Section Styles (Card Style) */
 .section {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background-color: var(--admin-card-background);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: var(--spacing-lg);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .section h1 {
     margin-top: 0;
-    color: #34495e;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    color: var(--primary-color); /* Use primary color for section titles */
+    border-bottom: 2px solid var(--admin-border-color);
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    font-size: 1.8em;
+    transition: border-color 0.3s ease;
 }
 
-/* Dashboard Stilleri */
+/* Dashboard Styles */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
 }
 
 .stat-card {
-    background-color: #ecf0f1;
-    border-radius: 8px;
-    padding: 20px;
+    background-color: var(--admin-card-background);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
     display: flex;
     align-items: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    border: 1px solid var(--admin-border-color);
 }
 
 .stat-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
 }
 
 .stat-card .stat-icon {
     font-size: 2.5em;
-    color: #3498db;
-    margin-right: 15px;
+    color: var(--secondary-color); /* Use secondary color for icons */
+    margin-right: var(--spacing-md);
 }
 
 .stat-card .stat-info h3 {
-    margin: 0 0 5px 0;
+    margin: 0 0 var(--spacing-xs) 0;
     font-size: 1.1em;
-    color: #555;
+    color: var(--admin-text-color);
 }
 
 .stat-card .stat-info .stat-number {
     margin: 0;
     font-size: 1.8em;
     font-weight: bold;
-    color: #2c3e50;
+    color: var(--primary-color); /* Use primary color for numbers */
 }
 
 .recent-activity h2 {
-    color: #34495e;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
+    color: var(--primary-color); /* Use primary color for subtitles */
+    border-bottom: 1px solid var(--admin-border-color);
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    font-size: 1.5em;
 }
 
 .activity-list {
-    /* JavaScript ile doldurulacak öğeler için genel stil */
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
 }
 
 .activity-item {
     display: flex;
     align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px dashed #eee;
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px dashed var(--admin-border-color);
 }
 
 .activity-item:last-child {
@@ -206,8 +301,8 @@ body {
 
 .activity-item .activity-icon {
     font-size: 1.5em;
-    color: #7f8c8d;
-    margin-right: 15px;
+    color: var(--admin-icon-color);
+    margin-right: var(--spacing-md);
 }
 
 .activity-item .activity-details {
@@ -215,199 +310,219 @@ body {
 }
 
 .activity-item .activity-text {
-    margin: 0 0 5px 0;
-    color: #555;
+    margin: 0 0 var(--spacing-xs) 0;
+    color: var(--admin-text-color);
 }
 
 .activity-item .activity-time {
     font-size: 0.9em;
-    color: #999;
+    color: var(--admin-secondary-text);
 }
 
-/* Table Stilleri */
+/* Table Styles */
 .table-container {
-    overflow-x: auto; /* Tablo içeriği taşarsa kaydırma çubuğu çıkar */
+    overflow-x: auto;
 }
 
 .data-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: var(--spacing-md);
 }
 
 .data-table th,
 .data-table td {
-    padding: 12px 15px;
+    padding: var(--spacing-sm) var(--spacing-md);
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--admin-border-color);
+    color: var(--admin-text-color);
 }
 
 .data-table th {
-    background-color: #3498db;
-    color: #fff;
-    font-weight: bold;
+    background-color: var(--admin-table-header-bg);
+    color: var(--admin-table-header-text);
+    font-weight: 600;
 }
 
 .data-table tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: rgba(0, 0, 0, 0.02); /* Subtle stripe */
 }
 
 .data-table tbody tr:hover {
-    background-color: #e9e9e9;
+    background-color: var(--admin-table-row-hover);
 }
 
-.status-badge {
-    padding: 5px 10px;
-    border-radius: 12px;
-    font-size: 0.8em;
-    font-weight: bold;
-    color: #fff;
-}
-
-.status-badge.active {
-    background-color: #2ecc71; /* Yeşil */
-}
-
-.status-badge.inactive {
-    background-color: #e74c3c; /* Kırmızı */
-}
-
-/* Button Stilleri */
+/* Button Styles */
 .btn-primary,
 .btn-secondary {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: var(--transition);
+    gap: var(--spacing-xs);
+    text-decoration: none;
 }
 
 .btn-primary {
-    background-color: #3498db;
-    color: #fff;
+    background-color: var(--admin-button-primary-bg);
+    color: var(--admin-button-primary-text);
 }
 
 .btn-primary:hover {
-    background-color: #2980b9;
+    background-color: var(--primary-dark); /* Darken on hover */
+    box-shadow: var(--box-shadow);
 }
 
 .btn-secondary {
-    background-color: #95a5a6;
-    color: #fff;
+    background-color: var(--admin-button-secondary-bg);
+    color: var(--admin-button-secondary-text);
 }
 
 .btn-secondary:hover {
-    background-color: #7f8c8d;
+    background-color: #545b62; /* Darken on hover */
 }
 
 .btn-icon {
     background: none;
     border: none;
     cursor: pointer;
-    color: #3498db;
-    font-size: 1.1em;
-    margin: 0 5px;
-    padding: 5px;
-    border-radius: 4px;
-    transition: color 0.3s ease;
+    color: var(--admin-icon-color);
+    font-size: 1.2em;
+    padding: var(--spacing-xs);
+    border-radius: 50%;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-icon:hover {
-    color: #2980b9;
-    background-color: #f2f2f2;
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--primary-color); /* Use primary color on hover */
 }
 
+/* Action Bar (for buttons above tables) */
 .action-bar {
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-md);
 }
 
-/* Form Stilleri */
+/* Form Styles */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: var(--spacing-md);
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 600;
+    color: var(--admin-text-color);
 }
 
 .form-group input[type="text"],
 .form-group input[type="email"],
 .form-group input[type="password"],
+.form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box; /* Padding ve border genişliğe dahil */
+    padding: var(--spacing-sm);
+    border: 1px solid var(--admin-input-border);
+    border-radius: var(--border-radius);
+    font-size: 1em;
+    background-color: var(--admin-input-background);
+    color: var(--admin-input-text);
+    transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 5px rgba(67, 97, 238, 0.3);
 }
 
 .form-actions {
-    margin-top: 20px;
-    text-align: right;
+    margin-top: var(--spacing-md);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-sm);
 }
 
 .form-actions button {
-    margin-left: 10px;
+    min-width: 100px; /* Give buttons a minimum width */
 }
 
-/* Modal Stilleri */
+/* Modal Styles */
 .modal {
-    display: none; /* Başlangıçta gizli */
-    position: fixed; /* Sabit konum */
-    z-index: 1; /* Üst katmanda olsun */
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000; /* High z-index to be on top */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* İçerik taşarsa kaydır */
-    background-color: rgba(0, 0, 0, 0.4); /* Hafif karartılmış arka plan */
-    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.8); /* Dark overlay with higher opacity */
+    display: flex; /* Use flexbox for centering */
     align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md);
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: auto; /* Ortalamak için */
-    padding: 30px;
-    border-radius: 8px;
-    width: 90%; /* Genişlik */
-    max-width: 500px; /* Maksimum genişlik */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    position: relative; /* Kapatma butonu için */
+    background-color: var(--admin-card-background); /* Use card background for solid fill */
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    width: 100%;
+    max-width: 500px; /* Max width for modal */
+    position: relative;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1001; /* Make sure content is above the overlay */
 }
 
 .modal-content h2 {
     margin-top: 0;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    color: var(--primary-color); /* Modal title color */
+    border-bottom: 1px solid var(--admin-border-color);
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
 }
 
-/* Ayarlar Bölümü Stilleri */
+.close {
+    color: var(--admin-secondary-text);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    transition: var(--transition);
+}
+
+.close:hover,
+.close:focus {
+    color: var(--error-color); /* Error color for close button */
+    text-decoration: none;
+}
+
+/* Settings Section Specific Styles */
 .settings-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.settings-card {
-    background-color: #ecf0f1;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    gap: var(--spacing-md);
 }
 
 .settings-card h2 {
-    margin-top: 0;
-    color: #34495e;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    font-size: 1.2em;
+    color: var(--primary-dark);
+    margin-bottom: var(--spacing-md);
 }
 
 .toggle-switch {
@@ -430,7 +545,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: var(--admin-border-color);
     transition: .4s;
     border-radius: 34px;
 }
@@ -442,87 +557,161 @@ body {
     width: 26px;
     left: 4px;
     bottom: 4px;
-    background-color: white;
+    background-color: var(--admin-card-background);
     transition: .4s;
     border-radius: 50%;
 }
 
 input:checked + label {
-    background-color: #2196F3;
+    background-color: var(--success-color);
 }
 
 input:focus + label {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px var(--success-color);
 }
 
 input:checked + label:before {
     transform: translateX(26px);
 }
 
-/* Bildirim Stilleri */
+/* Notification Styles (re-using existing structure but updated colors) */
 .notification {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #333;
-    color: #fff;
-    padding: 15px 20px;
-    border-radius: 8px;
-    z-index: 1000;
-    opacity: 0.9;
-    transition: opacity 0.3s ease-in-out;
+    bottom: var(--spacing-md);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--admin-card-background);
+    color: var(--admin-text-color);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, bottom 0.3s ease;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.notification.show {
+    opacity: 1;
+    visibility: visible;
+    bottom: var(--spacing-lg);
 }
 
 .notification.success {
-    background-color: #2ecc71;
+    border: 1px solid var(--success-color);
+    color: var(--success-color);
+}
+
+.notification.success i {
+    color: var(--success-color);
 }
 
 .notification.error {
-    background-color: #e74c3c;
+    border: 1px solid var(--error-color);
+    color: var(--error-color);
+}
+
+.notification.error i {
+    color: var(--error-color);
 }
 
 .notification.info {
-    background-color: #3498db;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
 }
 
-/* Duyarlılık (Responsiveness) */
+.notification.info i {
+    color: var(--primary-color);
+}
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
     .admin-container {
-        flex-direction: column; /* Küçük ekranlarda dikey düzen */
+        flex-direction: column;
     }
 
     .sidebar {
-        position: relative; /* Küçük ekranlarda sabit konumu kaldır */
         width: 100%;
         height: auto;
-        padding: 10px;
+        position: static;
+        padding: var(--spacing-md);
     }
 
     .main-content {
-        margin-left: 0; /* Sidebar boşluğunu kaldır */
-        padding: 10px;
+        margin-left: 0;
+        padding: var(--spacing-md);
     }
 
     .top-bar {
-        flex-direction: column; /* Küçük ekranlarda dikey top bar */
-        align-items: flex-start;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm);
     }
 
     .top-bar .search-box {
         width: 100%;
-        margin-bottom: 10px;
     }
 
     .top-bar .user-info {
         width: 100%;
-        justify-content: flex-end;
+        justify-content: center;
     }
 
     .stats-grid {
-        grid-template-columns: 1fr; /* Küçük ekranlarda tek sütun */
+        grid-template-columns: 1fr;
     }
 
     .modal-content {
-        width: 95%;
+        padding: var(--spacing-md);
     }
+}
+
+/* Back Button Specific Styles */
+.back-button {
+    margin-top: auto; /* Push to the bottom */
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Separator line */
+    padding-top: var(--spacing-md);
+}
+
+.back-button a {
+    color: var(--admin-sidebar-text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    font-size: 1.1em;
+    margin-top: -15px; /* Keep the manual adjustment */
+}
+
+.back-button a:hover {
+     background-color: var(--admin-sidebar-active-bg);
+     color: var(--light-color);
+}
+
+.back-button i {
+    margin-right: var(--spacing-md);
+    font-size: 1.2em;
+}
+
+/* Scrollbar styles for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--admin-background);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
 } 

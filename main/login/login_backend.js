@@ -26,6 +26,10 @@ async function loginUser(email, password) {
             return { success: false, message: "Kullanıcı bulunamadı" };
         }
 
+        if (!user.isVerified) {
+            return { success: false, message: "Lütfen önce e-posta adresinizi doğrulayın" };
+        }
+
         // Şifre kontrolü - bcrypt ile karşılaştırma
         console.log('Checking password...'); // Debug log
         const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -33,14 +37,14 @@ async function loginUser(email, password) {
         
         if (!isPasswordValid) {
             console.log('Invalid password'); // Debug log
-            return { success: false, message: "Hatalı şifre" };
+            return { success: false, message: "Geçersiz şifre" };
         }
 
         // AuthToken oluştur (sadece JWT ile)
         const authToken = jwt.sign(
-            { email: user.email, isAdmin: user.isAdmin },
+            { userId: user._id, email: user.email },
             process.env.JWT_SECRET || 'begakkom-secret-key-2024',
-            { expiresIn: '7d' }
+            { expiresIn: '24h' }
         );
 
         // Giriş başarılı
@@ -48,7 +52,7 @@ async function loginUser(email, password) {
         return {
             success: true,
             message: "Giriş başarılı",
-            authToken: authToken, // JWT olarak dön
+            token: authToken,
             user: {
                 id: user._id,
                 firstName: user.firstName,
@@ -204,37 +208,45 @@ module.exports = {
 // Bağlantıyı test et (isteğe bağlı)
 // testDatabaseConnection().catch(console.error);
 
-async function handleLogin(event) {
-    event.preventDefault();
-    
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    
+async function handleLogin(email, password) {
     try {
-        const response = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, password })
-        });
+        const db = await getDb();
+        const usersCollection = db.collection('users');
         
-        const data = await response.json();
-        
-        if (data.success) {
-            localStorage.setItem('authToken', data.token);
-            localStorage.setItem('user', JSON.stringify({
-                id: data.user.id,
-                email: data.user.email,
-                name: data.user.firstName + ' ' + data.user.lastName
-            }));
-            
-            window.location.href = '/main/anasayfa/anasayfa_screen.html';
-        } else {
-            showError(data.message || 'Giriş başarısız');
+        const user = await usersCollection.findOne({ email });
+        if (!user) {
+            return { success: false, message: "Kullanıcı bulunamadı" };
         }
+
+        if (!user.isVerified) {
+            return { success: false, message: "Lütfen önce e-posta adresinizi doğrulayın" };
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return { success: false, message: "Geçersiz şifre" };
+        }
+
+        // Create JWT token
+        const token = jwt.sign(
+            { userId: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        return {
+            success: true,
+            message: "Giriş başarılı",
+            token,
+            user: {
+                id: user._id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName
+            }
+        };
     } catch (error) {
-        console.error('Login error:', error);
-        showError('Giriş sırasında bir hata oluştu');
+        console.error("Giriş hatası:", error);
+        return { success: false, message: "Bir hata oluştu" };
     }
 }

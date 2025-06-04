@@ -176,6 +176,40 @@ body {
     color: var(--primary-color);
 }
 
+/* Yeni eklenen settings-header sınıfı */
+.settings-header {
+    display: flex;
+    justify-content: space-between; /* Başlık ve butonu iki yana yasla */
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--admin-border-color);
+}
+
+/* Admin Panel Butonu için sade stil */
+#adminPanelButton {
+    background: none;
+    border: none;
+    color: var(--admin-link-color); /* Link rengini kullan */
+    font-size: 1em;
+    cursor: pointer;
+    padding: var(--spacing-xs) var(--spacing-sm); /* Biraz padding ekle */
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    display: inline-flex; /* İkon ve metni yan yana getir */
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+#adminPanelButton:hover {
+    color: var(--admin-link-hover-color); /* Hover rengini kullan */
+    background-color: rgba(0, 0, 0, 0.05); /* Hafif arka plan rengi */
+}
+
+#adminPanelButton i {
+    margin-right: var(--spacing-xs);
+}
+
 .settings-section {
     display: flex;
     flex-direction: column;

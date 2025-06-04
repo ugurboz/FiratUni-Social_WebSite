@@ -7,6 +7,9 @@ const { getUserProfile } = require('./main/profil/profil_backend');
 const { getClubs, joinClub, leaveClub, getClubDetails, initializeClubs } = require('./main/kulupler/kulupler_backend');
 const { testConnection, getDb } = require('./db/config');
 const uploadRoute = require('./server/routes/upload');
+const { ObjectId } = require('mongodb');
+const session = require('express-session');
+const { sendResetCode, verifyResetCode, updatePassword } = require('./main/forgot_password/forgot_password_backend');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,6 +17,17 @@ const PORT = process.env.PORT || 3000;
 // Middleware (Sıralama önemli: Body parser ve CORS en başta olmalı)
 app.use(express.json());
 app.use(cors());
+
+// Session middleware configuration
+app.use(session({
+    secret: 'firat_uni_social_platform_secret_key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { 
+        secure: false, // Set to true if using HTTPS
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}));
 
 // *********** API ROUTES ***********
 // Tüm API rotaları statik dosya sunumundan önce gelmeli
@@ -366,6 +380,47 @@ app.get('/api/admin/clubs', async (req, res) => {
     }
 });
 
+// Yeni kulüp ekleme endpoint'i
+app.post('/api/admin/clubs', async (req, res) => {
+    try {
+        const { name, description } = req.body;
+
+        if (!name) {
+            return res.status(400).json({
+                success: false,
+                message: 'Kulüp adı gereklidir'
+            });
+        }
+
+        const db = await getDb();
+        const clubsCollection = db.collection('clubs');
+
+        // Yeni kulüp objesi
+        const newClub = {
+            name,
+            description: description || '',
+            president: null, // Başlangıçta başkan yok
+            members: [],
+            isActive: true, // Yeni kulüpler varsayılan olarak aktif
+            createdAt: new Date()
+        };
+
+        const result = await clubsCollection.insertOne(newClub);
+
+        res.json({
+            success: true,
+            message: 'Kulüp başarıyla eklendi',
+            clubId: result.insertedId
+        });
+    } catch (error) {
+        console.error('Kulüp eklenirken hata:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Kulüp eklenirken bir hata oluştu'
+        });
+    }
+});
+
 // Admin ayarları getirme endpoint'i
 app.get('/api/admin/settings', async (req, res) => {
     try {
@@ -685,6 +740,266 @@ app.put('/api/user/theme', async (req, res) => {
     }
 });
 
+// Kullanıcı düzenleme endpoint'i
+app.put('/api/admin/users/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { firstName, lastName, email, department, studentNumber, isAdmin, role } = req.body;
+
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+
+        // Kullanıcıyı güncelle
+        const result = await usersCollection.updateOne(
+            { _id: new ObjectId(userId) },
+            {
+                $set: {
+                    firstName,
+                    lastName,
+                    email,
+                    department,
+                    studentNumber,
+                    isAdmin,
+                    role,
+                    updatedAt: new Date()
+                }
+            }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Kullanıcı bulunamadı'
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Kullanıcı başarıyla güncellendi'
+        });
+    } catch (error) {
+        console.error('Kullanıcı güncelleme hatası:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Kullanıcı güncellenirken bir hata oluştu'
+        });
+    }
+});
+
+// Kullanıcı silme endpoint'i
+app.delete('/api/admin/users/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+
+        // Kullanıcıyı sil
+        const result = await usersCollection.deleteOne({ _id: new ObjectId(userId) });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Kullanıcı bulunamadı'
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Kullanıcı başarıyla silindi'
+        });
+    } catch (error) {
+        console.error('Kullanıcı silme hatası:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Kullanıcı silinirken bir hata oluştu'
+        });
+    }
+});
+
+// Admin kullanıcı detaylarını getirme endpoint'i
+app.get('/api/admin/users/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+
+        // Kullanıcıyı bul
+        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Kullanıcı bulunamadı'
+            });
+        }
+
+        // Şifreyi gizle
+        const { password, ...userData } = user;
+
+        res.json({
+            success: true,
+            user: userData
+        });
+    } catch (error) {
+        console.error('Kullanıcı detayları getirme hatası:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Kullanıcı detayları alınırken bir hata oluştu'
+        });
+    }
+});
+
+// Admin kulüp detaylarını getirme endpoint'i
+app.get('/api/admin/clubs/:clubId', async (req, res) => {
+    try {
+        const { clubId } = req.params;
+
+        const db = await getDb();
+        const clubsCollection = db.collection('clubs');
+
+        // Kulübü bul
+        const club = await clubsCollection.findOne({ _id: new ObjectId(clubId) });
+
+        if (!club) {
+            return res.status(404).json({
+                success: false,
+                message: 'Kulüp bulunamadı'
+            });
+        }
+
+        res.json({
+            success: true,
+            club: club
+        });
+    } catch (error) {
+        console.error('Kulüp detayları getirme hatası:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Kulüp detayları alınırken bir hata oluştu'
+        });
+    }
+});
+
+// Admin kulüp düzenleme endpoint'i
+app.put('/api/admin/clubs/:clubId', async (req, res) => {
+    try {
+        const { clubId } = req.params;
+        const { name, isActive } = req.body; // Şimdilik sadece isim ve aktiflik güncellenebilir
+
+        const db = await getDb();
+        const clubsCollection = db.collection('clubs');
+
+        // Kulübü güncelle
+        const result = await clubsCollection.updateOne(
+            { _id: new ObjectId(clubId) },
+            {
+                $set: {
+                    name,
+                    isActive,
+                    updatedAt: new Date()
+                }
+            }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Kulüp bulunamadı'
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Kulüp başarıyla güncellendi'
+        });
+    } catch (error) {
+        console.error('Kulüp güncelleme hatası:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Kulüp güncellenirken bir hata oluştu'
+        });
+    }
+});
+
+// Admin kulüp silme endpoint'i
+app.delete('/api/admin/clubs/:clubId', async (req, res) => {
+    try {
+        const { clubId } = req.params;
+
+        const db = await getDb();
+        const clubsCollection = db.collection('clubs');
+
+        // Kulübü sil
+        const result = await clubsCollection.deleteOne({ _id: new ObjectId(clubId) });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Kulüp bulunamadı'
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Kulüp başarıyla silindi'
+        });
+    } catch (error) {
+        console.error('Kulüp silme hatası:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Kulüp silinirken bir hata oluştu'
+        });
+    }
+});
+
+// Şifremi unuttum endpoint'leri
+app.post('/api/forgot-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+        console.log('Şifre sıfırlama isteği alındı:', email);
+        const result = await sendResetCode(email);
+        res.json(result);
+    } catch (error) {
+        console.error('Şifre sıfırlama hatası:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Şifre sıfırlama işlemi sırasında bir hata oluştu.' 
+        });
+    }
+});
+
+app.post('/api/verify-reset-code', async (req, res) => {
+    try {
+        const { email, code } = req.body;
+        console.log('Kod doğrulama isteği alındı:', { email, code });
+        const result = await verifyResetCode(email, code);
+        res.json(result);
+    } catch (error) {
+        console.error('Kod doğrulama hatası:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Kod doğrulama işlemi sırasında bir hata oluştu.' 
+        });
+    }
+});
+
+app.post('/api/reset-password', async (req, res) => {
+    try {
+        const { email, newPassword } = req.body;
+        console.log('Şifre güncelleme isteği alındı:', email);
+        const result = await updatePassword(email, newPassword);
+        res.json(result);
+    } catch (error) {
+        console.error('Şifre güncelleme hatası:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Şifre güncelleme işlemi sırasında bir hata oluştu.' 
+        });
+    }
+});
+
 // Upload rotasını tüm açık /api rotalarından sonra ekleyin
 app.use('/api', uploadRoute);
 
@@ -707,6 +1022,10 @@ app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'main', 'register', 'register_screen.html'));
 });
 
+app.get('/verify', (req, res) => {
+    res.sendFile(path.join(__dirname, 'main', 'verify', 'verify_email_screen.html'));
+});
+
 app.get('/reset-password', (req, res) => {
     res.sendFile(path.join(__dirname, 'main', 'login', 'reset_password_screen.html'));
 });
@@ -714,9 +1033,6 @@ app.get('/reset-password', (req, res) => {
 app.get('/anasayfa', (req, res) => {
     res.sendFile(path.join(__dirname, 'main', 'anasayfa', 'anasayfa_screen.html'));
 });
-
-// Kök dizini statik olarak sunan middleware'i en sona taşıdık, belirli sayfa rotalarından sonra.
-app.use(express.static(path.join(__dirname)));
 
 // SPA-style route handler - Client-side routing için
 // Bu rota, yukarıdaki belirli rotalar ve statik dosyalarla eşleşmeyen GET isteklerini yakalar
@@ -792,12 +1108,16 @@ app.listen(PORT, async () => {
     console.log('- DELETE /api/user/delete-account');
     console.log('- PUT  /api/user/settings');
     console.log('- PUT  /api/user/theme');
-    console.log('- POST /api/upload');
+    console.log('- GET  /api/admin/clubs/:clubId');
+    console.log('- PUT  /api/admin/clubs/:clubId');
+    console.log('- DELETE /api/admin/clubs/:clubId');
+    console.log('- POST /api/admin/clubs');
 
     console.log('\nAvailable Page routes:');
     console.log('- GET  /');
     console.log('- GET  /login');
     console.log('- GET  /register');
+    console.log('- GET  /verify');
     console.log('- GET  /reset-password');
     console.log('- GET  /anasayfa');
 });
