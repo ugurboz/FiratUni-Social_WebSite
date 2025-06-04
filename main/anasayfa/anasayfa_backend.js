@@ -95,9 +95,9 @@ async function loadPosts() {
                 postElement.className = 'post';
                 postElement.innerHTML = `
                     <div class="post-header">
-                        <div class="post-avatar">${post.username ? post.username.charAt(0).toUpperCase() : 'A'}</div>
+                        <div class="post-avatar">${(post.firstName ? post.firstName.charAt(0) : '') + (post.lastName ? post.lastName.charAt(0) : '').toUpperCase()}</div>
                         <div class="post-user">
-                            <div class="post-author">${post.username || 'Anonim'}</div>
+                            <div class="post-author">${post.firstName} ${post.lastName}</div>
                             <div class="post-time">${formatTime(post.timestamp)}</div>
                         </div>
                     </div>

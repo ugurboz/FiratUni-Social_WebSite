@@ -150,10 +150,14 @@
                     </div>
                 </div>
 
-                <div class="settings-card" id="adminPanelCard" style="display:none; margin-top: 24px;">
-                    <button class="save-button" onclick="window.location.href='/main/admin/admin_screen.html'">
-                        <i class="fas fa-user-shield"></i> Admin Paneli
-                    </button>
+                <!-- Admin Panel Butonu -->
+                <div class="settings-card admin-panel" id="adminPanelSection" style="display: none;">
+                    <h3 class="card-title">Yönetici İşlemleri</h3>
+                    <div class="admin-actions">
+                        <button class="admin-panel-button" onclick="goToAdminPanel()">
+                            <i class="fas fa-user-shield"></i> Admin Paneline Git
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -177,7 +181,9 @@
             
             // Tema ayarı kontrolü ve toggle butonunu ayarla
             setupThemeToggle();
-            checkAdminStatus(); // Admin kontrolünü sayfa yüklenince çağır
+
+            // Admin panel butonunu kontrol et
+            checkAdminStatus();
         });
 
         // Tema ayarlarını kontrol et ve toggle butonunu ayarla
@@ -514,33 +520,58 @@
             }, 3000);
         }
 
-        // Admin kontrolü
-        async function checkAdminStatus() {
+        // Admin paneline yönlendirme
+        async function goToAdminPanel() {
             try {
                 const user = JSON.parse(localStorage.getItem('user') || '{}');
                 const email = user.email;
-
+                
                 if (!email) {
-                    console.error('User email not found');
+                    showNotification('Kullanıcı bilgileri bulunamadı', 'error');
                     return;
                 }
 
-                const response = await fetch(`http://localhost:3000/api/admin/check-status?email=${encodeURIComponent(email)}`, {
-                    method: 'GET',
+                // API'den kullanıcı bilgilerini kontrol et
+                const response = await fetch(`http://localhost:3000/api/profile?email=${encodeURIComponent(email)}`, {
                     headers: {
-                        'Content-Type': 'application/json',
                         'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                     }
                 });
                 
                 const data = await response.json();
-                console.log('Admin check response:', data); // Debug için log ekledim
                 
-                if (data.success && data.isAdmin) {
-                    document.getElementById('adminPanelCard').style.display = 'block';
+                if (data.success && data.user && data.user.isAdmin) {
+                    window.location.href = '../admin/index.html';
+                } else {
+                    showNotification('Bu sayfaya erişim yetkiniz bulunmamaktadır.', 'error');
                 }
             } catch (error) {
-                console.error('Admin status check error:', error);
+                console.error('Admin panel kontrolü sırasında hata:', error);
+                showNotification('Bir hata oluştu, lütfen tekrar deneyin.', 'error');
+            }
+        }
+
+        // Admin durumunu kontrol et
+        async function checkAdminStatus() {
+            try {
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                const email = user.email;
+                
+                if (!email) return;
+
+                const response = await fetch(`http://localhost:3000/api/profile?email=${encodeURIComponent(email)}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.user && data.user.isAdmin) {
+                    document.getElementById('adminPanelSection').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Admin durumu kontrol edilirken hata:', error);
             }
         }
     </script>

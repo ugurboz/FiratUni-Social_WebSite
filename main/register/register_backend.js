@@ -39,6 +39,7 @@ async function handleRegister(userData) {
             firstName: userData.firstName,
             lastName: userData.lastName,
             studentNumber: userData.studentNumber,
+            username: userData.studentNumber,
             email: userEmail,
             password: hashedPassword,
             department: userData.department,

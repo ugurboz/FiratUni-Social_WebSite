@@ -203,3 +203,38 @@ module.exports = {
 
 // Bağlantıyı test et (isteğe bağlı)
 // testDatabaseConnection().catch(console.error);
+
+async function handleLogin(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    
+    try {
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            localStorage.setItem('authToken', data.token);
+            localStorage.setItem('user', JSON.stringify({
+                id: data.user.id,
+                email: data.user.email,
+                name: data.user.firstName + ' ' + data.user.lastName
+            }));
+            
+            window.location.href = '/main/anasayfa/anasayfa_screen.html';
+        } else {
+            showError(data.message || 'Giriş başarısız');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        showError('Giriş sırasında bir hata oluştu');
+    }
+}

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Paneli - Fırat Üniversitesi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <ul class="nav-links">
+                <li class="active">
+                    <a href="#" onclick="showSection('dashboard')">
+                        <i class="fas fa-home"></i>
+                        <span>Ana Sayfa</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('users')">
+                        <i class="fas fa-users"></i>
+                        <span>Kullanıcılar</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('clubs')">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Kulüpler</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('events')">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Etkinlikler</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('settings')">
+                        <i class="fas fa-cog"></i>
+                        <span>Ayarlar</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Ara..." onkeyup="handleSearch(this.value)">
+                </div>
+                <div class="user-info">
+                    <span class="user-name" id="adminName">Admin</span>
+                    <img src="../images/default-avatar.png" alt="Admin" class="user-avatar">
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <div class="section" id="dashboard">
+                <h1>Kontrol Paneli</h1>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Toplam Kullanıcı</h3>
+                            <p class="stat-number" id="totalUsers">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Toplam Kulüp</h3>
+                            <p class="stat-number" id="totalClubs">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Toplam Etkinlik</h3>
+                            <p class="stat-number" id="totalEvents">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Toplam Gönderi</h3>
+                            <p class="stat-number" id="totalPosts">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h2>Son Aktiviteler</h2>
+                    <div class="activity-list" id="activityList">
+                        <!-- Aktiviteler JavaScript ile doldurulacak -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div class="section" id="users" style="display: none;">
+                <h1>Kullanıcı Yönetimi</h1>
+                <div class="action-bar">
+                    <button class="btn-primary" onclick="showAddUserModal()">
+                        <i class="fas fa-plus"></i> Yeni Kullanıcı
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Ad Soyad</th>
+                                <th>E-posta</th>
+                                <th>Öğrenci No</th>
+                                <th>Bölüm</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Kullanıcılar JavaScript ile doldurulacak -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Clubs Section -->
+            <div class="section" id="clubs" style="display: none;">
+                <h1>Kulüp Yönetimi</h1>
+                <div class="action-bar">
+                    <button class="btn-primary" onclick="showAddClubModal()">
+                        <i class="fas fa-plus"></i> Yeni Kulüp
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Kulüp Adı</th>
+                                <th>Başkan</th>
+                                <th>Üye Sayısı</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clubsTableBody">
+                            <!-- Kulüpler JavaScript ile doldurulacak -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Events Section -->
+            <div class="section" id="events" style="display: none;">
+                <h1>Etkinlik Yönetimi</h1>
+                <div class="action-bar">
+                    <button class="btn-primary" onclick="showAddEventModal()">
+                        <i class="fas fa-plus"></i> Yeni Etkinlik
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Etkinlik Adı</th>
+                                <th>Tarih</th>
+                                <th>Konum</th>
+                                <th>Organizatör</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventsTableBody">
+                            <!-- Etkinlikler JavaScript ile doldurulacak -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="section" id="settings" style="display: none;">
+                <h1>Sistem Ayarları</h1>
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h2>Genel Ayarlar</h2>
+                        <form id="generalSettings">
+                            <div class="form-group">
+                                <label for="siteName">Site Adı</label>
+                                <input type="text" id="siteName" name="siteName" value="Fırat Üniversitesi Sosyal Platform">
+                            </div>
+                            <div class="form-group">
+                                <label for="siteDescription">Site Açıklaması</label>
+                                <textarea id="siteDescription" name="siteDescription" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="maintenanceMode">Bakım Modu</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="maintenanceMode" name="maintenanceMode">
+                                    <label for="maintenanceMode"></label>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-primary" onclick="saveGeneralSettings()">Kaydet</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="addUserModal">
+        <div class="modal-content">
+            <h2>Yeni Kullanıcı Ekle</h2>
+            <form id="addUserForm">
+                <div class="form-group">
+                    <label for="newUserFirstName">Ad</label>
+                    <input type="text" id="newUserFirstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="newUserLastName">Soyad</label>
+                    <input type="text" id="newUserLastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="newUserEmail">E-posta</label>
+                    <input type="email" id="newUserEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="newUserPassword">Şifre</label>
+                    <input type="password" id="newUserPassword" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('addUserModal')">İptal</button>
+                    <button type="submit" class="btn-primary">Ekle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

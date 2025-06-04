@@ -468,41 +468,65 @@ input:checked + .slider:before {
     }
 }
 
-/* Admin Zone Styles */
-.admin-zone {
-    background-color: var(--primary-color);
-    color: white;
+/* Admin Panel Butonu Stilleri */
+.admin-panel {
     margin-top: 20px;
+    border: 2px solid #3498db;
 }
 
-.admin-zone .card-title {
-    color: white;
+.admin-panel .card-title {
+    color: #3498db;
 }
 
 .admin-actions {
     display: flex;
     justify-content: center;
-    padding: 20px;
+    padding: 20px 0;
 }
 
 .admin-panel-button {
-    display: inline-flex;
-    align-items: center;
+    background-color: #3498db;
+    color: white;
+    border: none;
     padding: 12px 24px;
-    background-color: white;
-    color: var(--primary-color);
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: 600;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     transition: all 0.3s ease;
 }
 
 .admin-panel-button i {
-    margin-right: 8px;
-    font-size: 1.2em;
+    font-size: 18px;
 }
 
 .admin-panel-button:hover {
+    background-color: #2980b9;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+}
+
+.admin-panel-button:active {
+    transform: translateY(0);
+}
+
+/* Karanlık tema için admin panel butonu stilleri */
+[data-theme="dark"] .admin-panel {
+    border-color: #3498db;
+}
+
+[data-theme="dark"] .admin-panel .card-title {
+    color: #3498db;
+}
+
+[data-theme="dark"] .admin-panel-button {
+    background-color: #3498db;
+    color: white;
+}
+
+[data-theme="dark"] .admin-panel-button:hover {
+    background-color: #2980b9;
 } 

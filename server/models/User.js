@@ -121,9 +121,10 @@ const userSchema = new mongoose.Schema({
             default: true
         }
     },
-    isAdmin: {
-        type: Boolean,
-        default: false
+    role: {
+        type: String,
+        enum: ['user', 'moderator', 'admin'],
+        default: 'user'
     },
     active: {
         type: Boolean,
@@ -138,6 +139,10 @@ const userSchema = new mongoose.Schema({
         ref: 'Event'
     }],
     createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    updatedAt: {
         type: Date,
         default: Date.now
     }
