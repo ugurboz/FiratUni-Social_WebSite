@@ -1,81 +1,86 @@
 # beGAKKOM
 
-<div align="center">
-  <pre>
-  ██████╗ ███████╗ ██████╗  █████╗ ██╗  ██╗██╗  ██╗ ██████╗ ███╗   ███╗
-  ██╔══██╗██╔════╝██╔════╝ ██╔══██╗██║ ██╔╝██║ ██╔╝██╔═══██╗████╗ ████║
-  ██████╔╝█████╗  ██║  ███╗███████║█████╔╝ █████╔╝ ██║   ██║██╔████╔██║
-  ██╔══██╗██╔══╝  ██║   ██║██╔══██║██╔═██╗ ██╔═██╗ ██║   ██║██║╚██╔╝██║
-  ██████╔╝███████╗╚██████╔╝██║  ██║██║  ██╗██║  ██╗╚██████╔╝██║ ╚═╝ ██║
-  ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝
-  </pre>
-  <p><strong>Fırat Üniversitesi Sosyal Platformu</strong></p>
+██████╗ ███████╗ ██████╗  █████╗ ██╗  ██╗██╗  ██╗ ██████╗ ███╗   ███╗  
+██╔══██╗██╔════╝██╔════╝ ██╔══██╗██║ ██╔╝██║ ██╔╝██╔═══██╗████╗ ████║  
+██████╔╝█████╗  ██║  ███╗███████║█████╔╝ █████╔╝ ██║   ██║██╔████╔██║  
+██╔══██╗██╔══╝  ██║   ██║██╔══██║██╔═██╗ ██╔═██╗ ██║   ██║██║╚██╔╝██║  
+██████╔╝███████╗╚██████╔╝██║  ██║██║  ██╗██║  ██╗╚██████╔╝██║ ╚═╝ ██║  
+╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝
 
-  [![Status](https://img.shields.io/badge/Status-Active-success.svg)](https://begakkom.firat.edu.tr)
-  [![Version](https://img.shields.io/badge/Version-1.0.0-blue.svg)](https://begakkom.firat.edu.tr)
-  [![License](https://img.shields.io/badge/License-ISC-blue.svg)](LICENSE)
-</div>
+**Fırat Üniversitesi'ne Özel Sosyal Platform**
 
 ## 📋 İçindekiler
 
-- [Proje Hakkında](#-proje-hakkında)
-- [Özellikler](#-özellikler)
-- [Kullanım](#-kullanım)
-- [Güvenlik](#-güvenlik)
-- [İletişim](#-iletişim)
+- [Proje Hakkında](#proje-hakkında)
+- [Özellikler](#özellikler)
+- [Kullanım](#kullanım)
+- [Güvenlik](#güvenlik)
+- [İletişim](#iletişim)
 
 ## 🎯 Proje Hakkında
 
-beGAKKOM, Fırat Üniversitesi öğrencileri için geliştirilmiş modern bir sosyal ağ platformudur. Bu proje, Yazılım Mühendisliği Temelleri dersi kapsamında geliştirilmiştir.
+**beGAKKOM**, Fırat Üniversitesi öğrencileri için özel olarak geliştirilmiş, sosyalliği dijital dünyada desteklemeyi hedefleyen modern bir sosyal ağ platformudur.
 
-### 🎨 Öne Çıkan Özellikler
+Bu proje, Yazılım Mühendisliği Temelleri dersi kapsamında geliştirilmiştir ve tamamen üniversite içi etkileşimi artırmak amacıyla tasarlanmıştır.
 
-- 🔐 Güvenli kullanıcı kimlik doğrulama sistemi
+> “beGAKKOM” ismindeki “GAKKOM”, Elâzığ kültüründe yakın dostlara hitaben kullanılan sıcak bir kelimedir. Başındaki “be” ise yine Elâzığlıların seslenme şeklinden esinlenilmiştir.
+
+### Neden Bu Platform?
+
+- Fırat Üniversitesi öğrencileri arasında **kulüp, etkinlik ve proje katılımını** teşvik eder.
+- Üniversite ortamında **canlı sosyalliği** dijital olarak da destekler.
+- Sadece öğrencilere özel bir ortam sunmak amacıyla, **öğrenci e-posta adresiyle giriş** zorunludur.
+- **Halı saha, masa tenisi gibi etkinliklerde** katılımcı çağırma ve organize etme gibi özellikler ile fiziksel etkileşim desteklenir.
+
+## ✨ Özellikler
+
+- 🔐 Güvenli kullanıcı kimlik doğrulama (Fırat mail adresi ile)
 - 👥 Öğrenci profilleri
-- 🎯 Kulüp yönetim sistemi
-- 📅 Etkinlik organizasyonu
+- 🎯 Kulüp yönetimi ve üyelik sistemi
+- 📅 Etkinlik planlama ve takvim entegrasyonu
+- 📢 Canlı etkinlik organizasyonu (halı saha, masa tenisi vb.)
 - 💬 Gerçek zamanlı mesajlaşma
-- 📱 Responsive tasarım
+- 📱 Responsive ve mobil uyumlu tasarım
 
 ## 🌐 Kullanım
 
 ### Giriş Yapma
-1. Öğrenci numaranız ve şifrenizle giriş yapın
-2. Profilinizi oluşturun ve platformu kullanmaya başlayın
+1. [beGAKKOM](https://begakkom.firat.edu.tr) sitesine gidin
+2. Üniversiteye ait `@firat.edu.tr` mail adresinizle giriş yapın
+3. Profilinizi oluşturduktan sonra kulüp ve etkinlikleri keşfetmeye başlayın
 
 ### Kulüplere Katılma
-1. Kulüpler sekmesine gidin
-2. İlgilendiğiniz kulübü seçin
-3. "Katıl" butonuna tıklayın
+1. “Kulüpler” sekmesine gidin
+2. İlginizi çeken kulübü seçin
+3. “Katıl” butonuna tıklayın
 
-### Etkinliklere Katılma
-1. Etkinlikler sekmesini ziyaret edin
-2. İlgilendiğiniz etkinliği seçin
-3. Katılım formunu doldurun
+### Canlı Etkinlik Katılımı
+1. “Etkinlikler” sayfasında planlanan fiziksel aktiviteleri görüntüleyin
+2. Halı saha, masa tenisi gibi etkinliklerde doğrudan arkadaşlarınızı çağırın
+3. Katılım durumunuzu anlık olarak takip edin
 
 ## 🔒 Güvenlik
 
-- Şifreler güvenli bir şekilde saklanıyor
-- SSL sertifikası ile güvenli bağlantı
-- Kişisel verilerin korunması
-- Güvenli oturum yönetimi
+- Şifreler modern algoritmalarla güvenli şekilde saklanır
+- Tüm bağlantılar SSL ile korunur
+- Kişisel veriler KVKK kapsamında gizli tutulur
+- Güvenli oturum ve kimlik doğrulama yönetimi uygulanır
 
 ## 👥 Ekip
 
 | Rol | İsim | Sorumluluklar |
 |-----|------|---------------|
-| Proje Yöneticisi | Uğur Boz | Proje koordinasyonu, Hata Ayıklama |
-| Geliştirici | Hüseyin Adıgüzel | Backend, Test |
-| Geliştirici | Baran Arda Kandemir | Frontend, Güvenlik |
-| Geliştirici | Elif Zehra Ünal | Frontend, Entegrasyon |
-| Geliştirici | İbrahim Taşkıran | API , Frontend |
+| Proje Yöneticisi | Uğur Boz | Proje koordinasyonu, hata ayıklama |
+| Geliştirici | Hüseyin Adıgüzel | Backend, test |
+| Geliştirici | Baran Arda Kandemir | Frontend, güvenlik |
+| Geliştirici | Elif Zehra Ünal | Frontend, entegrasyon |
+| Geliştirici | İbrahim Taşkıran | API, frontend |
 
 ## 📞 İletişim
 
-- Proje Yöneticisi: [Uğur Boz](mailto:iletisim.ugurboz@gmail.com)
-- Akademik Danışman: [Özal Yıldırım](mailto:ozal@firat.edu.tr)
+- Proje Yöneticisi: [iletisim.ugurboz@gmail.com](mailto:iletisim.ugurboz@gmail.com)
+- Akademik Danışman: [ozalyildirim@firat.edu.tr](mailto:ozalyildirim@firat.edu.tr)
 
 ---
-<div align="center">
-  <sub>Built with ❤️ by Fırat Üniversitesi Yazılım Mühendisliği Öğrencileri</sub>
-</div>
+
+_Fırat Üniversitesi Yazılım Mühendisliği öğrencileri tarafından, üniversite sosyalliğini desteklemek amacıyla geliştirildi._
