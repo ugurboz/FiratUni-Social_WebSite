@@ -40,9 +40,8 @@ beGAKKOM, Fırat Üniversitesi öğrencileri için geliştirilmiş modern bir so
 ## 🌐 Kullanım
 
 ### Giriş Yapma
-1. [beGAKKOM](https://begakkom.firat.edu.tr) adresine gidin
-2. Öğrenci numaranız ve şifrenizle giriş yapın
-3. Profilinizi oluşturun ve platformu kullanmaya başlayın
+1. Öğrenci numaranız ve şifrenizle giriş yapın
+2. Profilinizi oluşturun ve platformu kullanmaya başlayın
 
 ### Kulüplere Katılma
 1. Kulüpler sekmesine gidin
