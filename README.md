@@ -87,9 +87,8 @@ Bu proje, Yazılım Mühendisliği Temelleri dersi kapsamında geliştirilmişti
 
 ## 📞 İletişim
 
-- Proje Yöneticisi: [iletisim.ugurboz@gmail.com](mailto:iletisim.ugurboz@gmail.com)
-- Akademik Danışman: [ozalyildirim@firat.edu.tr](mailto:ozalyildirim@firat.edu.tr)
-
+- Proje Yöneticisi: [Uğur Boz](mailto:iletisim.ugurboz@gmail.com)
+- Akademik Danışman: [Özal Yıldırım](mailto:ozalyildirim@firat.edu.tr)
 ---
 
 _Fırat Üniversitesi Yazılım Mühendisliği öğrencileri tarafından, üniversite sosyalliğini desteklemek amacıyla geliştirildi._
